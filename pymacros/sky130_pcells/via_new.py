@@ -1,4 +1,51 @@
 ########################################################################################################################
+##
+# Mabrains Company LLC ("Mabrains Company LLC") CONFIDENTIAL
+##
+# Copyright (C) 2018-2021 Mabrains Company LLC <contact@mabrains.com>
+##
+# This file is authored by:
+#           - <Mina Maksimous> <mina_maksimous@mabrains.com>
+##
+# This code is provided solely for Mabrains use and can not be sold or reused for any other purpose by
+# any person or entity without prior authorization from Mabrains.
+##
+# NOTICE:  All information contained herein is, and remains the property of Mabrains Company LLC.
+# The intellectual and technical concepts contained herein are proprietary to Mabrains Company LLC
+# and may be covered by U.S. and Foreign Patents, patents in process, and are protected by
+# trade secret or copyright law.
+# Dissemination of this information or reproduction of this material is strictly forbidden
+# unless prior written permission is obtained
+# from Mabrains Company LLC.  Access to the source code contained herein is hereby forbidden to anyone except current
+# Mabrains Company LLC employees, managers or contractors who have executed Confidentiality and Non-disclosure
+# agreements explicitly covering such access.
+#
+##
+# The copyright notice above does not evidence any actual or intended publication or disclosure
+# of  this source code, which includes
+# information that is confidential and/or proprietary, and is a trade secret, of  Mabrains Company LLC.
+# ANY REPRODUCTION, MODIFICATION, DISTRIBUTION, PUBLIC  PERFORMANCE, OR PUBLIC DISPLAY OF OR THROUGH USE
+# OF THIS  SOURCE CODE  WITHOUT THE EXPRESS WRITTEN CONSENT OF Mabrains Company LLC IS STRICTLY PROHIBITED,
+# AND IN VIOLATION OF APPLICABLE LAWS AND INTERNATIONAL TREATIES.  THE RECEIPT OR POSSESSION OF  THIS SOURCE CODE
+# AND/OR RELATED INFORMATION DOES NOT CONVEY OR IMPLY ANY RIGHTS TO REPRODUCE, DISCLOSE OR DISTRIBUTE ITS CONTENTS,
+# OR TO MANUFACTURE, USE, OR SELL ANYTHING THAT IT  MAY DESCRIBE, IN WHOLE OR IN PART.
+##
+# Mabrains retains the full rights for the software which includes the following but not limited to: right to sell,
+# resell, repackage, distribute, creating a Mabrains Company LLC using that code, use, reuse or modify the code created.
+##
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED
+# TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+# MABRAINS COMPANY LLC OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT,TORT OR OTHERWISE, ARISING FROM
+# , OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# MABRAINS COMPANY LLC DOES NOT HOLD ANY RESPONSIBILITIES THAT MIGHT RISE DUE TO LOSE OF MONEY OR DIGITAL ASSETS USING
+# THIS SOFTWARE AND IT IS SOLELY THE RESPONSIBILITY OF THE SOFTWARE USER.
+#
+# This banner can not be removed by anyone other than Mabrains Company LLC.
+##
+########################################################################################################################
+
+########################################################################################################################
 ## Mabrains Company LLC
 ##
 ## Mabrains Via Generator for Skywaters 130nm
@@ -32,7 +79,8 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
 
         #self.param("metal", self.TypeString, "Choose metal type AL or CU", default="AL")
 
-        starting_layer = self.param("starting_metal", self.TypeString, "choose the starting metal", default="metal1")
+        starting_layer = self.param("starting_metal", self.TypeString, "choose the starting metal")
+        starting_layer.add_choice("Poly",-4)
         starting_layer.add_choice("Ptap", -3)
         starting_layer.add_choice("Ntap", -2)
         starting_layer.add_choice("li", -1)
@@ -42,7 +90,7 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
         starting_layer.add_choice("metal4", 3)
         starting_layer.add_choice("metal5", 4)
 
-        ending_layer = self.param("ending_metal",self.TypeString,"choose the ending material",default = "metal1")
+        ending_layer = self.param("ending_metal",self.TypeString,"choose the ending material")
         ending_layer.add_choice("ptap", -3)
         ending_layer.add_choice("Ntap", -2)
         ending_layer.add_choice("li", -1)
@@ -55,6 +103,7 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
         self.param("width", self.TypeDouble, "width", default=1)
         self.param("length", self.TypeDouble, "length", default=1)
 
+        
         #self.param("metal", self.TypeString, "Choose metal type AL or CU", default="AL")
         #self.param("via_type", self.TypeString, "Choose via type", default="via")
 
@@ -91,9 +140,10 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
             num_cont = int((spc_cont + cont_spc) / (cont_width + cont_spc))
             free_spc = box_width - (num_cont * cont_width + (num_cont - 1) * cont_spc)
             return num_cont, free_spc
+
     def display_text_impl(self):
         # Provide a descriptive text for the cell
-        return "( Via )"
+        return "via_array"
 
     def coerce_parameters_impl(self):
 
@@ -122,6 +172,8 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
 
 
     def draw_metals(self,width,length,starting_metal,ending_metal):
+        l_poly = self.layout.layer(poly_lay_num,poly_lay_dt)
+        l_npc = self.layout.layer(npc_lay_num,npc_lay_dt)
         l_nsdm = self.layout.layer(nsdm_lay_num,nsdm_lay_dt)
         l_psdm = self.layout.layer(psdm_lay_num,psdm_lay_dt)
         l_nwell = self.layout.layer(nwell_lay_num,nwell_lay_dt)
@@ -136,17 +188,23 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
         width = width * persision
         length = length * persision
         npsdm_enc_tap = 0.125*persision
+        npc_enc = 0.1*persision
+        poly_extension = 0.09*persision
         Pass = 0
         for metal in range(starting_metal,ending_metal+1):
-            if metal == -3:
+            if metal == -4:
+                self.cell.shapes(l_poly).insert(pya.Path([pya.Point(0, 0), pya.Point(length, 0)], width+2*poly_extension))
+                self.cell.shapes(l_npc).insert(pya.Path([pya.Point(-npc_enc, 0), pya.Point(length+npc_enc, 0)], width+2*npc_enc))
+                Pass = 1
+            if metal == -3 and Pass != 1:
                 self.cell.shapes(l_tap).insert(pya.Path([pya.Point(0, 0), pya.Point(length, 0)], width))
-                self.cell.shapes(l_psdm).insert(pya.Path([pya.Point(-npsdm_enc_tap/2, 0), pya.Point(length+npsdm_enc_tap/2, 0)], width+npsdm_enc_tap))
+                self.cell.shapes(l_psdm).insert(pya.Path([pya.Point(-npsdm_enc_tap, 0), pya.Point(length+npsdm_enc_tap, 0)], width+2*npsdm_enc_tap))
                 Pass = 1
 
             if metal == -2 and Pass != 1:
                 self.cell.shapes(l_tap).insert(pya.Path([pya.Point(0, 0), pya.Point(length, 0)], width))
-                self.cell.shapes(l_nsdm).insert(pya.Path([pya.Point(-npsdm_enc_tap/2, 0), pya.Point(length+npsdm_enc_tap/2, 0)], width+npsdm_enc_tap))
-                self.cell.shapes(l_nwell).insert(pya.Path([pya.Point(-npsdm_enc_tap/2, 0), pya.Point(length+npsdm_enc_tap/2, 0)], width+npsdm_enc_tap))
+                self.cell.shapes(l_nsdm).insert(pya.Path([pya.Point(-npsdm_enc_tap, 0), pya.Point(length+npsdm_enc_tap, 0)], width+2*npsdm_enc_tap))
+                self.cell.shapes(l_nwell).insert(pya.Path([pya.Point(-npsdm_enc_tap, 0), pya.Point(length+npsdm_enc_tap, 0)], width+2*npsdm_enc_tap))
 
             if metal == -1:
                 self.cell.shapes(l_li).insert(pya.Path([pya.Point(0, 0), pya.Point(length, 0)], width))
@@ -161,6 +219,8 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
                 self.cell.shapes(l_met4).insert(pya.Path([pya.Point(0, 0),pya.Point(length,0)],width))
             if metal == 4:
                 self.cell.shapes(l_met5).insert(pya.Path([pya.Point(0, 0), pya.Point(length, 0)], width))
+
+        self.cell.flatten(1)
 
 
     def draw_vias(self,width,length,starting_metal,ending_metal):
@@ -202,12 +262,17 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
             AL_via2 = pya.Box(0, 0, via2_size, via2_size )
             AL_via3 = pya.Box(0, 0, via3_size , via3_size)
             AL_via4 = pya.Box(0, 0, via4_size, via4_size)
-
-
-
+            licon_cell = self.layout.create_cell("licon")
+            mcon_cell = self.layout.create_cell("mcon")
+            via_cell = self.layout.create_cell("via")
+            via2_cell = self.layout.create_cell("via2")
+            via3_cell = self.layout.create_cell("via3")
+            via4_cell = self.layout.create_cell("via4")
+            if starting_metal == -4:
+                met_licon_enc_1 = 0.05*persision
+                met_licon_enc_2 = 0.08*persision
             for i in range(starting_metal, ending_metal):
                 if i == -2:
-                    licon_cell = self.layout.create_cell("licon")
                     licon_cell.shapes(l_licon).insert(licon_Via)
                     num_licon_1, licon_free_spc_1 = self.number_spc_contacts(width, met_licon_enc_1, licon_spc, licon_size)
                     num_licon_2, licon_free_spc_2 = self.number_spc_contacts(length, met_licon_enc_2, licon_spc, licon_size)
@@ -217,9 +282,10 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
                                                 num_licon_2, num_licon_1)
 
                     self.cell.insert(licon_arr)
+                    # licon_cell.clear() 
 
                 if i == -1:
-                    mcon_cell = self.layout.create_cell("mcon")
+                    
                     mcon_cell.shapes(l_mcon).insert(licon_Via)
                     num_mcon_1, mcon_free_spc_1 = self.number_spc_contacts(width, met_mcon_enc_1, mcon_spc, mcon_size)
                     num_mcon_2, mcon_free_spc_2 = self.number_spc_contacts(length, met_mcon_enc_2, mcon_spc, mcon_size)
@@ -229,8 +295,9 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
                                                 num_mcon_2, num_mcon_1)
 
                     self.cell.insert(mcon_arr)
+                    # mcon_cell.delete()
                 if i == 0:
-                    via_cell = self.layout.create_cell("via")
+                    
                     via_cell.shapes(l_via).insert(AL_via)
                     num_via_1,via_free_spc_1 = self.number_spc_contacts(width,met_via_enc_1,via_spc,via_size)
                     num_via_2,via_free_spc_2 = self.number_spc_contacts(length,met_via_enc_2,via_spc,via_size)
@@ -238,6 +305,7 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
                                       pya.Vector(via_spc+via_size, 0), pya.Vector(0, via_spc+via_size),num_via_2,num_via_1)
 
                     self.cell.insert(via_arr)
+                    # via_cell.delete()
 
 
 
@@ -246,7 +314,7 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
 
                     #self.cell.shapes(l_met2).insert(pya.Path([pya.Point(0, 0), pya.Point(length, 0)], width))
                 if i == 1:
-                    via2_cell = self.layout.create_cell("via2")
+                    
                     via2_cell.shapes(l_via2).insert(AL_via2)
                     num_via2_1, via2_free_spc_1 = self.number_spc_contacts(width, met_via2_enc_1, via2_spc, via2_size)
                     num_via2_2, via2_free_spc_2 = self.number_spc_contacts(length, met_via2_enc_2, via2_spc, via2_size)
@@ -256,8 +324,9 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
                                                 num_via2_2, num_via2_1)
 
                     self.cell.insert(via2_arr)
+                    # via2_cell.delete()
                 if i == 2:
-                    via3_cell = self.layout.create_cell("via3")
+                    
                     via3_cell.shapes(l_via3).insert(AL_via3)
                     num_via3_1, via3_free_spc_1 = self.number_spc_contacts(width, met_via3_enc_1, via3_spc, via3_size)
                     num_via3_2, via3_free_spc_2 = self.number_spc_contacts(length, met_via3_enc_2, via3_spc, via3_size)
@@ -268,9 +337,10 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
                                                  num_via3_2, num_via3_1)
 
                     self.cell.insert(via3_arr)
+                    # via3_cell.delete()
                     pass
                 if i == 3:
-                    via4_cell = self.layout.create_cell("via4")
+                    
                     via4_cell.shapes(l_via4).insert(AL_via4)
                     num_via4_1, via4_free_spc_1 = self.number_spc_contacts(width, met_via4_enc, via4_spc, via4_size)
                     num_via4_2, via4_free_spc_2 = self.number_spc_contacts(length, met_via4_enc, via4_spc, via4_size)
@@ -280,6 +350,21 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
                                                  pya.Vector(0, via4_spc + via4_size),
                                                  num_via4_2, num_via4_1)
                     self.cell.insert(via4_arr)
+                    # via4_cell.delete()
+
+            # via_cell.clear()
+            # self.cell.flatten(1)
+
+            self.layout.convert_cell_to_static(licon_cell.cell_index())
+            self.layout.convert_cell_to_static(mcon_cell.cell_index())
+            self.layout.convert_cell_to_static(via_cell.cell_index())
+            self.layout.convert_cell_to_static(via2_cell.cell_index())
+            self.layout.convert_cell_to_static(via3_cell.cell_index())
+            self.layout.convert_cell_to_static(via4_cell.cell_index())
+
+
+            
+                
 
 
 
@@ -295,7 +380,10 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
         # create the shape
         self.draw_metals(self.width,self.length,self.starting_metal,self.ending_metal)
         self.draw_vias(self.width,self.length,self.starting_metal,self.ending_metal)
-
+        self.cell.flatten(1)
+        self.layout.cleanup()
+        
+        
 
 
 
