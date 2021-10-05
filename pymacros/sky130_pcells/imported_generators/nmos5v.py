@@ -46,69 +46,67 @@
 ########################################################################################################################
 
 ########################################################################################################################
-## Mabrains Company LLC
+# Mabrains Company LLC
 ##
-## Mabrains Pcells Generators for Klayout for Skywaters 130nm
+# Mabrains NMOS 5v Generator for Skywaters 130nm
 ########################################################################################################################
-
+from generators.klayout.layers_definiations import *
+from generators.klayout.nmos18 import *
 import pya
-
-# from .via import ViaGenerator
-from .via_new import Via_newGenerator
-from .nmos18 import NMOS18
-from .pmos18 import PMOS18
-from .circle import Circle
-from .polyres import PolyRes
-from .inductor import IndGenerator
-from .rectangular_shielding import rectangular_shielding_Generator
-from .triangular_shielding import triangular_shielding_Generator
-from .diff_square_inductor import diff_squar_ind_Generator
-from .single_octagon_ind import single_octagon_ind_Generator
-from .new_single_octagon_ind import new_single_octagon_Generator
-from .diff_octagon import diff_octagon_ind_Generator
-from .nmos5d10 import nmos5d10_gen
-from .pmos5d10 import pmos5d10_gen
-from .mimcap_1 import mimcap_1_gen
-from .mimcap_2 import mimcap_2_gen
-
-from .layers_definiations import *
-
-class Sky130(pya.Library):
-    """
-    The library where we will put the PCell into
-    """
-
-    def __init__(self):
-        # Set the description
-        self.description = "Skywaters 130nm Pcells"
-
-        # Create the PCell declarations
-        # self.layout().register_pcell("via", ViaGenerator())
-        self.layout().register_pcell("via_new", Via_newGenerator())
-        self.layout().register_pcell("nmos18", NMOS18())
-        self.layout().register_pcell("Circle", Circle())
-        self.layout().register_pcell("pmos18", PMOS18())
-        self.layout().register_pcell("poly_res", PolyRes())
-        self.layout().register_pcell("inductor", IndGenerator())
-        self.layout().register_pcell("rectangular_shielding", rectangular_shielding_Generator())
-        self.layout().register_pcell("triangular_shielding", triangular_shielding_Generator())
-        self.layout().register_pcell("diff_square_inductor", diff_squar_ind_Generator())
-        self.layout().register_pcell("diff_octagon_inductor", diff_octagon_ind_Generator())
-        self.layout().register_pcell("single_octagon_ind", single_octagon_ind_Generator())
-        self.layout().register_pcell("new_single_octagon_ind", new_single_octagon_Generator())
-        self.layout().register_pcell("nmos5d10", nmos5d10_gen())
-        self.layout().register_pcell("pmos5d10", pmos5d10_gen())
-        self.layout().register_pcell("mimcap_1", mimcap_1_gen())
-        self.layout().register_pcell("mimcap_2", mimcap_2_gen())
+import math
+import os
+import sys
 
 
+class nmos5(nmos18_device):
+    diff_hvntm_enc = 0.185
+    hvi_extension = 0.06
+
+    def __init__(self, w=0.5, l=0.5, nf=1, gr=1,
+                 dsa=1,
+                 connection=0,
+                 n=1,
+                 x_offest=0,
+                 y_offest=0,
+                 connection_labels=1,
+                 conn_num="0",
+                 gate_connection="gate_connection_",
+                 gate_connection_up="gate_connection_up_",
+                 gate_connection_down="gate_connection_down_",
+                 drain_connection="drain_connection_",
+                 source_connection="source_connection_",
+                 layout=None):
+        super().__init__(w=w, l=l, nf=nf, gr=gr, dsa=dsa, connection=connection, 
+                        n=n, x_offest=x_offest, y_offest=y_offest, conn_num=conn_num, gate_connection=gate_connection,
+                         gate_connection_up=gate_connection_up, gate_connection_down=gate_connection_down, drain_connection=drain_connection, 
+                         source_connection=source_connection, layout=layout,connection_labels=connection_labels)
+        self.l_hvntm = self.layout.layer(hvntm_lay_num, hvntm_lay_dt)
+        self.l_hvi = self.layout.layer(hvi_lay_num, hvi_lay_dt)
+        self.cell_str = "nmos5_w" + str(self.w).replace(".", "p") + "u_l" + str(self.l).replace(".", "p") + "u_nf" + str(
+            self.nf) + "_drain_area" + str(self.dsa) + "_gate_connection" + str(self.connection) + "alt" + str(self.n)
+        self.percision = 1/self.layout.dbu
+
+    def draw_guard_ring(self, layout, x, y, guard_width, guard_height, precision, cell, tap_width=0.29):
+        return super().draw_guard_ring(layout, x, y, guard_width, guard_height, precision, tap_width=tap_width, cell=cell)
+
+    def draw_nmos5(self):
+        self.nmos_cell = super().draw_nmos()
+        self.nmos_cell.shapes(self.l_hvntm).insert(
+            self.diff_box.enlarge(nmos5.diff_hvntm_enc*1000, nmos5.diff_hvntm_enc*1000))
+        self.nmos_cell.shapes(self.l_hvi).insert(self.nmos_cell.bbox().enlarge(
+            nmos5.hvi_extension*1000, nmos5.hvi_extension*1000))
+
+        return self.nmos_cell
 
 
+# layout_obj = pya.Layout()
+# nmos_5_instance = nmos5(layout=layout_obj)
+# cell_name = nmos_5_instance.draw_nmos5()
+# top_cell = top_cell = layout_obj.create_cell("TOP")
 
+# write_cells = pya.CellInstArray(cell_name.cell_index(), pya.Trans(pya.Point(3000, 0)),
+#                                 pya.Vector(0, 0), pya.Vector(0, 0), 1, 1)
 
+# top_cell.insert(write_cells)
 
-
-
-
-        # Register us with the name "MyLib".
-        self.register("SKY130")
+# layout_obj.write("nmos_5v.gds")
