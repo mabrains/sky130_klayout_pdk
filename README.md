@@ -38,8 +38,8 @@ To use this repo, you need to do the following:
 | mimcap_2              | :heavy_check_mark:           | :heavy_check_mark:      | :heavy_check_mark:      | 122             | Semi automated         |
 | npn                   | :heavy_check_mark:           | :heavy_check_mark:      | :heavy_check_mark:      | 2               | Semi automated         |
 | pnp                   | :heavy_check_mark:           | :heavy_check_mark:      | :heavy_check_mark:      | 2               | Semi automated         |
-| poly_res              | :heavy_check_mark:           | :heavy_check_mark:      | :x:   | 113             | Semi automated         |
-| via_generator         | :heavy_check_mark:           | :heavy_check_mark:      | N.A           | 10              | Manual                 |
+| poly_res              | :heavy_check_mark:           | :heavy_check_mark:      | not_perfect   | 113             | Semi automated         |
+| via_generator         | :heavy_check_mark:           | :heavy_check_mark:      | :x:           | 10              | Manual                 |
 | Single_inductor       | :heavy_check_mark:           | not perfect   | :x:   | 5               | Manual                 |
 | rectangular_shielding | :heavy_check_mark:           | not perfect   | :x:   | 5               | Manual                 |
 | diff_octagon_inductor | :heavy_check_mark:           | not perfect   | :x:   | 5               | Manual                 |
