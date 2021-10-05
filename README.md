@@ -30,22 +30,22 @@ To use this repo, you need to do the following:
  ## Status
 | Device Name           | Status        | DRC           | LVS           | Number of Cases | Method of verification |
 |-----------------------|---------------|---------------|---------------|-----------------|------------------------|
-| Nmos 1.8v             | :white_check_mark:           | complete      | complete      | 163             | Semi automated         |
-| pmos 1.8v             | Com           | complete      | complete      | 163             | Semi automated         |
-| nmos 5v               | com           | complete      | complete      | 90              | Semi automated         |
-| pmos 5v               | com           | complete      | complete      | 90              | Semi automated         |
-| mimcap_1              | com           | complete      | complete      | 122             | Semi automated         |
-| mimcap_2              | com           | complete      | complete      | 122             | Semi automated         |
-| npn                   | com           | complete      | complete      | 2               | Semi automated         |
-| pnp                   | com           | complete      | complete      | 2               | Semi automated         |
-| poly_res              | com           | complete      | not complete  | 113             | Semi automated         |
-| via_generator         | com           | complete      | N.A           | 10              | Manual                 |
-| Single_inductor       | com           | not perfect   | not complete  | 5               | Manual                 |
-| rectangular_shielding | com           | not perfect   | not complete  | 5               | Manual                 |
-| diff_octagon_inductor | com           | not perfect   | not complete  | 5               | Manual                 |
-| n-diode               | N.A           | not completed | not completed | N.A             | N.A                    |
-| p-diode               | N.A           | not completed | not completed | N.A             | N.A                    |
-| diff_square_inductor  | com           | not perfect   | not complete  | 5               | Manual                 |
-| nmos 1.8 lvt          | not completed | not complete  | not complete  | N.A             | N.A                    |
-| diff-resistor         | not completed | not completed | not completed | N.A             | N.A                    |
+| Nmos 1.8v             | :heavy_check_mark:           | :heavy_check_mark:      | :heavy_check_mark:      | 163             | Semi automated         |
+| pmos 1.8v             | :heavy_check_mark:           | :heavy_check_mark:      | :heavy_check_mark:      | 163             | Semi automated         |
+| nmos 5v               | :heavy_check_mark:           | :heavy_check_mark:      | :heavy_check_mark:      | 90              | Semi automated         |
+| pmos 5v               | :heavy_check_mark:           | :heavy_check_mark:      | :heavy_check_mark:      | 90              | Semi automated         |
+| mimcap_1              | :heavy_check_mark:           | :heavy_check_mark:      | complete      | 122             | Semi automated         |
+| mimcap_2              | :heavy_check_mark:           | :heavy_check_mark:      | :heavy_check_mark:      | 122             | Semi automated         |
+| npn                   | :heavy_check_mark:           | :heavy_check_mark:      | :heavy_check_mark:      | 2               | Semi automated         |
+| pnp                   | :heavy_check_mark:           | :heavy_check_mark:      | :heavy_check_mark:      | 2               | Semi automated         |
+| poly_res              | :heavy_check_mark:           | :heavy_check_mark:      | not complete  | 113             | Semi automated         |
+| via_generator         | :heavy_check_mark:           | :heavy_check_mark:      | N.A           | 10              | Manual                 |
+| Single_inductor       | :heavy_check_mark:           | not perfect   | not complete  | 5               | Manual                 |
+| rectangular_shielding | :heavy_check_mark:           | not perfect   | not complete  | 5               | Manual                 |
+| diff_octagon_inductor | :heavy_check_mark:           | not perfect   | not complete  | 5               | Manual                 |
+| n-diode               | :x:          | :x: | :x: | :x:            | :x:                   |
+| p-diode               | :x:           | :x: | :x: | :x:            | :x:                    |
+| diff_square_inductor  | :heavy_check_mark:           | not perfect   | :x:  | 5               | Manual                 |
+| nmos 1.8 lvt          | :x: | :x:  | :x:  | N.A             | N.A                    |
+| diff-resistor         | :x: | :x: | :x: | :x:            | :x:                    |
  
