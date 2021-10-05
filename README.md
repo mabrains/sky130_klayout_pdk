@@ -34,18 +34,18 @@ To use this repo, you need to do the following:
 | pmos 1.8v             | :heavy_check_mark:           | :heavy_check_mark:      | :heavy_check_mark:      | 163             | Semi automated         |
 | nmos 5v               | :heavy_check_mark:           | :heavy_check_mark:      | :heavy_check_mark:      | 90              | Semi automated         |
 | pmos 5v               | :heavy_check_mark:           | :heavy_check_mark:      | :heavy_check_mark:      | 90              | Semi automated         |
-| mimcap_1              | :heavy_check_mark:           | :heavy_check_mark:      | complete      | 122             | Semi automated         |
+| mimcap_1              | :heavy_check_mark:           | :heavy_check_mark:      | :heavy_check_mark:      | 122             | Semi automated         |
 | mimcap_2              | :heavy_check_mark:           | :heavy_check_mark:      | :heavy_check_mark:      | 122             | Semi automated         |
 | npn                   | :heavy_check_mark:           | :heavy_check_mark:      | :heavy_check_mark:      | 2               | Semi automated         |
 | pnp                   | :heavy_check_mark:           | :heavy_check_mark:      | :heavy_check_mark:      | 2               | Semi automated         |
-| poly_res              | :heavy_check_mark:           | :heavy_check_mark:      | not complete  | 113             | Semi automated         |
+| poly_res              | :heavy_check_mark:           | :heavy_check_mark:      | :x:   | 113             | Semi automated         |
 | via_generator         | :heavy_check_mark:           | :heavy_check_mark:      | N.A           | 10              | Manual                 |
-| Single_inductor       | :heavy_check_mark:           | not perfect   | not complete  | 5               | Manual                 |
-| rectangular_shielding | :heavy_check_mark:           | not perfect   | not complete  | 5               | Manual                 |
-| diff_octagon_inductor | :heavy_check_mark:           | not perfect   | not complete  | 5               | Manual                 |
+| Single_inductor       | :heavy_check_mark:           | not perfect   | :x:   | 5               | Manual                 |
+| rectangular_shielding | :heavy_check_mark:           | not perfect   | :x:   | 5               | Manual                 |
+| diff_octagon_inductor | :heavy_check_mark:           | not perfect   | :x:   | 5               | Manual                 |
 | n-diode               | :x:          | :x: | :x: | :x:            | :x:                   |
 | p-diode               | :x:           | :x: | :x: | :x:            | :x:                    |
 | diff_square_inductor  | :heavy_check_mark:           | not perfect   | :x:  | 5               | Manual                 |
-| nmos 1.8 lvt          | :x: | :x:  | :x:  | N.A             | N.A                    |
+| nmos 1.8 lvt          | :x: | :x:  | :x:  | :x:             | :x:                    |
 | diff-resistor         | :x: | :x: | :x: | :x:            | :x:                    |
  
