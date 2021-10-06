@@ -47,11 +47,11 @@
 
 
 import pya
-import generators.klayout.nmos18 as nmos
-from generators.klayout.layers_definiations import *
+
+from .layers_definiations import *
 import os
-repo_path = os.environ['automation_repo']
-gds_path = repo_path+"/generators/klayout/"
+USER = os.environ['USER']
+gds_path = "/home/"+USER+"/.klayout/tech/sky130/pymacros/sky130_pcells/imported_generators/"
 
 class pnp():
 
@@ -67,7 +67,7 @@ class pnp():
         if self.device_name == "pnp_w3p4_l3p4":
             self.layout.read( gds_path +
                              self.device_name+".gds")
-            self.cell_name = "sky130_fd_pr__pnp_05v5_W3p40L3p40"
+            self.cell_name = "sky130_fd_pr__rf_pnp_05v5_W3p40L3p40"
         elif self.device_name == "pnp_w0p68_l0p68":
             self.layout.read( gds_path +
                              self.device_name+".gds")

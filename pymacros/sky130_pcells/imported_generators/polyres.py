@@ -52,7 +52,7 @@
 ########################################################################################################################
 import pya
 import math
-from generators.klayout.layers_definiations import *
+from .layers_definiations import *
 
 
 class PolyRes:

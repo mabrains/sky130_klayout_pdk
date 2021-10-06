@@ -70,6 +70,8 @@ from .nmos5d10 import nmos5d10_gen
 from .pmos5d10 import pmos5d10_gen
 from .mimcap_1 import mimcap_1_gen
 from .mimcap_2 import mimcap_2_gen
+from .pnp_gen import pnp_bjt
+
 
 from .layers_definiations import *
 
@@ -100,6 +102,7 @@ class Sky130(pya.Library):
         self.layout().register_pcell("pmos5d10", pmos5d10_gen())
         self.layout().register_pcell("mimcap_1", mimcap_1_gen())
         self.layout().register_pcell("mimcap_2", mimcap_2_gen())
+        self.layout().register_pcell("BNB BJT", pnp_bjt())
 
 
 
