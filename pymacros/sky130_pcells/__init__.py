@@ -58,7 +58,7 @@ from .via_new import Via_newGenerator
 from .nmos18 import NMOS18
 from .pmos18 import PMOS18
 from .circle import Circle
-from .polyres import PolyRes
+from .polyres import PolyRes_gen
 from .inductor import IndGenerator
 from .rectangular_shielding import rectangular_shielding_Generator
 from .triangular_shielding import triangular_shielding_Generator
@@ -90,7 +90,7 @@ class Sky130(pya.Library):
         self.layout().register_pcell("nmos18", NMOS18())
         self.layout().register_pcell("Circle", Circle())
         self.layout().register_pcell("pmos18", PMOS18())
-        self.layout().register_pcell("poly_res", PolyRes())
+        self.layout().register_pcell("poly_res", PolyRes_gen())
         self.layout().register_pcell("inductor", IndGenerator())
         self.layout().register_pcell("rectangular_shielding", rectangular_shielding_Generator())
         self.layout().register_pcell("triangular_shielding", triangular_shielding_Generator())

@@ -133,6 +133,7 @@ class nmos18_device:
                  gate_connection_down="gate_connection_down_",
                  drain_connection="drain_connection_",
                  source_connection="source_connection_",
+                 connected_gates = 1,
                  layout=None):
         self.w = w
         self.l = l
@@ -140,6 +141,7 @@ class nmos18_device:
         self.gr = gr
         self.dsa = dsa
         self.connection = connection
+        
         self.n = n
         self.x_offest = x_offest
         self.y_offest = y_offest
@@ -150,6 +152,7 @@ class nmos18_device:
         self.drain_connection = drain_connection
         self.source_connection = source_connection
         self.layout = layout
+        self.connected_gates = connected_gates
         self.connection_labels = connection_labels
         self.l_diff_implant = self.layout.layer(nsdm_lay_num, nsdm_lay_dt)
         self.l_guard = self.layout.layer(
@@ -407,6 +410,7 @@ class nmos18_device:
         conn_num : number of the connection 
         """
         # Netnames
+        print(self.connection)
         if self.gate_connection_up == "gate_connection_up_":
             gate_connection_text_up = self.gate_connection_up + \
                 str(self.conn_num)
@@ -452,7 +456,7 @@ class nmos18_device:
         if self.dsa > 8:
             raise max_drain_source_area
 
-        if self.connection != 1 and self.connection != 0 and self.connection != 2 and self.connection != 3:
+        if self.connection != 1 and self.connection != 0 and self.connection != 2 and self.connection != 3 and self.connection != 4:
             raise gate_connection_error
 
         if self.connection == 2 and self.nf % self.n != 0:
@@ -627,8 +631,8 @@ class nmos18_device:
         neck_box_down = pya.Box(diffusion_width, -polylicon_spc_diff, channel_length + diffusion_width,
                                 -poly_diff_min_enc)
         # licon_box_down = pya.Box(contact_gate_box_down.center().x - licon_size/2, contact_gate_box_down.center().y-(licon_size/2),contact_gate_box_down.center().x + licon_size/2,contact_gate_box_down.center().y + licon_size/2)
-        npc_box_down = pya.Box(contact_gate_box_down.p1.x - npc_enc_gate, contact_gate_box_down.p1.y - npc_enc_gate,
-                               contact_gate_box_down.p2.x + npc_enc_gate, contact_gate_box_down.p2.y + npc_enc_gate)
+        npc_box_down = pya.Box(contact_gate_box_down.p1.x - 1.6*npc_enc_gate, contact_gate_box_down.p1.y - npc_enc_gate,
+                               contact_gate_box_down.p2.x + 1.6*npc_enc_gate, contact_gate_box_down.p2.y + npc_enc_gate)
         li_box_down = pya.Box(diff_box.p1.x, contact_gate_box_down.p1.y,
                               diff_box.p1.x + multipliers * diffusion_total_width + (
                                   2 * multipliers - 2) * npsdm_enc_diff + (multipliers - 1) * npsdm_spc,
@@ -742,6 +746,9 @@ class nmos18_device:
         self.nmos_cell.shapes(self.l_diff_implant).insert(nsdm_box)
         # if mos_type == 'p':
         # self.nmos_cell.shapes(l_psdm).insert(nsdm_box)
+        if self.connected_gates == 0:
+            li_box_down = contact_gate_box_down
+            li_box_up = contact_gate_box_up
         num_ver_mcon_gates, free_spc_mcon_gates_v = self.number_spc_contacts(li_box_down.height(), mcon_m1_enc, mcon_spc,
                                                                              mcon_size)
         num_hor_mcon_gates, free_spc_mcon_gates_h = self.number_spc_contacts(li_box_down.width(), mcon_m1_enc_adjacent, mcon_spc,
@@ -774,9 +781,12 @@ class nmos18_device:
 
                     p1_x += 2 * licon_size
                     p2_x += 2 * licon_size
-
-                self.nmos_cell.shapes(l_li).insert(li_box_down)
-                self.nmos_cell.shapes(l_met1).insert(li_box_down)
+                if self.connected_gates == 0: # the gate has contacts but no connection
+                    down_gate_connection.shapes(l_li).insert(contact_gate_box_down)
+                    down_gate_connection.shapes(l_met1).insert(contact_gate_box_down)
+                else:
+                    self.nmos_cell.shapes(l_li).insert(li_box_down)
+                    self.nmos_cell.shapes(l_met1).insert(li_box_down)
                 down_gate_connection.shapes(l_npc).insert(npc_box_down)
 
                 x_mcon_gates = li_box_down.p1.x + free_spc_mcon_gates_h / 2
@@ -787,13 +797,19 @@ class nmos18_device:
                     x1_mcon_gates = x_mcon_gates + mcon_size
                     mcon_box_gate = pya.Box(
                         x_mcon_gates, y_mcon_gates, x1_mcon_gates, y1_mcon_gates)
-                    self.nmos_cell.shapes(l_mcon).insert(mcon_box_gate)
+                    if self.connected_gates == 0: # the gate has contacts but no connection
+                        down_gate_connection.shapes(l_mcon).insert(mcon_box_gate)
+                    else:    
+                        self.nmos_cell.shapes(l_mcon).insert(mcon_box_gate)
                     for mcon1 in range(num_ver_mcon_gates - 1):
                         y_mcon_gates += mcon_size + mcon_spc
                         y1_mcon_gates += mcon_size + mcon_spc
                         mcon_box_gate = pya.Box(
                             x_mcon_gates, y_mcon_gates, x1_mcon_gates, y1_mcon_gates)
-                        self.nmos_cell.shapes(l_mcon).insert(mcon_box_gate)
+                        if self.connected_gates == 0: # the gate has contacts but no connection
+                            down_gate_connection.shapes(l_mcon).insert(mcon_box_gate)
+                        else:
+                            self.nmos_cell.shapes(l_mcon).insert(mcon_box_gate)
                     y_mcon_gates -= (num_ver_mcon_gates - 1) * \
                         mcon_size + (num_ver_mcon_gates - 1) * mcon_spc
                     y1_mcon_gates -= (num_ver_mcon_gates - 1) * \
@@ -819,9 +835,13 @@ class nmos18_device:
                                                 li_box_up.center().y)
                 if self.connection_labels:
                     self.nmos_cell.shapes(l_met1_label).insert(gate_connection_text_up)
-
-                self.nmos_cell.shapes(l_li).insert(li_box_up)
-                self.nmos_cell.shapes(l_met1).insert(li_box_up)
+                if self.connected_gates == 0: # the gate has contacts but no connection
+                    li_box_up = contact_gate_box_up
+                    up_gate_connection.shapes(l_li).insert(contact_gate_box_up)
+                    up_gate_connection.shapes(l_met1).insert(contact_gate_box_up)
+                else:
+                    self.nmos_cell.shapes(l_li).insert(li_box_up)
+                    self.nmos_cell.shapes(l_met1).insert(li_box_up)
                 for licon_ct in range(num_horizontal_licon_gate):
                     licon_box_up = pya.Box(p1_x, p1_y, p2_x, p2_y)
 
@@ -844,13 +864,19 @@ class nmos18_device:
                     x1_mcon_gates = x_mcon_gates + mcon_size
                     mcon_box_gate = pya.Box(
                         x_mcon_gates, y_mcon_gates, x1_mcon_gates, y1_mcon_gates)
-                    self.nmos_cell.shapes(l_mcon).insert(mcon_box_gate)
+                    if self.connected_gates == 0 :
+                        up_gate_connection.shapes(l_mcon).insert(mcon_box_gate)
+                    else:
+                        self.nmos_cell.shapes(l_mcon).insert(mcon_box_gate)
                     for mcon1 in range(num_ver_mcon_gates - 1):
                         y_mcon_gates += mcon_size + mcon_spc
                         y1_mcon_gates += mcon_size + mcon_spc
                         mcon_box_gate = pya.Box(
                             x_mcon_gates, y_mcon_gates, x1_mcon_gates, y1_mcon_gates)
-                        self.nmos_cell.shapes(l_mcon).insert(mcon_box_gate)
+                        if self.connected_gates == 0 :
+                            up_gate_connection.shapes(l_mcon).insert(mcon_box_gate) 
+                        else:
+                            self.nmos_cell.shapes(l_mcon).insert(mcon_box_gate)
                     y_mcon_gates -= (num_ver_mcon_gates - 1) * \
                         mcon_size + (num_ver_mcon_gates - 1) * mcon_spc
                     y1_mcon_gates -= (num_ver_mcon_gates - 1) * \

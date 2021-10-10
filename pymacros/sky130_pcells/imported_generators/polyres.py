@@ -65,6 +65,7 @@ class PolyRes:
                  rx=1, ry=1,
                  gr=0, series=0,
                  p_label="", n_label=""
+                 ,connection_labels=1
                  ):
 
         self.layout = layout
@@ -84,6 +85,7 @@ class PolyRes:
         self.psdm_spacing = 0.38
         self.psdm_enclosure = 0.11
         self. urpm_enclosure = 0.2
+        self.connection_labels = connection_labels
 
         # layers_definations
         self.l_poly = self.layout.layer(poly_lay_num, poly_lay_dt)  # Poly
@@ -312,15 +314,17 @@ class PolyRes:
             upper_text = pya.Text(
                 self.p_label, upper_m1_box.center().x, upper_m1_box.center().y)
             self.upper_label_box = pya.Box(upper_m1_box.p1, upper_m1_box.p2)
-            self.cell.shapes(self.l_met1_label).insert(upper_text)
-            self.cell.shapes(self.l_met1_pin).insert(self.upper_label_box)
+            if self.connection_labels:
+                self.cell.shapes(self.l_met1_label).insert(upper_text)
+                self.cell.shapes(self.l_met1_pin).insert(self.upper_label_box)
 
         if label_location == 'lower' or self.both_labels == 1:
             lower_text = pya.Text(
                 self.n_label, lower_m1_box.center().x, lower_m1_box.center().y)
             self.lower_label_box = pya.Box(lower_m1_box.p1, lower_m1_box.p2)
-            self.cell.shapes(self.l_met1_label).insert(lower_text)
-            self.cell.shapes(self.l_met1_pin).insert(self.lower_label_box)
+            if self.connection_labels:
+                self.cell.shapes(self.l_met1_label).insert(lower_text)
+                self.cell.shapes(self.l_met1_pin).insert(self.lower_label_box)
 
     def draw_one_licon(self, lfx, start_x, precision, licon_lfy1, licon_ury1, licon_lfy2, licon_ury2):
         """ Draw one pair of licon.
