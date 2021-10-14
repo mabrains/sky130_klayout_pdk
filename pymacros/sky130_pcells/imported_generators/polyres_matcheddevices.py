@@ -52,7 +52,7 @@
 ########################################################################################################################
 import pya
 import math
-from layers_definiations import *
+from .layers_definiations import *
 
 
 

@@ -47,8 +47,8 @@
 
 
 import pya
-import generators.klayout.nmos18 as nmos
-from generators.klayout.layers_definiations import *
+import nmos18 as nmos
+from .layers_definiations import *
 import os
 repo_path = os.environ['automation_repo']
 gds_path = repo_path+"/generators/klayout/"

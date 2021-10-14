@@ -44,7 +44,7 @@
 # This banner can not be removed by anyone other than Mabrains Company LLC.
 ##
 ########################################################################################################################
-from generators.klayout.layers_definiations import *
+from .layers_definiations import *
 import pya
 
 
