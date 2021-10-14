@@ -50,9 +50,9 @@
 ##
 # Mabrains NMOS 5v Generator for Skywaters 130nm
 ########################################################################################################################
-from generators.klayout import pmos18
-from generators.klayout.layers_definiations import *
-from generators.klayout.pmos18 import *
+# from generators.klayout import pmos18
+from .layers_definiations import *
+from .pmos18 import *
 import pya
 import math
 import os
@@ -76,11 +76,12 @@ class pmos5(pmos18_device):
                  drain_connection="drain_connection_",
                  source_connection="source_connection_",
                  bulk_connection="bulk_connection_",
+                 connected_gates=1,
                  layout=None):
         super().__init__(w=w, l=l, nf=nf, gr=gr, dsa=dsa, connection=connection, 
                         n=n, x_offest=x_offest, y_offest=y_offest, conn_num=conn_num, gate_connection=gate_connection,
                         gate_connection_up=gate_connection_up, gate_connection_down=gate_connection_down, drain_connection=drain_connection, 
-                        source_connection=source_connection, layout=layout,connection_labels=connection_labels)
+                        source_connection=source_connection, layout=layout,connection_labels=connection_labels,connected_gates=connected_gates)
         self.cell_str = "pmos5_w" + str(self.w).replace(".", "p") + "u_l" + str(self.l).replace(".", "p") + "u_nf" + str(
             self.nf) + "_drain_area" + str(self.dsa) + "_gate_connection" + str(self.connection) + "alt" + str(self.n)
         self.l_hvi = self.layout.layer(hvi_lay_num, hvi_lay_dt)

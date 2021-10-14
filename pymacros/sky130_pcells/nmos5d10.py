@@ -47,7 +47,7 @@
 
 import pya
 import math
-from generators.klayout.nmos5v import *
+from .imported_generators.nmos5v import *
 
 """
 This sample PCell implements a library called "MyLib" with a single PCell that
@@ -77,13 +77,16 @@ class nmos5d10_gen(pya.PCellDeclarationHelper):
         self.param("l", self.TypeDouble, "Length", default=0.15)
         self.param("nf", self.TypeInt, "Number of Fingers", default=1)
         self.param("gr", self.TypeBoolean, "guard ring", default=1)
-        self.param("dsa", self.TypeInt, "drain and source number of contacts", default=1)
+        self.param("dsa", self.TypeInt,
+                   "drain and source number of contacts", default=1)
         self.param("connection", self.TypeInt, "Connection Option", default=0)
-        self.param("n", self.TypeInt, "Alternate Factor(for Alternate Connection)", default=1)
+        self.param("n", self.TypeInt,
+                   "Alternate Factor(for Alternate Connection)", default=1)
         # connection_option.add_choice("Connection Up",0)
         # connection_option.add_choice("Connection Down",1)
         # connection_option.add_choice("Alternate connection",2)
-
+        self.param("connected_gates", self.TypeBoolean,
+                   "Connected Gates", default=1)
 
     def display_text_impl(self):
         # Provide a descriptive text for the cell
@@ -135,12 +138,10 @@ class nmos5d10_gen(pya.PCellDeclarationHelper):
 
     def produce_impl(self):
         # This is the main part of the implementation: create the layout
-        nmos5_instance = nmos5(w=self.w,l=self.l,nf=self.nf,connection=self.connection,layout=self.layout,gr=self.gr,connection_labels=0)
+        nmos5_instance = nmos5(w=self.w, l=self.l, nf=self.nf, connection=self.connection,
+                               layout=self.layout, gr=self.gr, connection_labels=0, connected_gates=self.connected_gates)
         nmos_cell = nmos5_instance.draw_nmos5()
         write_cells = pya.CellInstArray(nmos_cell.cell_index(), pya.Trans(pya.Point(0, 0)),
-                              pya.Vector(0, 0), pya.Vector(0, 0), 1, 1)
+                                        pya.Vector(0, 0), pya.Vector(0, 0), 1, 1)
         self.cell.flatten(1)
         self.cell.insert(write_cells)
-
-        
-        

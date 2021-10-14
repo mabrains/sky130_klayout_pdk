@@ -50,7 +50,7 @@
 ##
 ## Mabrains Via Generator for Skywaters 130nm
 ########################################################################################################################
-from .layers_definiations import *
+from .imported_generators.layers_definiations import *
 import pya
 import math
 import pandas as pd
@@ -79,7 +79,7 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
 
         #self.param("metal", self.TypeString, "Choose metal type AL or CU", default="AL")
 
-        starting_layer = self.param("starting_metal", self.TypeString, "choose the starting metal")
+        starting_layer = self.param("starting_metal", self.TypeString, "choose the starting metal",default=-4)
         starting_layer.add_choice("Poly",-4)
         starting_layer.add_choice("Ptap", -3)
         starting_layer.add_choice("Ntap", -2)
@@ -90,7 +90,7 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
         starting_layer.add_choice("metal4", 3)
         starting_layer.add_choice("metal5", 4)
 
-        ending_layer = self.param("ending_metal",self.TypeString,"choose the ending material")
+        ending_layer = self.param("ending_metal",self.TypeString,"choose the ending material",default=-4)
         ending_layer.add_choice("ptap", -3)
         ending_layer.add_choice("Ntap", -2)
         ending_layer.add_choice("li", -1)
@@ -102,6 +102,7 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
 
         self.param("width", self.TypeDouble, "width", default=1)
         self.param("length", self.TypeDouble, "length", default=1)
+        self.param("hv",self.TypeBoolean,"High Voltage works in case of ptap and ntap",default=False)
 
         
         #self.param("metal", self.TypeString, "Choose metal type AL or CU", default="AL")
@@ -184,12 +185,14 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
         l_met3 = self.layout.layer(met3_lay_num, met3_lay_dt)
         l_met4 = self.layout.layer(met4_lay_num, met4_lay_dt)
         l_met5 = self.layout.layer(met5_lay_num, met5_lay_dt)
+        l_hvi =  self.layout.layer(hvi_lay_num,hvi_lay_dt)
         persision = 1000
         width = width * persision
         length = length * persision
         npsdm_enc_tap = 0.125*persision
         npc_enc = 0.1*persision
         poly_extension = 0.09*persision
+        hv_enc_tap = 0.33*persision
         Pass = 0
         for metal in range(starting_metal,ending_metal+1):
             if metal == -4:
@@ -199,12 +202,19 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
             if metal == -3 and Pass != 1:
                 self.cell.shapes(l_tap).insert(pya.Path([pya.Point(0, 0), pya.Point(length, 0)], width))
                 self.cell.shapes(l_psdm).insert(pya.Path([pya.Point(-npsdm_enc_tap, 0), pya.Point(length+npsdm_enc_tap, 0)], width+2*npsdm_enc_tap))
+                if self.hv :
+                    self.cell.shapes(l_hvi).insert(pya.Path([pya.Point(-hv_enc_tap, 0), pya.Point(length+hv_enc_tap, 0)], width+2*hv_enc_tap))
                 Pass = 1
 
             if metal == -2 and Pass != 1:
                 self.cell.shapes(l_tap).insert(pya.Path([pya.Point(0, 0), pya.Point(length, 0)], width))
                 self.cell.shapes(l_nsdm).insert(pya.Path([pya.Point(-npsdm_enc_tap, 0), pya.Point(length+npsdm_enc_tap, 0)], width+2*npsdm_enc_tap))
                 self.cell.shapes(l_nwell).insert(pya.Path([pya.Point(-npsdm_enc_tap, 0), pya.Point(length+npsdm_enc_tap, 0)], width+2*npsdm_enc_tap))
+                if self.hv :
+                    self.cell.shapes(l_hvi).insert(pya.Path([pya.Point(-hv_enc_tap, 0), pya.Point(length+hv_enc_tap, 0)], width+2*hv_enc_tap))
+                    self.cell.shapes(l_nwell).insert(pya.Path([pya.Point(-hv_enc_tap, 0), pya.Point(length+hv_enc_tap, 0)], width+2*hv_enc_tap))
+                else :
+                    self.cell.shapes(l_nwell).insert(pya.Path([pya.Point(-npsdm_enc_tap, 0), pya.Point(length+npsdm_enc_tap, 0)], width+2*npsdm_enc_tap))
 
             if metal == -1:
                 self.cell.shapes(l_li).insert(pya.Path([pya.Point(0, 0), pya.Point(length, 0)], width))
@@ -262,17 +272,36 @@ class Via_newGenerator(pya.PCellDeclarationHelper):
             AL_via2 = pya.Box(0, 0, via2_size, via2_size )
             AL_via3 = pya.Box(0, 0, via3_size , via3_size)
             AL_via4 = pya.Box(0, 0, via4_size, via4_size)
-            licon_cell = self.layout.create_cell("licon")
-            mcon_cell = self.layout.create_cell("mcon")
-            via_cell = self.layout.create_cell("via")
-            via2_cell = self.layout.create_cell("via2")
-            via3_cell = self.layout.create_cell("via3")
-            via4_cell = self.layout.create_cell("via4")
+            if self.layout.cell("licon") == None :
+                licon_cell = self.layout.create_cell("licon")
+            else:
+                licon_cell = self.layout.cell("licon")
+            if self.layout.cell("mcon") == None :
+                mcon_cell = self.layout.create_cell("mcon")
+            else:
+                mcon_cell = self.layout.cell("mcon")
+            if self.layout.cell("via") == None:
+                via_cell = self.layout.create_cell("via")
+            else:
+                via_cell = self.layout.cell("via")
+            if self.layout.cell("via2") == None:
+                via2_cell = self.layout.create_cell("via2")
+            else:
+                via2_cell = self.layout.cell("via2")
+            if self.layout.cell("via3") == None:
+                via3_cell = self.layout.create_cell("via3")
+            else:
+                via3_cell = self.layout.cell("via3")
+            if self.layout.cell("via4") == None:
+                via4_cell = self.layout.create_cell("via4")
+            else:
+                via4_cell = self.layout.cell("via4")
             if starting_metal == -4:
                 met_licon_enc_1 = 0.05*persision
                 met_licon_enc_2 = 0.08*persision
             for i in range(starting_metal, ending_metal):
                 if i == -2:
+                    
                     licon_cell.shapes(l_licon).insert(licon_Via)
                     num_licon_1, licon_free_spc_1 = self.number_spc_contacts(width, met_licon_enc_1, licon_spc, licon_size)
                     num_licon_2, licon_free_spc_2 = self.number_spc_contacts(length, met_licon_enc_2, licon_spc, licon_size)

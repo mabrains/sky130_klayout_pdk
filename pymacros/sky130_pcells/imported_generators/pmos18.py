@@ -51,7 +51,7 @@
 # Mabrains PMOS 1.8V Generator for Skywaters 130nm
 ########################################################################################################################
 
-from generators.klayout.nmos18 import *
+from .nmos18 import *
 
 
 class pmos18_device(nmos18_device):
@@ -70,12 +70,13 @@ class pmos18_device(nmos18_device):
                  drain_connection="drain_connection_",
                  source_connection="source_connection_",
                  connection_labels=1,
+                 connected_gates=1,
                  layout=None):
         super().__init__(w=w, l=l, nf=nf, gr=gr, dsa=dsa, connection=connection, 
                         n=n, x_offest=x_offest, y_offest=y_offest, conn_num=conn_num, 
                         gate_connection=gate_connection,
                         gate_connection_up=gate_connection_up, gate_connection_down=gate_connection_down, drain_connection=drain_connection, 
-                        source_connection=source_connection, layout=layout,connection_labels=connection_labels)
+                        source_connection=source_connection, layout=layout,connection_labels=connection_labels,connected_gates=connected_gates)
 
         self.layout = layout
         self.percision = 1/self.layout.dbu

@@ -496,9 +496,9 @@ class nmos18_device:
         # and the channel length is low todo find the length in code
 
         diffusion_width = self.dsa * mcon_size + \
-            (self.dsa - 1) * mcon_spc + 2 * liconpoly_spc
+            (self.dsa - 1) * mcon_spc + 2 * liconpoly_spc + 0.01*PERCISION
 
-        channel_length = self.l * PERCISION
+        channel_length = int(self.l * PERCISION)
 
         if source_shared == 0:
             # if no source sharing nf = 1 and repetition become multiplier
@@ -691,6 +691,8 @@ class nmos18_device:
                                contact_gate_box_up.center().y + licon_size / 2)
         npc_box_up = pya.Box(contact_gate_box_up.p1.x - 1.6 * npc_enc_gate, contact_gate_box_up.p1.y - npc_enc_gate,
                              contact_gate_box_up.p2.x + 1.6 * npc_enc_gate, contact_gate_box_up.p2.y + npc_enc_gate)
+       
+
         li_path_up = pya.Path(
             [pya.Point(diff_box.p1.x, licon_box_up.center().y),
              pya.Point(diff_box.p2.x, licon_box_up.center().y)],

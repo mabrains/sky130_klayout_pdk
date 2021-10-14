@@ -50,8 +50,8 @@
 ##
 # Mabrains NMOS 5v Generator for Skywaters 130nm
 ########################################################################################################################
-from generators.klayout.layers_definiations import *
-from generators.klayout.nmos18 import *
+from .layers_definiations import *
+from .nmos18 import *
 import pya
 import math
 import os
@@ -75,11 +75,12 @@ class nmos5(nmos18_device):
                  gate_connection_down="gate_connection_down_",
                  drain_connection="drain_connection_",
                  source_connection="source_connection_",
+                 connected_gates = 1,
                  layout=None):
         super().__init__(w=w, l=l, nf=nf, gr=gr, dsa=dsa, connection=connection, 
                         n=n, x_offest=x_offest, y_offest=y_offest, conn_num=conn_num, gate_connection=gate_connection,
                          gate_connection_up=gate_connection_up, gate_connection_down=gate_connection_down, drain_connection=drain_connection, 
-                         source_connection=source_connection, layout=layout,connection_labels=connection_labels)
+                         source_connection=source_connection, layout=layout,connection_labels=connection_labels,connected_gates=connected_gates)
         self.l_hvntm = self.layout.layer(hvntm_lay_num, hvntm_lay_dt)
         self.l_hvi = self.layout.layer(hvi_lay_num, hvi_lay_dt)
         self.cell_str = "nmos5_w" + str(self.w).replace(".", "p") + "u_l" + str(self.l).replace(".", "p") + "u_nf" + str(
