@@ -48,7 +48,7 @@
 
 import pya
 import math
-from generators.klayout.mimcap import *
+from .imported_generators.mimcap import *
 
 
 
