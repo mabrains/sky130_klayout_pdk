@@ -39,7 +39,7 @@ To use this repo, you need to do the following:
 | npn                   |sky130_fd_pr__npn_05v5 |:heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | 2               | Semi automated         |
 | pnp                   |sky130_fd_pr__pnp_05v5 |:heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | 2               | Semi automated         |
 | P- poly_res              |sky130_fd_pr__res_xhigh_po |:heavy_check_mark:| :heavy_check_mark: | not_perfect   | 113        | Semi automated|
-| via_generator         | Connectivity |:heavy_check_mark:           | :heavy_check_mark:      | :x:           | 10              | Manual                 |
+| via_generator         | Connectivity |:heavy_check_mark:           | :heavy_check_mark:      | Connectivity   | 10              | Manual                 |
 | Single_inductor       | Mabrains Device |:heavy_check_mark:           | not perfect   | No LVS Available   | 5               | Manual                 |
 | rectangular_shielding | Mabrains Device |:heavy_check_mark:           | not perfect   | No LVS Available   | 5               | Manual                 |
 | diff_octagon_inductor | Mabrains Device |:heavy_check_mark:           | not perfect   | No LVS Available   | 5               | Manual                 |
