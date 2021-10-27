@@ -43,9 +43,9 @@ To use this repo, you need to do the following:
 | Single_inductor       | Mabrains Device |:heavy_check_mark:           | not perfect   | :x:   | 5               | Manual                 |
 | rectangular_shielding | Mabrains Device |:heavy_check_mark:           | not perfect   | :x:   | 5               | Manual                 |
 | diff_octagon_inductor | Mabrains Device |:heavy_check_mark:           | not perfect   | :x:   | 5               | Manual                 |
+| diff_square_inductor  | Mabrains Device |:heavy_check_mark:           | not perfect   | :x:  | 5               | Manual                 |
 | n-diode               |sky130_fd_pr__diode_pw2nd_*,sky130_fd_pr__model__parasitic_* |:x: | :x: | :x: | :x:            | :x:     |
 | p-diode               |ky130_fd_pr__diode_pd2nw_* |:x:           | :x: | :x: | :x:            | :x:                    |
-| diff_square_inductor  | :x:|:heavy_check_mark:           | not perfect   | :x:  | 5               | Manual                 |
 | nmos 1.8 lvt          |sky130_fd_pr__nfet_01v8_lvt |:x: | :x:  | :x:  | :x:     | :x:             |
 | diff-resistor         | |:x: | :x: | :x: | :x:     | :x:       |
 | mom cap               |sky130_fd_pr__cap_vpp_* |:x: | :x: | :x: | :x:     | :x:        |
