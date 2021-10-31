@@ -129,5 +129,6 @@ class mimcap_1_gen(pya.PCellDeclarationHelper):
         write_cells = pya.CellInstArray(mimcap_cell.cell_index(), pya.Trans(pya.Point(0, 0)),
                               pya.Vector(self.x_spacing*self.percision, 0), pya.Vector(0, self.y_spacing*self.percision),self.array_x , self.array_y)
         
-        self.cell.flatten(1)
+        
         self.cell.insert(write_cells)
+        self.cell.flatten(1)

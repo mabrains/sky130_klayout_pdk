@@ -120,7 +120,7 @@ class NMOS18(pya.PCellDeclarationHelper):
         return pya.Trans(self.shape.bbox().center())
 
     def produce_impl(self):
-        nmos18_instance = nmos18_device(w=self.w, l=self.l, nf=self.nf, connection=self.connection,
+        nmos18_instance = nmos18_device(w=self.w, l=self.l, nf=self.nf, connection=int(self.connection),
                                         layout=self.layout, gr=self.gr, connection_labels=0, dsa=self.dsa,connected_gates=self.connected_gates)
         nmos_cell = nmos18_instance.draw_nmos()
 

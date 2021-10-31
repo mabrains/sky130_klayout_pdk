@@ -144,5 +144,6 @@ class pmos5d10_gen(pya.PCellDeclarationHelper):
 
         write_cells = pya.CellInstArray(pmos_cell.cell_index(), pya.Trans(pya.Point(0, 0)),
                                         pya.Vector(0, 0), pya.Vector(0, 0), 1, 1)
-        self.cell.flatten(1)
+        
         self.cell.insert(write_cells)
+        self.cell.flatten(1)

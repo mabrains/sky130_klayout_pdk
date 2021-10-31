@@ -143,5 +143,6 @@ class nmos5d10_gen(pya.PCellDeclarationHelper):
         nmos_cell = nmos5_instance.draw_nmos5()
         write_cells = pya.CellInstArray(nmos_cell.cell_index(), pya.Trans(pya.Point(0, 0)),
                                         pya.Vector(0, 0), pya.Vector(0, 0), 1, 1)
-        self.cell.flatten(1)
         self.cell.insert(write_cells)
+        self.cell.flatten(1)
+        

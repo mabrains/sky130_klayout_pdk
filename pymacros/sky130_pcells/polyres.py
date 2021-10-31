@@ -3,6 +3,7 @@
 ##
 ## Mabrains poly resistor 1.8V Generator for Skywaters 130nm
 ########################################################################################################################
+from typing import DefaultDict
 from pandas.core import series
 import pya
 import math
@@ -24,7 +25,7 @@ class PolyRes_gen(pya.PCellDeclarationHelper):
         self.param("Model", self.TypeString, "Model", default="sky130_fd_pr__res_xhigh_po",readonly=True)
         self.param("Sheet Resistance", self.TypeInt, "Sheet Resistance", default="2000",unit = "ohm/sq" ,readonly=True)
         self.R = self.param("Rtotal", self.TypeDouble, "Total Resistance", default="2", readonly=True,unit = "Kohm")
-        self.width = self.param("w", self.TypeList, "Width")  # Width
+        self.width = self.param("w", self.TypeList, "Width",default=0.35)  # Width
         self.width.add_choice("0.35", 0.35)
         self.width.add_choice("0.69", 0.69)
         self.width.add_choice("1.41", 1.41)
@@ -142,8 +143,9 @@ class PolyRes_gen(pya.PCellDeclarationHelper):
         write_cells = pya.CellInstArray(polyres_cell.cell_index(), pya.Trans(pya.Point(0, 0)),
                               pya.Vector(0, 0), pya.Vector(0, 0),1 , 1)
         
-        self.cell.flatten(1)
+        
         self.cell.insert(write_cells)
+        self.cell.flatten(1)
         self.layout.cleanup()
 
     
