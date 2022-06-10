@@ -3,7 +3,7 @@ import pya
 import os
 
 #print(os.system('pwd'))
-lay_csv_map = os.path.join(os.path.expanduser("~"), ".klayout", "tech", "sky130", "pymacros", "sky130_pcells", "gds_layers.csv")
+lay_csv_map = os.path.join(os.path.dirname(os.path.realpath(__file__)), "gds_layers.csv")
 lay_df = pd.read_csv(lay_csv_map)
 
 # print(lay_df)

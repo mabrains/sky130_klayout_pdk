@@ -7,53 +7,16 @@
 # This file is authored by:
 #           - <Mina Maksimous> <mina_maksimous@mabrains.com>
 ##
-# This code is provided solely for Mabrains use and can not be sold or reused for any other purpose by
-# any person or entity without prior authorization from Mabrains.
-##
-# NOTICE:  All information contained herein is, and remains the property of Mabrains Company LLC.
-# The intellectual and technical concepts contained herein are proprietary to Mabrains Company LLC
-# and may be covered by U.S. and Foreign Patents, patents in process, and are protected by
-# trade secret or copyright law.
-# Dissemination of this information or reproduction of this material is strictly forbidden
-# unless prior written permission is obtained
-# from Mabrains Company LLC.  Access to the source code contained herein is hereby forbidden to anyone except current
-# Mabrains Company LLC employees, managers or contractors who have executed Confidentiality and Non-disclosure
-# agreements explicitly covering such access.
-#
-##
-# The copyright notice above does not evidence any actual or intended publication or disclosure
-# of  this source code, which includes
-# information that is confidential and/or proprietary, and is a trade secret, of  Mabrains Company LLC.
-# ANY REPRODUCTION, MODIFICATION, DISTRIBUTION, PUBLIC  PERFORMANCE, OR PUBLIC DISPLAY OF OR THROUGH USE
-# OF THIS  SOURCE CODE  WITHOUT THE EXPRESS WRITTEN CONSENT OF Mabrains Company LLC IS STRICTLY PROHIBITED,
-# AND IN VIOLATION OF APPLICABLE LAWS AND INTERNATIONAL TREATIES.  THE RECEIPT OR POSSESSION OF  THIS SOURCE CODE
-# AND/OR RELATED INFORMATION DOES NOT CONVEY OR IMPLY ANY RIGHTS TO REPRODUCE, DISCLOSE OR DISTRIBUTE ITS CONTENTS,
-# OR TO MANUFACTURE, USE, OR SELL ANYTHING THAT IT  MAY DESCRIBE, IN WHOLE OR IN PART.
-##
-# Mabrains retains the full rights for the software which includes the following but not limited to: right to sell,
-# resell, repackage, distribute, creating a Mabrains Company LLC using that code, use, reuse or modify the code created.
-##
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED
-# TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
-# MABRAINS COMPANY LLC OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-# WHETHER IN AN ACTION OF CONTRACT,TORT OR OTHERWISE, ARISING FROM
-# , OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-# MABRAINS COMPANY LLC DOES NOT HOLD ANY RESPONSIBILITIES THAT MIGHT RISE DUE TO LOSE OF MONEY OR DIGITAL ASSETS USING
-# THIS SOFTWARE AND IT IS SOLELY THE RESPONSIBILITY OF THE SOFTWARE USER.
-#
-# This banner can not be removed by anyone other than Mabrains Company LLC.
-##
 ########################################################################################################################
 
 ########################################################################################################################
-## Mabrains Company LLC
+# Mabrains Company LLC
 ##
-## Mabrains poly resistor 1.8V Generator for Skywaters 130nm
+# Mabrains poly resistor 1.8V Generator for Skywaters 130nm
 ########################################################################################################################
 import pya
 import math
 from .layers_definiations import *
-
 
 
 class PolyRes:
@@ -61,16 +24,17 @@ class PolyRes:
     Mabrains poly resistor Generator for Skywaters 130nm
     """
 
-    def __init__(self,layout,
-                w=0.35,l=1,
-                rx=1,ry=1,
-                gr=0,series=0,
+    def __init__(self, layout,
+                 w=0.35, l=1,
+                 rx=1, ry=1,
+                 gr=0, series=0,
+                 p_label="", n_label=""
+                 ,connection_labels=1
+                 ):
 
-                ):
-       
         self.layout = layout
         self.w = w
-        self.l = l
+        self.l = l + 0.12
         self.rx = rx
         self.ry = ry
         self.gr = gr
@@ -79,78 +43,92 @@ class PolyRes:
         self.licon_enclosure = 0.08
         self.licon_length = 2
         self.res_spacing_x = 1.24
-        self.res_spacing_y = 0.52
+        self.res_spacing_y = 1.24
 
         self.gr_half_width = 0.255
         self.psdm_spacing = 0.38
         self.psdm_enclosure = 0.11
         self. urpm_enclosure = 0.2
-       
+        self.connection_labels = connection_labels
 
-    
-         # layers_definations
+        # layers_definations
         self.l_poly = self.layout.layer(poly_lay_num, poly_lay_dt)  # Poly
-        self.l_licon = self.layout.layer(licon_lay_num, licon_lay_dt)  # licon local interconnect
+        self.l_licon = self.layout.layer(
+            licon_lay_num, licon_lay_dt)  # licon local interconnect
         self.l_li = self.layout.layer(li_lay_num, li_lay_dt)
         self.l_mcon = self.layout.layer(mcon_lay_num, mcon_lay_dt)
         self.l_met1 = self.layout.layer(met1_lay_num, met1_lay_dt)
         self.l_urpm = self.layout.layer(urpm_lay_num, urpm_lay_dt)
-        self.l_psdm = self.layout.layer(psdm_lay_num, psdm_lay_dt)  # psdm source drain impaln
+        self.l_psdm = self.layout.layer(
+            psdm_lay_num, psdm_lay_dt)  # psdm source drain impaln
         self.l_tap = self.layout.layer(tap_lay_num, tap_lay_dt)
         self.l_npc = self.layout.layer(npc_lay_num, npc_lay_dt)
         self.l_poly_res = self.layout.layer(poly_res_lay_num, poly_res_lay_dt)
-
-        cell_str = "poly_res_w" + str(w).replace(".", "p") + "u_l" + str(l).replace(".", "p") + "u_repeatx" + str(
-        rx) + "_repeaty" + str(ry) + "_guard_ring" + str(gr) + "series_connection" + str(series)
+        self.l_met1_label = self.layout.layer(
+            met1_label_lay_num, met1_label_lay_dt)
+        self.l_met1_pin = self.layout.layer(
+            met1_pin_lay_num, met1_pin_lay_dt)
+        cell_str = "rpoly_w" + str(w).replace(".", "p") + "u_l" + str(l).replace(".", "p") + "u_rx" + str(
+            rx) + "_ry" + str(ry) + "_gr" + str(gr) + "series" + str(series)
+        self.p_label = p_label
+        self.n_label = n_label
+        self.both_labels = 0
+        self.row_both_labels = 0
         self.cell = self.layout.create_cell(cell_str)
-   
-
-   
-
-   
+        self.lower_label_box = pya.Box()
+        self.upper_label_box = pya.Box()
 
     def draw_polyres(self):
         # precision value for scaling
         PERCISION = 1/self.layout.dbu
-
-       
 
         # inputs
         # self.draw_one_finger(self.w, self.l, 0, 0, PERCISION)
         # self.draw_metal1_between(0+self.w*PERCISION, 0, PERCISION)
         lfx = 0
         lfy = 0
-        lfx_res = lfx + (self.gr_half_width + self.psdm_spacing + self.psdm_enclosure) * PERCISION
-        lfy_res = lfy + (self.gr_half_width + self.psdm_spacing + self.psdm_enclosure) * PERCISION
+        lfx_res = lfx + (self.gr_half_width +
+                         self.psdm_spacing + self.psdm_enclosure) * PERCISION
+        lfy_res = lfy + (self.gr_half_width +
+                         self.psdm_spacing + self.psdm_enclosure) * PERCISION
 
         gr_width = 2*self.gr_half_width + 2*self.psdm_spacing + 2*self.psdm_enclosure + \
-                   (self.rx - 1)*self.res_spacing_x + self.rx*self.w
+            (self.rx - 1)*self.res_spacing_x + self.rx*self.w
         gr_height = 2 * self.gr_half_width + 2 * self.psdm_spacing + 2 * self.psdm_enclosure + \
-                   (self.ry - 1) * self.res_spacing_y + self.ry*(4*self.licon_enclosure + 2*self.licon_length + self.l)
+            (self.ry - 1) * self.res_spacing_y + self.ry * \
+            (4*self.licon_enclosure + 2*self.licon_length + self.l)
         self.draw_matrix(lfx_res, lfy_res, PERCISION)
 
-        if self.rx ==1 and self.ry > 1 :
-            urpm_enclosure = ((1.27 * PERCISION - self.w * PERCISION) / 2)
+        if self.rx == 1 and self.ry > 1:
+            if self.w < 1.27:
+                urpm_enclosure = ((1.27 * PERCISION - self.w * PERCISION) / 2)
+            else:
+                urpm_enclosure = 0.2 * PERCISION
             urpm_lfx = lfx_res - urpm_enclosure
             urpm_urx = urpm_lfx + self.w*PERCISION + 2*urpm_enclosure
             urpm_lfy = lfy_res - self.urpm_enclosure * PERCISION
-            urpm_ury = urpm_lfy + (gr_height+2*self.urpm_enclosure - (2 * self.gr_half_width + 2 * self.psdm_spacing + 2 * self.psdm_enclosure)) * PERCISION
-            self.cell.shapes(self.l_urpm).insert(pya.Box(urpm_lfx, urpm_lfy, urpm_urx, urpm_ury))
+            urpm_ury = urpm_lfy + (gr_height+2*self.urpm_enclosure - (
+                2 * self.gr_half_width + 2 * self.psdm_spacing + 2 * self.psdm_enclosure)) * PERCISION
+            self.cell.shapes(self.l_urpm).insert(
+                pya.Box(urpm_lfx, urpm_lfy, urpm_urx, urpm_ury))
 
         else:
             urpm_lfx = lfx_res - self.urpm_enclosure*PERCISION
-            urpm_urx = lfx_res + ((self.rx - 1)*self.res_spacing_x + self.rx*self.w + self.urpm_enclosure)*PERCISION
+            urpm_urx = lfx_res + \
+                ((self.rx - 1)*self.res_spacing_x + self.rx *
+                 self.w + self.urpm_enclosure)*PERCISION
             urpm_lfy = lfy_res - self.urpm_enclosure * PERCISION
             urpm_ury = urpm_lfy + (gr_height + 2 * self.urpm_enclosure - (
-                        2 * self.gr_half_width + 2 * self.psdm_spacing + 2 * self.psdm_enclosure)) * PERCISION
-            self.cell.shapes(self.l_urpm).insert(pya.Box(urpm_lfx, urpm_lfy, urpm_urx, urpm_ury))
+                2 * self.gr_half_width + 2 * self.psdm_spacing + 2 * self.psdm_enclosure)) * PERCISION
+            self.cell.shapes(self.l_urpm).insert(
+                pya.Box(urpm_lfx, urpm_lfy, urpm_urx, urpm_ury))
 
         if self.gr:
             self.draw_guard_ring(lfx, lfy, gr_width, gr_height, PERCISION)
 
         return self.cell
 
-    def draw_one_finger(self, width, length, lfx, lfy, precision,m1=1):
+    def draw_one_finger(self, width, length, lfx, lfy, precision, label_location='', label=''):
         """ Draw one finger of resistor given width and starting and ending points
         =
         Parameters
@@ -169,6 +147,11 @@ class PolyRes:
 
         precision : int
             precision of grid
+
+        label_location : string
+            upper : upper label 
+            lower : lower label 
+
         """
         # **** important note all dimensions are referenced to poly box
         # ury = length + licon margin *4 + length + 2*li length
@@ -184,7 +167,8 @@ class PolyRes:
         psdm_lfy = lfy - psdm_enclosure
         psdm_urx = urx + psdm_enclosure
         psdm_ury = ury + psdm_enclosure
-        self.cell.shapes(self.l_psdm).insert(pya.Box(psdm_lfx, psdm_lfy, psdm_urx, psdm_ury))
+        self.cell.shapes(self.l_psdm).insert(
+            pya.Box(psdm_lfx, psdm_lfy, psdm_urx, psdm_ury))
 
         # draw npc box
         npc_enclosure = 0.095 * precision
@@ -192,7 +176,8 @@ class PolyRes:
         npc_lfy = lfy - npc_enclosure
         npc_urx = urx + npc_enclosure
         npc_ury = ury + npc_enclosure
-        self.cell.shapes(self.l_npc).insert(pya.Box(npc_lfx, npc_lfy, npc_urx, npc_ury))
+        self.cell.shapes(self.l_npc).insert(
+            pya.Box(npc_lfx, npc_lfy, npc_urx, npc_ury))
 
         if self.rx == 1 and self. ry == 1:
             # draw urpm box
@@ -205,10 +190,11 @@ class PolyRes:
                 urpm_lfx = lfx - urpm_enclosure
                 urpm_urx = urx + urpm_enclosure
             else:
-                urpm_enclosure = ((1.27* precision - width * precision)/2)
+                urpm_enclosure = ((1.27 * precision - width * precision)/2)
                 urpm_lfx = lfx - urpm_enclosure
                 urpm_urx = urx + urpm_enclosure
-            self.cell.shapes(self.l_urpm).insert(pya.Box(urpm_lfx, urpm_lfy, urpm_urx, urpm_ury))
+            self.cell.shapes(self.l_urpm).insert(
+                pya.Box(urpm_lfx, urpm_lfy, urpm_urx, urpm_ury))
 
         # draw licon box
         licon_enclosure = self.licon_enclosure * precision
@@ -217,56 +203,92 @@ class PolyRes:
         licon_lfy1 = lfy + licon_enclosure
         licon_ury1 = licon_lfy1 + self.licon_length * precision
 
-        licon_lfy2 = lfy + (3 * licon_enclosure + self.licon_length * precision + length * precision)
+        licon_lfy2 = lfy + (3 * licon_enclosure +
+                            self.licon_length * precision + length * precision)
         licon_ury2 = licon_lfy2 + self.licon_length * precision
         if str(width)[0:4] == "0.35":
-            self.draw_one_licon(lfx, 0.08, precision, licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
+            self.draw_one_licon(lfx, 0.08, precision,
+                                licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
         elif str(width)[0:4] == "0.69":
-            self.draw_one_licon(lfx, 0.25, precision, licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
+            self.draw_one_licon(lfx, 0.25, precision,
+                                licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
 
         elif str(width)[0:4] == "1.41":
-            self.draw_one_licon(lfx, 0.35, precision, licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
-            self.draw_one_licon(lfx, 0.88, precision, licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
+            self.draw_one_licon(lfx, 0.35, precision,
+                                licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
+            self.draw_one_licon(lfx, 0.88, precision,
+                                licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
         elif str(width)[0:4] == "2.85":
-            self.draw_one_licon(lfx, 0.418, precision, licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
-            self.draw_one_licon(lfx, 1.026, precision, licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
-            self.draw_one_licon(lfx, 1.634, precision, licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
-            self.draw_one_licon(lfx, 2.242, precision, licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
+            self.draw_one_licon(lfx, 0.418, precision,
+                                licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
+            self.draw_one_licon(lfx, 1.026, precision,
+                                licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
+            self.draw_one_licon(lfx, 1.634, precision,
+                                licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
+            self.draw_one_licon(lfx, 2.242, precision,
+                                licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
 
         elif str(width)[0:4] == "5.73":
-            self.draw_one_licon(lfx, 0.46, precision, licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
-            self.draw_one_licon(lfx, 1.11, precision, licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
-            self.draw_one_licon(lfx, 1.76, precision, licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
-            self.draw_one_licon(lfx, 2.41, precision, licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
-            self.draw_one_licon(lfx, 3.06, precision, licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
-            self.draw_one_licon(lfx, 3.71, precision, licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
-            self.draw_one_licon(lfx, 4.36, precision, licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
-            self.draw_one_licon(lfx, 5.01, precision, licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
+            self.draw_one_licon(lfx, 0.46, precision,
+                                licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
+            self.draw_one_licon(lfx, 1.11, precision,
+                                licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
+            self.draw_one_licon(lfx, 1.76, precision,
+                                licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
+            self.draw_one_licon(lfx, 2.41, precision,
+                                licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
+            self.draw_one_licon(lfx, 3.06, precision,
+                                licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
+            self.draw_one_licon(lfx, 3.71, precision,
+                                licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
+            self.draw_one_licon(lfx, 4.36, precision,
+                                licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
+            self.draw_one_licon(lfx, 5.01, precision,
+                                licon_lfy1, licon_ury1, licon_lfy2, licon_ury2)
 
         # draw polyres box
         poly_res_lfy = lfy + 2 * licon_enclosure + self.licon_length * precision
         poly_res_ury = poly_res_lfy + length * precision
-        self.cell.shapes(self.l_poly_res).insert(pya.Box(lfx, poly_res_lfy, urx, poly_res_ury))
+        self.cell.shapes(self.l_poly_res).insert(
+            pya.Box(lfx, poly_res_lfy, urx, poly_res_ury))
 
         # draw li box
-        self.cell.shapes(self.l_li).insert(pya.Box(lfx, lfy, urx, poly_res_lfy))
-        self.cell.shapes(self.l_li).insert(pya.Box(lfx, poly_res_ury, urx, ury))
+        self.cell.shapes(self.l_li).insert(
+            pya.Box(lfx, lfy, urx, poly_res_lfy))
+        self.cell.shapes(self.l_li).insert(
+            pya.Box(lfx, poly_res_ury, urx, ury))
 
         # draw mcon
-        if m1:
-            self.draw_mcon_in_li(lfx, lfy, width * precision, poly_res_lfy - lfy, precision)
-            self.draw_mcon_in_li(lfx, poly_res_ury, width * precision,  poly_res_lfy - lfy, precision)
+
+        self.draw_mcon_in_li(lfx, lfy, width * precision,
+                             poly_res_lfy - lfy, precision)
+        self.draw_mcon_in_li(lfx, poly_res_ury, width *
+                             precision,  poly_res_lfy - lfy, precision)
 
         # draw M1 box
-        if m1 :
+        lower_m1_box = pya.Box(lfx, lfy, urx, poly_res_lfy)
+        self.cell.shapes(self.l_met1).insert(
+            pya.Box(lfx, lfy, urx, poly_res_lfy))
+        upper_m1_box = pya.Box(lfx, poly_res_ury, urx, ury)
+        self.cell.shapes(self.l_met1).insert(
+            pya.Box(lfx, poly_res_ury, urx, ury))
 
-            self.cell.shapes(self.l_met1).insert(pya.Box(lfx, lfy, urx, poly_res_lfy))
-            self.cell.shapes(self.l_met1).insert(pya.Box(lfx, poly_res_ury, urx, ury))
+        # Add label for M1
+        if label_location == 'upper' or self.both_labels == 1:
+            upper_text = pya.Text(
+                self.p_label, upper_m1_box.center().x, upper_m1_box.center().y)
+            self.upper_label_box = pya.Box(upper_m1_box.p1, upper_m1_box.p2)
+            if self.connection_labels:
+                self.cell.shapes(self.l_met1_label).insert(upper_text)
+                self.cell.shapes(self.l_met1_pin).insert(self.upper_label_box)
 
-        
-
-        
-
+        if label_location == 'lower' or self.both_labels == 1:
+            lower_text = pya.Text(
+                self.n_label, lower_m1_box.center().x, lower_m1_box.center().y)
+            self.lower_label_box = pya.Box(lower_m1_box.p1, lower_m1_box.p2)
+            if self.connection_labels:
+                self.cell.shapes(self.l_met1_label).insert(lower_text)
+                self.cell.shapes(self.l_met1_pin).insert(self.lower_label_box)
 
     def draw_one_licon(self, lfx, start_x, precision, licon_lfy1, licon_ury1, licon_lfy2, licon_ury2):
         """ Draw one pair of licon.
@@ -298,11 +320,12 @@ class PolyRes:
         licon_urx1 = licon_lfx1 + 0.19 * precision
         licon_lfx2 = licon_lfx1
         licon_urx2 = licon_urx1
-        self.cell.shapes(self.l_licon).insert(pya.Box(licon_lfx1, licon_lfy1, licon_urx1, licon_ury1))
-        self.cell.shapes(self.l_licon).insert(pya.Box(licon_lfx2, licon_lfy2, licon_urx2, licon_ury2))
+        self.cell.shapes(self.l_licon).insert(
+            pya.Box(licon_lfx1, licon_lfy1, licon_urx1, licon_ury1))
+        self.cell.shapes(self.l_licon).insert(
+            pya.Box(licon_lfx2, licon_lfy2, licon_urx2, licon_ury2))
 
     def draw_mcon_in_li(self, lfx, lfy, width, height, precision):
-
         """ Draw one pair of licon.
 
         Parameters
@@ -325,8 +348,10 @@ class PolyRes:
         mcon_width = 0.17 * precision
         mcon_spacing = 0.19 * precision
 
-        x_num_mcon, x_spacing = self.number_spc_contacts(width, 0, mcon_spacing, mcon_width)
-        y_num_mcon, y_spacing = self.number_spc_contacts(height, 0, mcon_spacing, mcon_width)
+        x_num_mcon, x_spacing = self.number_spc_contacts(
+            width, 0, mcon_spacing, mcon_width)
+        y_num_mcon, y_spacing = self.number_spc_contacts(
+            height, 0, mcon_spacing, mcon_width)
         init_lfy = lfy + y_spacing/2
         current_lfx = lfx + x_spacing / 2
         # loop and draw each row of mcon
@@ -335,7 +360,8 @@ class PolyRes:
             for j in range(y_num_mcon):
                 urx = current_lfx + 0.17 * precision
                 ury = current_lfy + 0.17 * precision
-                self.cell.shapes(self.l_mcon).insert(pya.Box(current_lfx, current_lfy, urx, ury))
+                self.cell.shapes(self.l_mcon).insert(
+                    pya.Box(current_lfx, current_lfy, urx, ury))
                 current_lfy = current_lfy + mcon_width + mcon_spacing
 
             current_lfx = current_lfx + mcon_width + mcon_spacing
@@ -364,7 +390,8 @@ class PolyRes:
 
         spc_cont = box_width - 2 * min_enc
         num_cont = int((spc_cont + cont_spc) / (cont_width + cont_spc))
-        free_spc = box_width - (num_cont * cont_width + (num_cont - 1) * cont_spc)
+        free_spc = box_width - (num_cont * cont_width +
+                                (num_cont - 1) * cont_spc)
         return num_cont, free_spc
 
     def draw_metal1_between(self, lfx, lfy, precision):
@@ -381,12 +408,12 @@ class PolyRes:
         precision : int
             precision of grid
         """
-        urx = lfx + 2*self.res_spacing_x * precision 
-        ury = lfy +(self.licon_length + 2 * self.licon_enclosure) * precision
+        urx = lfx + self.res_spacing_x * precision
+        ury = lfy + (self.licon_length + 2 * self.licon_enclosure) * precision
 
         self.cell.shapes(self.l_met1).insert(pya.Box(lfx, lfy, urx, ury))
 
-    def draw_one_raw(self, lfx, lfy, width, length, precision, num_of_res, first_down):
+    def draw_one_raw(self, lfx, lfy, width, length, precision, num_of_res, first_down, Text=0, last_row=0):
         """ draw one metal between resistors.
 
         width : double
@@ -413,8 +440,41 @@ class PolyRes:
         current_lfx = lfx
         returned_lfx = lfx
         returned_lfy = lfy
+        label_location = ''
+        label = ''
+        
         for i in range(1, num_of_res+1):
-            self.draw_one_finger(width, length, current_lfx, lfy, precision)
+            end_finger = num_of_res
+            if (i == 1 or (i == end_finger and self.ry == 1) or (last_row == 1 and i == end_finger)) and Text:
+                if ((i == 1 and first_down) or (i == end_finger and num_of_res % 2 == 0 and first_down)
+                        or (i == end_finger and num_of_res % 2 != 0 and not first_down)
+                        or (last_row == 1 and i == end_finger)) and (num_of_res != 1 and self.ry != 1):
+                    if not(i == end_finger and self.ry % 2 == 0):
+                        print("entered",str(self.ry),str(i),str(end_finger))
+                        label_location = 'upper'
+                        label = self.p_label
+                elif last_row != 1 and (num_of_res != 1 and self.ry != 1):
+                    label_location = 'lower'
+                    label = self.n_label
+                elif num_of_res == 1 and self.ry == 1:
+                    self.both_labels = 1
+                elif num_of_res > 1 and self.ry == 1 :
+                    if i == 1:
+                        label_location = 'lower'
+                    elif i == num_of_res :
+                        label_location = 'upper'
+                elif num_of_res == 1 and self.ry > 1:
+                    if last_row == 1 :
+                        label_location = 'upper'
+                    else :
+                        label_location = 'lower'
+                print('-->',label_location)
+                self.draw_one_finger(width, length, current_lfx, lfy,
+                                     precision, label_location=label_location, label=label)
+                label_location=''
+            else:
+                self.draw_one_finger(
+                    width, length, current_lfx, lfy, precision)
 
             if (not first_down) and (i == num_of_res):
                 returned_lfx = current_lfx
@@ -425,10 +485,14 @@ class PolyRes:
                 if i % 2 == 1:
                     lfy_metal1 = lfy
                 else:
-                    lfy_metal1 = lfy + (self.licon_enclosure * 2 + self.licon_length + length) * precision
+                    lfy_metal1 = lfy + \
+                        (self.licon_enclosure * 2 +
+                         self.licon_length + length) * precision
             else:
                 if i % 2 == 1:
-                    lfy_metal1 = lfy + (self.licon_enclosure * 2 + self.licon_length + length) * precision
+                    lfy_metal1 = lfy + \
+                        (self.licon_enclosure * 2 +
+                         self.licon_length + length) * precision
                 else:
                     lfy_metal1 = lfy
             if self.series:
@@ -452,24 +516,40 @@ class PolyRes:
         """
 
         current_lfy = lfy
+
         for i in range(1, self.ry+1):
+            text_write = 0
+            last_row = 0
+            if i == 1 or i == self.ry:
+                text_write = 1
+            if i == self.ry :
+                last_row = 1
+                
             if i % 2 == 1:
-                returned_lfx, returned_lfy = self.draw_one_raw(lfx, current_lfy, self.w, self.l, precision, self.rx, False)
+                returned_lfx, returned_lfy = self.draw_one_raw(
+                    lfx, current_lfy, self.w, self.l, precision, self.rx, False, Text=text_write, last_row=last_row)
             else:
-                returned_lfx, returned_lfy = self.draw_one_raw(lfx, current_lfy, self.w, self.l, precision, self.rx, True)
+                returned_lfx, returned_lfy = self.draw_one_raw(
+                    lfx, current_lfy, self.w, self.l, precision, self.rx, True, Text=text_write, last_row=last_row)
 
             if i != self.ry:
-                metal_lfy = returned_lfy + (4 * self.licon_enclosure + 2*self. licon_length + self.l) * precision
+                metal_lfy = returned_lfy + \
+                    (4 * self.licon_enclosure + 2 *
+                     self. licon_length + self.l) * precision
                 metal_ury = metal_lfy + self.res_spacing_y * precision
                 metal_urx = returned_lfx + self.w * precision
                 if self.series and self.rx % 2 == 1:
-                    self.cell.shapes(self.l_met1).insert(pya.Box(returned_lfx, metal_lfy, metal_urx, metal_ury))
+                    self.cell.shapes(self.l_met1).insert(
+                        pya.Box(returned_lfx, metal_lfy, metal_urx, metal_ury))
 
-            current_lfy += (4 * self.licon_enclosure + 2 * self. licon_length + self.l + self.res_spacing_y) * precision
+            current_lfy += (4 * self.licon_enclosure + 2 *
+                            self. licon_length + self.l + self.res_spacing_y) * precision
 
     def draw_guard_ring(self, x, y, guard_width, guard_height, precision, tap_width=0.26):
-        l_psdm = self.layout.layer(psdm_lay_num, psdm_lay_dt)  # psdm source drain impaln
-        l_licon = self.layout.layer(licon_lay_num, licon_lay_dt)  # licon local interconnect
+        # psdm source drain impaln
+        l_psdm = self.layout.layer(psdm_lay_num, psdm_lay_dt)
+        # licon local interconnect
+        l_licon = self.layout.layer(licon_lay_num, licon_lay_dt)
         l_li = self.layout.layer(li_lay_num, li_lay_dt)
         l_mcon = self.layout.layer(mcon_lay_num, mcon_lay_dt)
         l_met1 = self.layout.layer(met1_lay_num, met1_lay_dt)
@@ -487,11 +567,12 @@ class PolyRes:
         mcon_spc = 0.19 * PERCISION
         via_size = 0.15 * PERCISION
         via_spc = 0.17 * PERCISION
-        tap_width = tap_width *PERCISION
-        guard_ring_lower_left = pya.Point(x,y)
-        guard_ring_upper_left = pya.Point(x,y+guard_height)
-        guard_ring_upper_right = pya.Point(x+guard_width,y+guard_height)
-        guard_ring_lower_right = pya.Point(guard_ring_upper_right.x, guard_ring_lower_left.y)
+        tap_width = tap_width * PERCISION
+        guard_ring_lower_left = pya.Point(x, y)
+        guard_ring_upper_left = pya.Point(x, y+guard_height)
+        guard_ring_upper_right = pya.Point(x+guard_width, y+guard_height)
+        guard_ring_lower_right = pya.Point(
+            guard_ring_upper_right.x, guard_ring_lower_left.y)
         guard_ring_path = pya.Path(
             [guard_ring_lower_left, guard_ring_upper_left, guard_ring_upper_right, guard_ring_lower_right,
              guard_ring_lower_left], tap_width, tap_width / 2, 0)
@@ -518,13 +599,16 @@ class PolyRes:
         self.cell.shapes(l_psdm).insert(psdm_guard_ring_path)
         self.cell.shapes(l_li).insert(guard_ring_path)
         # top_nmos_cell.shapes(l_met1).insert(guard_ring_path)
-        distance_cont_guard_vert = guard_ring_upper_left.y - guard_ring_lower_left.y
-        num_licon_guard_vert, free_spc_licon_guard_left = self.number_spc_contacts(distance_cont_guard_vert,
+
+        distance_cont_guard_vert_licon = guard_ring_upper_left.y - \
+            guard_ring_lower_left.y - licon_size - 2*licon_size
+        num_licon_guard_vert, free_spc_licon_guard_left = self.number_spc_contacts(distance_cont_guard_vert_licon,
                                                                                    mcon_m1_enc,
                                                                                    licon_size, licon_size)
         licon_guard_p1_x_left = guard_ring_lower_left.x - licon_size / 2
         licon_guard_p1_x_right = guard_ring_lower_right.x - licon_size / 2
-        licon_guard_p1_y = guard_ring_lower_left.y + free_spc_licon_guard_left / 2
+        licon_guard_p1_y = guard_ring_lower_left.y + \
+            free_spc_licon_guard_left / 2 + licon_size/2 + licon_size
         licon_guard_p2_x_left = licon_guard_p1_x_left + licon_size
         licon_guard_p2_x_right = licon_guard_p1_x_right + licon_size
         licon_guard_p2_y = licon_guard_p1_y + licon_size
@@ -538,28 +622,35 @@ class PolyRes:
             self.cell.shapes(l_licon).insert(licon_guard_box_right)
             licon_guard_p1_y += 2 * licon_size
             licon_guard_p2_y += 2 * licon_size
-        num_mcon_guard_vert, free_spc_mcon_guard_left = self.number_spc_contacts(distance_cont_guard_vert, mcon_m1_enc,
+        distance_cont_guard_vert_mcon = guard_ring_upper_left.y - \
+            guard_ring_lower_left.y - mcon_size - 2*mcon_spc
+        num_mcon_guard_vert, free_spc_mcon_guard_left = self.number_spc_contacts(distance_cont_guard_vert_mcon, mcon_m1_enc,
                                                                                  mcon_spc, mcon_size)
         mcon_guard_p1_x_left = guard_ring_lower_left.x - mcon_size / 2
         mcon_guard_p1_x_right = guard_ring_lower_right.x - mcon_size / 2
-        mcon_guard_p1_y = guard_ring_lower_left.y + free_spc_mcon_guard_left / 2
+        mcon_guard_p1_y = guard_ring_lower_left.y + \
+            free_spc_mcon_guard_left / 2 + mcon_size/2 + mcon_spc
         mcon_guard_p2_x_left = mcon_guard_p1_x_left + mcon_size
         mcon_guard_p2_x_right = mcon_guard_p1_x_right + mcon_size
         mcon_guard_p2_y = mcon_guard_p1_y + licon_size
         for mcon in range(num_mcon_guard_vert):
-            mcon_guard_box_left = pya.Box(mcon_guard_p1_x_left, mcon_guard_p1_y, mcon_guard_p2_x_left, mcon_guard_p2_y)
+            mcon_guard_box_left = pya.Box(
+                mcon_guard_p1_x_left, mcon_guard_p1_y, mcon_guard_p2_x_left, mcon_guard_p2_y)
             mcon_guard_box_right = pya.Box(mcon_guard_p1_x_right, mcon_guard_p1_y, mcon_guard_p2_x_right,
                                            mcon_guard_p2_y)
             self.cell.shapes(l_mcon).insert(mcon_guard_box_left)
             self.cell.shapes(l_mcon).insert(mcon_guard_box_right)
             mcon_guard_p1_y += mcon_size + mcon_spc
             mcon_guard_p2_y += mcon_size + mcon_spc
-        num_via_guard_vert, free_spc_via_guard_left = self.number_spc_contacts(distance_cont_guard_vert,
+        distance_cont_guard_vert_via = guard_ring_upper_left.y - \
+            guard_ring_lower_left.y - via_size - 2*via_spc
+        num_via_guard_vert, free_spc_via_guard_left = self.number_spc_contacts(distance_cont_guard_vert_via,
                                                                                via_met_enc,
                                                                                via_spc, via_size)
         via_guard_p1_x_left = guard_ring_lower_left.x - via_size / 2
         via_guard_p1_x_right = guard_ring_lower_right.x - via_size / 2
-        via_guard_p1_y = guard_ring_lower_left.y + free_spc_via_guard_left / 2
+        via_guard_p1_y = guard_ring_lower_left.y + \
+            free_spc_via_guard_left / 2 + via_size/2 + via_spc
         via_guard_p2_x_left = via_guard_p1_x_left + via_size
         via_guard_p2_x_right = via_guard_p1_x_right + via_size
         via_guard_p2_y = via_guard_p1_y + via_size
@@ -572,11 +663,13 @@ class PolyRes:
             self.cell.shapes(l_via).insert(via_guard_box_right)
             via_guard_p1_y += via_size + via_spc
             via_guard_p2_y += via_size + via_spc
-        distance_cont_guard_hori = (guard_ring_upper_right.x - guard_ring_upper_left.x) - 2 * mcon_spc
+        distance_cont_guard_hori = (
+            guard_ring_upper_right.x - guard_ring_upper_left.x) - 2 * mcon_spc
         num_licon_guard_hori, free_spc_licon_guard_hori = self.number_spc_contacts(distance_cont_guard_hori,
                                                                                    mcon_m1_enc,
                                                                                    licon_size, licon_size)
-        licon_guard_p1_x_hori = guard_ring_lower_left.x + free_spc_licon_guard_hori / 2 + mcon_spc
+        licon_guard_p1_x_hori = guard_ring_lower_left.x + \
+            free_spc_licon_guard_hori / 2 + mcon_spc
         licon_guard_p1_y_lower = guard_ring_lower_left.y - licon_size / 2
         licon_guard_p1_y_upper = guard_ring_upper_left.y - licon_size / 2
         licon_guard_p2_x_hori = licon_guard_p1_x_hori + licon_size
@@ -594,7 +687,8 @@ class PolyRes:
             num_mcon_guard_hori, free_spc_mcon_guard_hori = self.number_spc_contacts(distance_cont_guard_hori,
                                                                                      mcon_m1_enc,
                                                                                      mcon_spc, mcon_size)
-            mcon_guard_p1_x_hori = guard_ring_lower_left.x + free_spc_mcon_guard_hori / 2 + mcon_spc
+            mcon_guard_p1_x_hori = guard_ring_lower_left.x + \
+                free_spc_mcon_guard_hori / 2 + mcon_spc
             mcon_guard_p1_y_lower = guard_ring_lower_left.y - mcon_size / 2
             mcon_guard_p1_y_upper = guard_ring_upper_left.y - mcon_size / 2
             mcon_guard_p2_x_hori = mcon_guard_p1_x_hori + mcon_size
@@ -614,7 +708,8 @@ class PolyRes:
             num_via_guard_hori, free_spc_via_guard_hori = self.number_spc_contacts(distance_cont_guard_hori,
                                                                                    via_met_enc,
                                                                                    via_spc, via_size)
-            via_guard_p1_x_hori = guard_ring_lower_left.x + free_spc_via_guard_hori / 2 + via_spc
+            via_guard_p1_x_hori = guard_ring_lower_left.x + \
+                free_spc_via_guard_hori / 2 + via_spc
             via_guard_p1_y_lower = guard_ring_lower_left.y - via_size / 2
             via_guard_p1_y_upper = guard_ring_upper_left.y - via_size / 2
             via_guard_p2_x_hori = via_guard_p1_x_hori + via_size
@@ -632,20 +727,5 @@ class PolyRes:
                 via_guard_p1_x_hori += via_size + via_spc
                 via_guard_p2_x_hori += via_size + via_spc
 
-
-layout = pya.Layout()
-top_cell = layout.create_cell("TOP")
-poly1 = PolyRes(layout=layout)
-cell_name = poly1.draw_polyres()
-
-write_cells = pya.CellInstArray(cell_name.cell_index(), pya.Trans(pya.Point(0, 0)),
-                                        pya.Vector(0, 0), pya.Vector(0, 0), 1, 1)
-top_cell.insert(write_cells)
-poly1 = PolyRes(layout=layout,rx=4,series=1,gr=1)
-cell_name = poly1.draw_polyres()
-write_cells = pya.CellInstArray(cell_name.cell_index(), pya.Trans(pya.Point(3000, 0)),
-                                        pya.Vector(0, 0), pya.Vector(0, 0), 1, 1)
-
-top_cell.insert(write_cells)
-
-layout.write("poly_res.gds")
+    def return_label_boxes(self):
+        return self.lower_label_box,self.upper_label_box
