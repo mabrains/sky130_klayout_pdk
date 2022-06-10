@@ -9,8 +9,8 @@ Mabrains is excited to share with you our Device Generator Library for Skywater 
 
  * sky130.lyt   : technology and connections description
  * sky130.lyp   : layers color and shape description
- * drc/drc_sky130.lydrc : DRC script
- * lvs/lvs_sky130.lylvs : LVS script
+ * DRC: please the following: https://github.com/efabless/mpw_precheck/blob/main/checks/tech-files/sky130A_mr.drc
+ * lvs/lvs_sky130.lylvs : LVS script (Not Qualified)
 
 ## Installation
 To use this repo, you need to do the following:
