@@ -2,8 +2,7 @@
 
 [<img src="https://raw.githubusercontent.com/mabrains/sky130_ubuntu_setup/main/logo.svg" width="150">](http://mabrains.com/)
 
-Mabrains is excited to share with you our Device Generator Library for Skywater 130nm PDK. It's very helpful for creating layouts on Skywater 130nm Technology.
-
+Mabrains is excited to share with you our Device Generator Library for Skywater 130nm PDK. These Device Generators are not qualified. Please use with caution.
 
 ## KLayout technology files for Skywater Sky130
 
