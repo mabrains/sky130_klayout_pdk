@@ -74,7 +74,7 @@ class NMOS18(pya.PCellDeclarationHelper):
         self.param("dsa", self.TypeInt,
                    "drain and source number of contacts", default=1)
         connection_option = self.param(
-            "connection", self.TypeString, "Connection Option", default="Connection Up")
+            "connection", self.TypeString, "Connection Option", default=0)
         connection_option.add_choice("Connection Up", 0)
         connection_option.add_choice("Connection Down", 1)
         connection_option.add_choice("Alternate connection", 2)
