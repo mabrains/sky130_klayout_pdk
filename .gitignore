@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+sky130_tech/klayoutrc
 
 pymacros/sky130_pcells/__pycache__/*
 
