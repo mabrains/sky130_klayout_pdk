@@ -14,18 +14,18 @@ Mabrains is excited to share with you our Device Generator Library for Skywater 
 
 ## Installation
 To use this repo, you need to do the following:
-1. Move old .klayout to .klayout_old: mv .klayout .klayout_old
-2. Open klayout and enable edit mode.
-3. Close klayout
-4. cd .klayout
-5. mkdir tech
-6. cd tech
-7. git clone https://github.com/mabrains/sky130_klayout_pdk.git sky130
-8. pip install pandas
-9. close your terminal.
-10. Open a new terminal and open klayout and select sky130 technology as your default.
-11. Close klayout.
-12. Open klayout, you should be able to see the message that sky130 technology has been loaded in the terminal.
+1. Clone the repo:
+```
+git clone https://github.com/mabrains/sky130_klayout_pdk.git
+```
+2. Go inside sky130_klayout_pdk:
+```
+cd sky130_klayout_pdk
+```
+3. Open klayout using the following command:
+```
+KLAYOUT_HOME=./sky130_tech klayout -e
+```
 
  ## Status
 | Device Name           |  Model | Status        | DRC           | LVS           | Number of Cases | Method of verification |
