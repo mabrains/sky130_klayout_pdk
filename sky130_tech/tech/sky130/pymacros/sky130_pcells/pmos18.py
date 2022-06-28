@@ -472,7 +472,7 @@ class PMOS18(pya.PCellDeclarationHelper):
         upper_connection = pya.CellInstArray(up_gate_connection.cell_index(), pya.Trans(pya.Point(shift_distance, 0)),
                                              pya.Vector(up_iteration_distance, 0),
                                              pya.Vector(iteration_distance_group, 0), up_iteration,
-                                             nf / self.n - math.ceil(nf / (2 * self.n)))
+                                             max(1, nf / self.n - math.ceil(nf / (2 * self.n))))
         nmos_cell.insert(upper_connection)
 
         # fingers = pya.CellInstArray(gate_cell.cell_index(), pya.Trans(pya.Point(0, 0)),
@@ -499,7 +499,7 @@ class PMOS18(pya.PCellDeclarationHelper):
                                                           pya.Trans(pya.Point(0, 0)),
                                                           pya.Vector(diffusion_width_big + channel_length, 0),
                                                           pya.Vector(0, 0),
-                                                          nf + 1, 0)
+                                                          nf + 1, 1)
             nmos_cell.insert(licon_between_fingers_arr)
 
         # mcon_diff_sides_arr = pya.CellInstArray(mcon_tran_sides_cell.cell_index(),
@@ -515,7 +515,7 @@ class PMOS18(pya.PCellDeclarationHelper):
 
         multiple_transistors = pya.CellInstArray(nmos_cell.cell_index(), pya.Trans(pya.Point(0, 0)),
                                                  pya.Vector(diffusion_total_width + 2 * npsdm_enc_diff + npsdm_spc, 0),
-                                                 pya.Vector(0, 0), multipliers, 0)
+                                                 pya.Vector(0, 0), multipliers, 1)
 
         self.cell.insert(multiple_transistors)
 
