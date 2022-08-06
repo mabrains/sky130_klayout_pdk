@@ -157,11 +157,11 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
       num_rects_dec = (pathLen+std_pitch_rect)/std_pitch_rect
       num_rects_int = int( (pathLen+std_pitch_rect)/std_pitch_rect )
       
-      delta = int( (num_rects_dec-num_rects_int)*std_pitch_rect/grid )*grid
+      delta = round( (num_rects_dec-num_rects_int)*std_pitch_rect/grid )*grid
       rect_spc = min_rect_spc+int((delta/(num_rects_int-1))/grid)*grid
       pitch_rect = rect_size+rect_spc
       
-      grid_delta = int( (delta-(rect_spc-min_rect_spc)*(num_rects_int-1))/grid )*grid
+      grid_delta = round( (delta-(rect_spc-min_rect_spc)*(num_rects_int-1))/grid )*grid
       
       for i in range(0, int(num_rects_int/2)):
         vcon1 = round((varCrd+i*pitch_rect)/grid )*grid
