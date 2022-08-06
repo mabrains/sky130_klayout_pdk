@@ -18,25 +18,26 @@
 import pya
 
 # from .via import ViaGenerator
-from .via_new import Via_newGenerator
-from .nmos18 import NMOS18
-from .pmos18 import PMOS18
-from .polyres import PolyRes_gen
-from .inductor import IndGenerator
-from .rectangular_shielding import rectangular_shielding_Generator
-from .triangular_shielding import triangular_shielding_Generator
-from .diff_square_inductor import diff_squar_ind_Generator
-from .single_octagon_ind import single_octagon_ind_Generator
-from .new_single_octagon_ind import new_single_octagon_Generator
-from .diff_octagon import diff_octagon_ind_Generator
-from .nmos5d10 import nmos5d10_gen
-from .pmos5d10 import pmos5d10_gen
-from .mimcap_1 import mimcap_1_gen
-from .mimcap_2 import mimcap_2_gen
-from .pnp_gen import pnp_bjt
+from sky130_pcells.PcViaStack import pcViaStackGenerator
+from sky130_pcells.PcGRing import pcGRingGenerator
+from sky130_pcells.nmos18 import NMOS18
+from sky130_pcells.pmos18 import PMOS18
+from sky130_pcells.polyres import PolyRes_gen
+from sky130_pcells.inductor import IndGenerator
+from sky130_pcells.rectangular_shielding import rectangular_shielding_Generator
+from sky130_pcells.triangular_shielding import triangular_shielding_Generator
+from sky130_pcells.diff_square_inductor import diff_squar_ind_Generator
+from sky130_pcells.single_octagon_ind import single_octagon_ind_Generator
+from sky130_pcells.new_single_octagon_ind import new_single_octagon_Generator
+from sky130_pcells.diff_octagon import diff_octagon_ind_Generator
+from sky130_pcells.nmos5d10 import nmos5d10_gen
+from sky130_pcells.pmos5d10 import pmos5d10_gen
+from sky130_pcells.mimcap_1 import mimcap_1_gen
+from sky130_pcells.mimcap_2 import mimcap_2_gen
+from sky130_pcells.pnp_gen import pnp_bjt
 
 
-from .layers_definiations import *
+from sky130_pcells.layers_definiations import *
 
 class Sky130(pya.Library):
     """
@@ -48,8 +49,8 @@ class Sky130(pya.Library):
         self.description = "Skywaters 130nm Pcells"
 
         # Create the PCell declarations
-        # self.layout().register_pcell("via", ViaGenerator())
-        self.layout().register_pcell("via_new", Via_newGenerator())
+        self.layout().register_pcell("PcViaStack", pcViaStackGenerator())
+        self.layout().register_pcell("PcGRing", pcGRingGenerator())
         self.layout().register_pcell("nmos18", NMOS18())
         self.layout().register_pcell("pmos18", PMOS18())
         self.layout().register_pcell("poly_res", PolyRes_gen())
