@@ -68,7 +68,12 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
       # match-case only possible thru py 3.10. check ur python version by print(sys.version)
       if well == "N+Tap":
         layList = ["diff","li","tap","nsdm","nwell","met1"]
-        encList = [0.0, 0.0, 0.0, npsdm_enc_tap, nwell_enc_ntap, 0.0] 
+        encList = [0.0, 0.0, 0.0, npsdm_enc_tap, nwell_enc_ntap, 0.0]
+        # nwell blanket
+        l_lay = self.layout.layer(nwell_lay_num,nwell_lay_dt)
+        self.cell.shapes(l_lay).insert(
+          pya.Box(0-l/2.0+nwell_enc_ntap, 0-h/2.0+nwell_enc_ntap, 
+          l/2.0+nwell_enc_ntap, h/2.0+nwell_enc_ntap))
       if well == "P+Tap":
         layList = ["diff","li","tap","psdm","met1"]
         encList = [0.0, 0.0, 0.0, npsdm_enc_tap, 0.0]  
