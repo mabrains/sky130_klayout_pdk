@@ -46,18 +46,20 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
         return "pcGRing (w=%.4gum,l=%.4gum)" % (self.w,self.l)
 
 
-    def _GRing(self,well,w,l,h,LmCON,RmCON,BmCON,TmCON):
+    def _GRing(self,layout, cell, well, w, l, h, LmCON, RmCON, BmCON, TmCON):
       # draw polygons ring paths
       
-      PRCN = 1000
-      w = w*PRCN
-      l = l*PRCN
-      h = h*PRCN
-      grid = 0.005*PRCN
+      self.layout = layout
+      self.cell = cell
+      prcn = 1000
+      w = w*prcn
+      l = l*prcn
+      h = h*prcn
+      grid = 0.005*prcn
       
-      npsdm_enc_diff = 0.125*PRCN
-      npsdm_enc_tap = 0.125*PRCN 
-      nwell_enc_ntap = 0.180*PRCN
+      npsdm_enc_diff = 0.125*prcn
+      npsdm_enc_tap = 0.125*prcn 
+      nwell_enc_ntap = 0.180*prcn
       
       #cell center-mark
       l_prBpundary = self.layout.layer(prbndry_lay_num,prbndry_lay_dt)
@@ -101,17 +103,17 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
       # active contacts generation
       
       # enclosures
-      diff_enc_licon = 0.06*PRCN
-      li_enc_licon = 0.08*PRCN 
-      met1_enc_mcon = 0.06*PRCN
+      diff_enc_licon = 0.06*prcn
+      li_enc_licon = 0.08*prcn 
+      met1_enc_mcon = 0.06*prcn
       
       # sizes 
-      licon_size = 0.17*PRCN
-      mcon_size = 0.17*PRCN
+      licon_size = 0.17*prcn
+      mcon_size = 0.17*prcn
       
       # spaces
-      licon_spc = 0.17*PRCN
-      mcon_spc = 0.19*PRCN
+      licon_spc = 0.17*prcn
+      mcon_spc = 0.19*prcn
       
       l_licon = self.layout.layer(licon_lay_num, licon_lay_dt)
       l_mcon = self.layout.layer(mcon_lay_num, mcon_lay_dt)
@@ -120,37 +122,37 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
       #--------------------------
       # length of contacts row: bottom
       pathLen = int((l+w)/grid)*grid  
-      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, 0.005*PRCN, 0-(l+w)/2.0, 0-(h+w)/2.0, "R0" )
+      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, 0.005*prcn, 0-(l+w)/2.0, 0-(h+w)/2.0, "R0" )
       
       # length of contacts row: Top
       pathLen = int((l+w)/grid)*grid  
-      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, 0.005*PRCN, 0-(l+w)/2.0, 0+(h+w)/2.0, "R0" )
+      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, 0.005*prcn, 0-(l+w)/2.0, 0+(h+w)/2.0, "R0" )
       
       # Heights of contacts row: Left
       pathLen = int((h+w)/grid)*grid  
-      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, 0.005*PRCN, 0-(h+w)/2.0, 0-(l+w)/2.0, "R90" )
+      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, 0.005*prcn, 0-(h+w)/2.0, 0-(l+w)/2.0, "R90" )
       
       # Heights of contacts row: Right
       pathLen = int((h+w)/grid)*grid  
-      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, 0.005*PRCN, 0-(h+w)/2.0, 0+(l+w)/2.0, "R90" )
+      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, 0.005*prcn, 0-(h+w)/2.0, 0+(l+w)/2.0, "R90" )
       
       # Generate mcon contacts
       #--------------------------
       # length of contacts row: bottom
       pathLen = int((l+w)/grid)*grid  
-      self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, 0.005*PRCN, 0-(l+w)/2.0, 0-(h+w)/2.0, "R0" )
+      self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, 0.005*prcn, 0-(l+w)/2.0, 0-(h+w)/2.0, "R0" )
       
       # length of contacts row: Top
       pathLen = int((l+w)/grid)*grid  
-      self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, 0.005*PRCN, 0-(l+w)/2.0, 0+(h+w)/2.0, "R0" )
+      self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, 0.005*prcn, 0-(l+w)/2.0, 0+(h+w)/2.0, "R0" )
       
       # Heights of contacts row: Left
       pathLen = int((h+w)/grid)*grid  
-      self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, 0.005*PRCN, 0-(h+w)/2.0, 0-(l+w)/2.0, "R90" )
+      self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, 0.005*prcn, 0-(h+w)/2.0, 0-(l+w)/2.0, "R90" )
       
       # Heights of contacts row: Right
       pathLen = int((h+w)/grid)*grid  
-      self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, 0.005*PRCN, 0-(h+w)/2.0, 0+(l+w)/2.0, "R90" )
+      self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, 0.005*prcn, 0-(h+w)/2.0, 0+(l+w)/2.0, "R90" )
     
     def rectRowCenterToCenter(self, l_rect, pathLen, min_rect_spc, rect_size, grid, varCrd, fixCrd, R):
       """
@@ -192,4 +194,4 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
     def produce_impl(self):
       
       # call GRing sub fucntion (_GRing)
-      self._GRing(self.well,self.w,self.l,self.h,self.LmCON,self.RmCON,self.BmCON,self.TmCON)
+      self._GRing(self.layout,self.cell,self.well,self.w,self.l,self.h,self.LmCON,self.RmCON,self.BmCON,self.TmCON)
