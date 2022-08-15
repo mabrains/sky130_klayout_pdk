@@ -71,7 +71,7 @@ class pcViaStackGenerator(pya.PCellDeclarationHelper):
         self.top_metal = 1
         raise AttributeError("Wait!! No Top Metal Exists")
     
-    def rectArrayBoundBox(self,lay, x, y, encX, encY, spcX, spcY, width, length):
+    def rectArrayBoundBox(self,lay, x, y, encX, encY, spcX, spcY, width, length, shapetrans = "0,0"):
 
         """ Calculate number of rect within a given dimensions and the overlap at both ends
             Parameters:
@@ -96,13 +96,17 @@ class pcViaStackGenerator(pya.PCellDeclarationHelper):
         
         for indY in range(0,numY):
           for indX in range(0, numX):
-            self.cell.shapes(lay).insert(pya.Box(ovlX/2.0+indX*pitchX, -y/2.0+ovlY/2.0+indY*pitchY, ovlX/2.0+indX*pitchX+length , -y/2.0+ovlY/2.0+indY*pitchY+width ))
-    
-    def draw_metals(self,width,length,starting_metal,ending_metal):
+            l_Shape = self.cell.shapes(lay).insert(pya.Box(ovlX/2.0+indX*pitchX, -y/2.0+ovlY/2.0+indY*pitchY, ovlX/2.0+indX*pitchX+length , -y/2.0+ovlY/2.0+indY*pitchY+width ))
+            l_Shape.transform(pya.Trans(eval(shapetrans)[0],eval(shapetrans)[1])) 
+             
+    def draw_metals(self,layout, cell, width,length,starting_metal,ending_metal,shapetrans = "0,0"):
         
         precision = 1000
         width = width * precision
         length = length * precision
+        
+        self.layout = layout
+        self.cell = cell
         
         #periphery.rst https://github.com/google/skywater-pdk/blob/main/docs/rules/periphery-rules.rst
         #Enclosure of diff by nsdm(psdm), except for butting edge 0.125
@@ -133,41 +137,44 @@ class pcViaStackGenerator(pya.PCellDeclarationHelper):
        
         l_hvi =  self.layout.layer(hvi_lay_num,hvi_lay_dt)
         
+        #define transformation list
+        l_Shapes = [];
+        
         if starting_metal == -5:
-          self.cell.shapes(l_li).insert(pya.Box(0, -width/2.0, length , width/2.0 ))
-          self.cell.shapes(l_poly).insert(pya.Box(0, -width/2.0, length , width/2.0 ))
-          self.cell.shapes(l_npc).insert(pya.Box(0, -width/2.0, length , width/2.0 ))
+          l_Shapes.append(self.cell.shapes(l_li).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
+          l_Shapes.append(self.cell.shapes(l_poly).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
+          l_Shapes.append(self.cell.shapes(l_npc).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
           
         if starting_metal == -4:
-          self.cell.shapes(l_diff).insert(pya.Box(0, -width/2.0, length , width/2.0 ))
-          self.cell.shapes(l_li).insert(pya.Box(0, -width/2.0, length , width/2.0 ))
-          self.cell.shapes(l_tap).insert(pya.Box(0, -width/2.0, length , width/2.0 ))
-          self.cell.shapes(l_psdm).insert(pya.Box(-npsdm_enc_tap, -width/2.0-npsdm_enc_tap, length+npsdm_enc_tap , width/2.0+npsdm_enc_tap ))
+          l_Shapes.append(self.cell.shapes(l_diff).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
+          l_Shapes.append(self.cell.shapes(l_li).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
+          l_Shapes.append(self.cell.shapes(l_tap).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
+          l_Shapes.append(self.cell.shapes(l_psdm).insert(pya.Box(-npsdm_enc_tap, -width/2.0-npsdm_enc_tap, length+npsdm_enc_tap , width/2.0+npsdm_enc_tap )))
           
           if self.hv :
-            self.cell.shapes(l_hvi).insert(pya.Box(-hvi_enc_tap, -width/2.0-hvi_enc_tap, length+hvi_enc_tap , width/2.0+hvi_enc_tap ))
+            l_Shapes.append(self.cell.shapes(l_hvi).insert(pya.Box(-hvi_enc_tap, -width/2.0-hvi_enc_tap, length+hvi_enc_tap , width/2.0+hvi_enc_tap )))
             
         if starting_metal == -3:
-          self.cell.shapes(l_diff).insert(pya.Box(0, -width/2.0, length , width/2.0 ))
-          self.cell.shapes(l_li).insert(pya.Box(0, -width/2.0, length , width/2.0 ))
-          self.cell.shapes(l_tap).insert(pya.Box(0, -width/2.0, length , width/2.0 ))
-          self.cell.shapes(l_nsdm).insert(pya.Box(-npsdm_enc_tap, -width/2.0-npsdm_enc_tap, length+npsdm_enc_tap , width/2.0+npsdm_enc_tap ))
+          l_Shapes.append(self.cell.shapes(l_diff).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
+          l_Shapes.append(self.cell.shapes(l_li).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
+          l_Shapes.append(self.cell.shapes(l_tap).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
+          l_Shapes.append(self.cell.shapes(l_nsdm).insert(pya.Box(-npsdm_enc_tap, -width/2.0-npsdm_enc_tap, length+npsdm_enc_tap , width/2.0+npsdm_enc_tap )))
           
           if self.hv :
-            self.cell.shapes(l_hvi).insert(pya.Box(-hvi_enc_tap, -width/2.0-hvi_enc_tap, length+hvi_enc_tap , width/2.0+hvi_enc_tap ))
-            self.cell.shapes(l_nwell).insert(pya.Box(-hvnwell_enc_tap, -width/2.0-hvnwell_enc_tap, length+hvnwell_enc_tap , width/2.0+hvnwell_enc_tap ))
+            l_Shapes.append(self.cell.shapes(l_hvi).insert(pya.Box(-hvi_enc_tap, -width/2.0-hvi_enc_tap, length+hvi_enc_tap , width/2.0+hvi_enc_tap )))
+            l_Shapes.append(self.cell.shapes(l_nwell).insert(pya.Box(-hvnwell_enc_tap, -width/2.0-hvnwell_enc_tap, length+hvnwell_enc_tap , width/2.0+hvnwell_enc_tap )))
           else:
-            self.cell.shapes(l_nwell).insert(pya.Box(-nwell_enc_ntap, -width/2.0-nwell_enc_ntap, length+nwell_enc_ntap , width/2.0+nwell_enc_ntap ))
+            l_Shapes.append(self.cell.shapes(l_nwell).insert(pya.Box(-nwell_enc_ntap, -width/2.0-nwell_enc_ntap, length+nwell_enc_ntap , width/2.0+nwell_enc_ntap )))
         
         if starting_metal == -2:
-          self.cell.shapes(l_diff).insert(pya.Box(0, -width/2.0, length , width/2.0 ))
-          self.cell.shapes(l_li).insert(pya.Box(0, -width/2.0, length , width/2.0 ))
-          self.cell.shapes(l_psdm).insert(pya.Box(-npsdm_enc_diff, -width/2.0-npsdm_enc_diff, length+npsdm_enc_diff , width/2.0+npsdm_enc_diff ))
+          l_Shapes.append(self.cell.shapes(l_diff).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
+          l_Shapes.append(self.cell.shapes(l_li).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
+          l_Shapes.append(self.cell.shapes(l_psdm).insert(pya.Box(-npsdm_enc_diff, -width/2.0-npsdm_enc_diff, length+npsdm_enc_diff , width/2.0+npsdm_enc_diff )))
          
         if starting_metal == -1:
-          self.cell.shapes(l_diff).insert(pya.Box(0, -width/2.0, length , width/2.0 ))
-          self.cell.shapes(l_li).insert(pya.Box(0, -width/2.0, length , width/2.0 ))
-          self.cell.shapes(l_nsdm).insert(pya.Box(-npsdm_enc_diff, -width/2.0-npsdm_enc_diff, length+npsdm_enc_diff , width/2.0+npsdm_enc_diff ))
+          l_Shapes.append(self.cell.shapes(l_diff).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
+          l_Shapes.append(self.cell.shapes(l_li).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
+          l_Shapes.append(self.cell.shapes(l_nsdm).insert(pya.Box(-npsdm_enc_diff, -width/2.0-npsdm_enc_diff, length+npsdm_enc_diff , width/2.0+npsdm_enc_diff )))
         
         for i in range(0,ending_metal):
             
@@ -178,13 +185,20 @@ class pcViaStackGenerator(pya.PCellDeclarationHelper):
             if metStr != "met6":
               l_met = self.layout.layer(eval(metStr+"_lay_num"), eval(metStr+"_lay_dt"))
             
-            self.cell.shapes(l_met).insert(pya.Box(0, -width/2.0, length , width/2.0 ))
-
-    def draw_vias(self,width,length,starting_metal,ending_metal):
+            l_Shapes.append(self.cell.shapes(l_met).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
+        
+        # transforming shapes
+        for shape in l_Shapes:
+            shape.transform(pya.Trans(eval(shapetrans)[0],eval(shapetrans)[1])) 
+      
+    def draw_vias(self,layout, cell, width,length,starting_metal,ending_metal,shapetrans = "0,0"):
             
         precision = 1000
         width = width * precision
         length = length * precision
+        
+        self.layout = layout
+        self.cell = cell
         
         if starting_metal < 0: 
           #FEOL contact layers 
@@ -242,8 +256,8 @@ class pcViaStackGenerator(pya.PCellDeclarationHelper):
           #Mcon must be enclosed by Met1 on one of two adjacent sides by at least 0.06
         
         
-          self.rectArrayBoundBox(l_licon,length,width, met_licon_enc_1, met_licon_enc_2, licon_spc, licon_spc, licon_size, licon_size)
-          self.rectArrayBoundBox(l_mcon,length,width, met_mcon_enc_1, met_mcon_enc_2, mcon_spc, mcon_spc, mcon_size, mcon_size)
+          self.rectArrayBoundBox(l_licon,length,width, met_licon_enc_1, met_licon_enc_2, licon_spc, licon_spc, licon_size, licon_size,shapetrans)
+          self.rectArrayBoundBox(l_mcon,length,width, met_mcon_enc_1, met_mcon_enc_2, mcon_spc, mcon_spc, mcon_size, mcon_size,shapetrans)
         
         #BEOL contact layers
         #Rules applicable only to Al BE flows
@@ -332,10 +346,13 @@ class pcViaStackGenerator(pya.PCellDeclarationHelper):
               #Assign viaStr to via sizes respectively
               via_spc = eval(viaStr+"_spc")
               
-              self.rectArrayBoundBox(l_via,length,width, met_via_enc_1, met_via_enc_2, via_spc, via_spc, via_size, via_size)
+              self.rectArrayBoundBox(l_via,length,width, met_via_enc_1, met_via_enc_2, via_spc, via_spc, via_size, via_size,shapetrans)
               
+    def _PcViaStack(self,layout, cell, width,length,starting_metal,ending_metal,shapetrans = "0,0"):
+      self.draw_metals(layout,cell,width,length,starting_metal,ending_metal,shapetrans)
+      self.draw_vias(layout,cell,width,length,starting_metal,ending_metal,shapetrans)
+    
     def produce_impl(self):
 
-        # generate the layout of pcViaStack pcell  
-        self.draw_metals(self.width,self.length,self.starting_metal,self.ending_metal)
-        self.draw_vias(self.width,self.length,self.starting_metal,self.ending_metal)
+        # generate the layout of pcViaStack subpcell (_PcViaStack)  
+        self._PcViaStack(self.layout, self.cell,self.width,self.length,self.starting_metal,self.ending_metal,shapetrans = "0,0")
