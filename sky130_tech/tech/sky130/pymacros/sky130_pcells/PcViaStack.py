@@ -146,7 +146,6 @@ class pcViaStackGenerator(pya.PCellDeclarationHelper):
           l_Shapes.append(self.cell.shapes(l_npc).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
           
         if starting_metal == -4:
-          l_Shapes.append(self.cell.shapes(l_diff).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
           l_Shapes.append(self.cell.shapes(l_li).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
           l_Shapes.append(self.cell.shapes(l_tap).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
           l_Shapes.append(self.cell.shapes(l_psdm).insert(pya.Box(-npsdm_enc_tap, -width/2.0-npsdm_enc_tap, length+npsdm_enc_tap , width/2.0+npsdm_enc_tap )))
@@ -155,7 +154,6 @@ class pcViaStackGenerator(pya.PCellDeclarationHelper):
             l_Shapes.append(self.cell.shapes(l_hvi).insert(pya.Box(-hvi_enc_tap, -width/2.0-hvi_enc_tap, length+hvi_enc_tap , width/2.0+hvi_enc_tap )))
             
         if starting_metal == -3:
-          l_Shapes.append(self.cell.shapes(l_diff).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
           l_Shapes.append(self.cell.shapes(l_li).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
           l_Shapes.append(self.cell.shapes(l_tap).insert(pya.Box(0, -width/2.0, length , width/2.0 )))
           l_Shapes.append(self.cell.shapes(l_nsdm).insert(pya.Box(-npsdm_enc_tap, -width/2.0-npsdm_enc_tap, length+npsdm_enc_tap , width/2.0+npsdm_enc_tap )))
@@ -215,6 +213,7 @@ class pcViaStackGenerator(pya.PCellDeclarationHelper):
           #Enclosure of licon by one of two adjacent LI sides = 0.08um
           #Enclosure of licon by one of two adjacent edges of isolated tap = 0.12um
           #poly_licon must be enclosed by npc by 0.1um
+          #Diff and tap are not allowed to extend beyond their abutting edge
           
           if starting_metal == -5:
               poly_licon_enc_1 = 0.05*precision # ok poly
@@ -226,13 +225,12 @@ class pcViaStackGenerator(pya.PCellDeclarationHelper):
               met_licon_enc_2 = max(poly_licon_enc_2, npc_enc_pc_licon, li_enc_licon_2)
               
           if starting_metal == -4 or starting_metal == -3:
-            diff_licon_enc_1 = 0.04*precision # ok diff
-            diff_licon_enc_2 = 0.06*precision # diff
+            
             li_enc_licon_2 = 0.08*precision
             tap_enc_licon_2 = 0.12*precision # exclusive for well diff 
             
-            met_licon_enc_1 = diff_licon_enc_1
-            met_licon_enc_2 = max(diff_licon_enc_2, li_enc_licon_2, tap_enc_licon_2)
+            met_licon_enc_1 = 0.0
+            met_licon_enc_2 = max(li_enc_licon_2, tap_enc_licon_2)
             
           if starting_metal == -2 or starting_metal == -1:
             diff_licon_enc_1 = 0.04*precision # ok diff
