@@ -97,7 +97,7 @@ class pcViaStackGenerator(pya.PCellDeclarationHelper):
         for indY in range(0,numY):
           for indX in range(0, numX):
             l_Shape = self.cell.shapes(lay).insert(pya.Box(ovlX/2.0+indX*pitchX, -y/2.0+ovlY/2.0+indY*pitchY, ovlX/2.0+indX*pitchX+length , -y/2.0+ovlY/2.0+indY*pitchY+width ))
-            l_Shape.transform(pya.Trans(eval(shapetrans)[0],eval(shapetrans)[1])) 
+            l_Shape.transform(pya.Trans(0,False,eval(shapetrans)[0],eval(shapetrans)[1])) 
              
     def draw_metals(self,layout, cell, width,length,starting_metal,ending_metal,shapetrans = "0,0"):
         
@@ -187,7 +187,7 @@ class pcViaStackGenerator(pya.PCellDeclarationHelper):
         
         # transforming shapes
         for shape in l_Shapes:
-            shape.transform(pya.Trans(eval(shapetrans)[0],eval(shapetrans)[1])) 
+            shape.transform(pya.Trans(0,False,eval(shapetrans)[0],eval(shapetrans)[1])) 
       
     def draw_vias(self,layout, cell, width,length,starting_metal,ending_metal,shapetrans = "0,0"):
             
