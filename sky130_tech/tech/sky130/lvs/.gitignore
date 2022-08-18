@@ -9,6 +9,10 @@ sky130.tsv
 .~lock.devices_list.odp.ods#
 .~lock.devices.tsv#
 .~lock.sky130.tsv#
+gen.py
+*.lvsdb
+*extracted.cir
+*.lvsdb
 
 # User-specific files
 *.rsuser
