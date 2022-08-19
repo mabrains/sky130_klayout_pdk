@@ -71,7 +71,7 @@ class pcViaStackGenerator(pya.PCellDeclarationHelper):
         self.top_metal = 1
         raise AttributeError("Wait!! No Top Metal Exists")
     
-    def rectArrayBoundBox(self,lay, x, y, encX, encY, spcX, spcY, width, length, shapetrans = "0,0"):
+    def rectArrayBoundBox(self,lay, x, y, encX, encY, spcX, spcY, width, length, shapetrans = pya.Point()):
 
         """ Calculate number of rect within a given dimensions and the overlap at both ends
             Parameters:
@@ -83,7 +83,6 @@ class pcViaStackGenerator(pya.PCellDeclarationHelper):
             width: given width (y-dir) of rect
             length: given length(x-dir) of rect      
         """
-        
         _y = y - 2 * encY
         pitchY = width + spcY
         numY = int((_y + spcY) / pitchY)
@@ -97,9 +96,9 @@ class pcViaStackGenerator(pya.PCellDeclarationHelper):
         for indY in range(0,numY):
           for indX in range(0, numX):
             l_Shape = self.cell.shapes(lay).insert(pya.Box(ovlX/2.0+indX*pitchX, -y/2.0+ovlY/2.0+indY*pitchY, ovlX/2.0+indX*pitchX+length , -y/2.0+ovlY/2.0+indY*pitchY+width ))
-            l_Shape.transform(pya.Trans(0,False,eval(shapetrans)[0],eval(shapetrans)[1])) 
+            l_Shape.transform(pya.Trans(0,False,shapetrans)) 
              
-    def draw_metals(self,layout, cell, width,length,starting_metal,ending_metal,shapetrans = "0,0"):
+    def draw_metals(self,layout, cell, width,length,starting_metal,ending_metal,shapetrans = pya.Point()):
         
         precision = 1000
         width = width * precision
@@ -187,9 +186,9 @@ class pcViaStackGenerator(pya.PCellDeclarationHelper):
         
         # transforming shapes
         for shape in l_Shapes:
-            shape.transform(pya.Trans(0,False,eval(shapetrans)[0],eval(shapetrans)[1])) 
+            shape.transform(pya.Trans(0,False,shapetrans)) 
       
-    def draw_vias(self,layout, cell, width,length,starting_metal,ending_metal,shapetrans = "0,0"):
+    def draw_vias(self,layout, cell, width,length,starting_metal,ending_metal,shapetrans = pya.Point()):
             
         precision = 1000
         width = width * precision
@@ -346,11 +345,11 @@ class pcViaStackGenerator(pya.PCellDeclarationHelper):
               
               self.rectArrayBoundBox(l_via,length,width, met_via_enc_1, met_via_enc_2, via_spc, via_spc, via_size, via_size,shapetrans)
               
-    def _PcViaStack(self,layout, cell, width,length,starting_metal,ending_metal,shapetrans = "0,0"):
+    def _PcViaStack(self,layout, cell, width,length,starting_metal,ending_metal,shapetrans = pya.Point()):
       self.draw_metals(layout,cell,width,length,starting_metal,ending_metal,shapetrans)
       self.draw_vias(layout,cell,width,length,starting_metal,ending_metal,shapetrans)
     
     def produce_impl(self):
 
         # generate the layout of pcViaStack subpcell (_PcViaStack)  
-        self._PcViaStack(self.layout, self.cell,self.width,self.length,self.starting_metal,self.ending_metal,shapetrans = "0,0")
+        self._PcViaStack(self.layout, self.cell,self.width,self.length,self.starting_metal,self.ending_metal,shapetrans = pya.Point())

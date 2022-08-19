@@ -133,16 +133,16 @@ class pcMos18FingerGenerator:
       widStack_licon = (licon_size+2*max(diff_licon_enc_2,li_enc_licon_2))/prcn
       widStack_mcon = (mcon_size+2*met_mcon_enc_2)/prcn
       widStack = max(self.w, widStack_licon, widStack_mcon) 
-      instViaStack._PcViaStack(self.layout, self.cell, widStack, sa/prcn, -1, 1,f'{-lenRx/2.0}'+","+"0")
-      instViaStack._PcViaStack(self.layout, self.cell, widStack, sa/prcn, -1, 1,f'{lenRx/2.0-sb}'+","+"0")
+      instViaStack._PcViaStack(self.layout, self.cell, widStack, sa/prcn, -1, 1,pya.Point(-lenRx/2.0,0))
+      instViaStack._PcViaStack(self.layout, self.cell, widStack, sa/prcn, -1, 1,pya.Point(lenRx/2.0-sb,0))
       
       #generate stack from Metal1 to Metal2
       
       lenStack = via_size+2*max(met1_via_enc_1,met2_via_enc_1)
       widStack_via = (via_size+2*max(met1_via_enc_2,met2_via_enc_2))/prcn
       widStack = max(self.w, widStack_via)
-      instViaStack._PcViaStack(self.layout, self.cell, widStack, lenStack/prcn, 0, 2,f'{-lenRx/2.0-(lenStack-sa)/2.0}'+","+"0")
-      instViaStack._PcViaStack(self.layout, self.cell, widStack, lenStack/prcn, 0, 2,f'{lenRx/2.0-sb-(lenStack-sa)/2.0}'+","+"0")
+      instViaStack._PcViaStack(self.layout, self.cell, widStack, lenStack/prcn, 0, 2,pya.Point(-lenRx/2.0-(lenStack-sa)/2.0,0))
+      instViaStack._PcViaStack(self.layout, self.cell, widStack, lenStack/prcn, 0, 2,pya.Point(lenRx/2.0-sb-(lenStack-sa)/2.0,0))
       
       #---------------------
       #  draw poly contacts
@@ -159,16 +159,16 @@ class pcMos18FingerGenerator:
       lenStack_mcon = (mcon_size+2*met_mcon_enc_1)/prcn
       lenStack = max(self.l, lenStack_licon, lenStack_mcon)
       if gate_contact == "Bottom" or gate_contact == "Both":   
-        instViaStack._PcViaStack(self.layout, self.cell, widStack/prcn, lenStack, -5, 1,f'{(-lenStack/2.0*prcn)},{(-(totPC+widStack)/2.0):.2f}')
+        instViaStack._PcViaStack(self.layout, self.cell, widStack/prcn, lenStack, -5, 1,pya.Point(-lenStack/2.0*prcn,-(totPC+widStack)/2.0))
       if gate_contact == "Top" or gate_contact == "Both":   
-        instViaStack._PcViaStack(self.layout, self.cell, widStack/prcn, lenStack, -5, 1,f'{(-lenStack/2.0*prcn)},{((totPC+widStack)/2.0):.2f}')
+        instViaStack._PcViaStack(self.layout, self.cell, widStack/prcn, lenStack, -5, 1,pya.Point(-lenStack/2.0*prcn,(totPC+widStack)/2.0))
      
       # generate stack from Metal1 to Metal2
       lenStack = max(self.l, (via_size+2*max(met1_via_enc_1,met2_via_enc_1))/prcn)
       widStack = gate_contact_num*via_size+(gate_contact_num-1)*via_spc+2*max(met1_via_enc_2,met2_via_enc_2)
       if gate_contact == "Bottom" or gate_contact == "Both": 
-        instViaStack._PcViaStack(self.layout, self.cell, widStack/prcn, lenStack, 0, 2,f'{(-lenStack/2.0*prcn)},{(-(totPC+widStack)/2.0):.2f}')
+        instViaStack._PcViaStack(self.layout, self.cell, widStack/prcn, lenStack, 0, 2,pya.Point(-lenStack/2.0*prcn,-(totPC+widStack)/2.0))
       if gate_contact == "Top" or gate_contact == "Both":
-        instViaStack._PcViaStack(self.layout, self.cell, widStack/prcn, lenStack, 0, 2,f'{(-lenStack/2.0*prcn)},{((totPC+widStack)/2.0):.2f}')
+        instViaStack._PcViaStack(self.layout, self.cell, widStack/prcn, lenStack, 0, 2,pya.Point(-lenStack/2.0*prcn,(totPC+widStack)/2.0))
         
       
