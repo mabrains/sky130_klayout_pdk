@@ -71,14 +71,41 @@ else
   logger.info("No substrate name given, default name is sky130_gnd")
 end
 
+#=== CUSTOM WRITER CLASS ===
+class SubcircuitModels < RBA::NetlistSpiceWriterDelegate
+
+  def write_device(device)
+    device_class = device.device_class
+    if device_class.name.include?('sky130')
+      str = "X" + device.expanded_name
+    else
+      str = device.id + device.expanded_name
+    end
+    device_class.terminal_definitions.each do |td|
+      str += " " + net_to_string(device.net_for_terminal(td.id))
+    end
+    str += " " + device_class.name
+    if device_class.name.include?('nfet') || device_class.name.include?('pfet')
+      device_class.parameter_definitions.each do |pd|
+        str += " " + pd.name + ("=%.12g" % device.parameter(pd.id))
+      end
+    end
+    emit_line(str)
+  end      
+
+end
+
+#=== CUSTOM WRITER ===
+custom_spice_writer = RBA::NetlistSpiceWriter::new(SubcircuitModels::new)
+
 #=== NET NAMES OPTION ===
 # true: use net names instead of numbers
 # false: use numbers for nets
-if $spice_net_names == "true"
-  spice_with_net_names = true
+if $spice_net_names == "false"
+  custom_spice_writer.use_net_names = false
   logger.info("Extracted netlist with net names: #{$spice_net_names}")
 else
-  spice_with_net_names = true
+  custom_spice_writer.use_net_names = true
   logger.info("Extracted netlist with net names: true")
 end
 
@@ -86,18 +113,18 @@ end
 # true: put in comments with details
 # false: no comments
 if $spice_comments == "true"
-  spice_with_comments = true
+  custom_spice_writer.with_comments = true
   logger.info("Extracted netlist with comments in details: #{$spice_comments}")
 else
-  spice_with_comments = false
+  custom_spice_writer.with_comments = false
   logger.info("Extracted netlist with comments in details: false")
 end
 
 if $target_netlist
-  target_netlist($target_netlist)
+  target_netlist($target_netlist, custom_spice_writer, "Extracted by KLayout with SKY130 LVS runset on : #{Time.now.strftime("%d/%m/%Y %H:%M")}")
   logger.info("Extracted netlist file: #{$target_netlist}")
 else
-  target_netlist(File.join(File.dirname(RBA::CellView::active.filename), source.cell_name+"_extracted.cir"), write_spice(spice_with_net_names, spice_with_comments),  "Extracted by KLayout with SKY130 LVS runset on : #{Time.now.strftime("%d/%m/%Y %H:%M")}")
+  target_netlist(File.join(File.dirname(RBA::CellView::active.filename), source.cell_name+"_extracted.cir"), custom_spice_writer,  "Extracted by KLayout with SKY130 LVS runset on : #{Time.now.strftime("%d/%m/%Y %H:%M")}")
   logger.info("Extracted netlist file: #{source.cell_name}_extracted.cir")
 end
 
@@ -111,8 +138,8 @@ end
 
 #=== PRINT DETAILS ===
 if $verbose == "true"
-  logger.info("Verbose mode: #{$verbose}")
   verbose(true)
+  logger.info("Verbose mode: #{$verbose}")
 else
   verbose(false)
   logger.info("Verbose mode: false")
@@ -130,7 +157,7 @@ if $run_mode == "tiling"
 elsif $run_mode == "deep"
   #=== HIER MODE ===
   deep
-  logger.info("deep  mode is enabled.")
+  logger.info("deep mode is enabled.")
 
 elsif $run_mode == "flat"
   #=== FLAT MODE ===
@@ -139,8 +166,8 @@ elsif $run_mode == "flat"
 
 else
   #=== DEFAULT MODE ===
-  flat
-  logger.info("flat  mode is enabled.")
+  deep
+  logger.info("deep  mode is enabled.")
 
 end # run_mode
 
@@ -157,49 +184,58 @@ class SubcircuitModelsReader < RBA::NetlistSpiceReaderDelegate
       super(s + " C=2e-16", element)
     elsif element == "R"
       super(s + " R=0", element)
+    elsif element == "L"
+      super(s + " L=0", element)
     else
       super
     end
   end
 
   # implements the delegate interface:
+  def wants_subcircuit(name)
+    name.include?('vpp') || name.include?('ind')
+  end
+
   # take and translate the element
-  # def element(circuit, el, name, model, value, nets, params)
+  def element(circuit, el, name, model, value, nets, params)
 
-  #   if el == "C"
-  #     if nets.size != 2
-  #       error("Capacitor needs two nodes")
-  #     end
+    unless el == "X" && ((model.include?('vpp')) || (model.include?('ind')))
+      # all other elements are left to the standard implementation
+      return super
+    end
 
-  #     # provide a device class
-  #     cls = circuit.netlist.device_class_by_name(model)
-  #     if ! cls
-  #       cls = RBA::DeviceClassCapacitor::new
-  #       cls.name = model
-  #       circuit.netlist.add(cls)
-  #     end
+    # provide a device class
+    if model.include?('vpp')
+      cls = RBA::DeviceClassMOS3Transistor::new
+      cls.name = model
+      circuit.netlist.add(cls)
 
-  #     # create a device
-  #     device = circuit.create_device(cls, name)
+      # create a device
+      device = circuit.create_device(cls, name)
 
-  #     # and configure the device
-  #     [ "A", "B" ].each_with_index do |t,index|
-  #       device.connect_terminal(t, nets[index])
-  #     end
+      # and configure the device
+      [ "S", "G", "D" ].each_with_index do |t,index|
+        device.connect_terminal(t, nets[index])
+      end
+    end
+    
+    if model.include?('ind')
+      cls = RBA::DeviceClassMOS4Transistor::new
+      cls.name = model
+      circuit.netlist.add(cls)
 
-  #     # parameters in the model are given in micrometer units, so
-  #     # we need to translate the parameter values from SI to um values:
-  #     device.set_parameter("A", ((params["W"] || 0.0) * (params["L"] || 0.0)) * 1e12)
-  #     device.set_parameter("P", ((params["W"] || 0.0) + (params["L"] || 0.0)) * 2e6)
-  #     device.set_parameter("C", (params["C"] || 0.0))
+      # create a device
+      device = circuit.create_device(cls, name)
 
-  #   else
-  #     return super
+      # and configure the device
+      [ "S", "G", "D", "B" ].each_with_index do |t,index|
+        device.connect_terminal(t, nets[index])
+      end
+    end
 
-  #   end
-  #   return true
+    return true
 
-  # end
+  end
 
 end
 
@@ -240,6 +276,168 @@ class MIMCap < RBA::DeviceClassCapacitor
     enable_parameter("A", true)
     enable_parameter("P", true)
   end
+end
+
+# Inductor device extraction
+class CustomInductorExtraction < RBA::GenericDeviceExtractor
+
+  def initialize(name)
+    self.name = name
+  end
+
+  def setup
+
+    define_layer("C1", "Conductor1")
+    define_layer("C2", "Conductor2")
+    define_layer("M", "Inductor")
+    define_layer("B", "Bulk")
+
+    register_device_class(RBA::DeviceClassMOS4Transistor::new)
+
+  end
+
+  def extract_devices(layer_geometry)
+
+    # layer_geometry provides the input layers in the order they are 
+    # defined with "define_layer"
+    # conductor is supposed to be "conductor outside marker"
+    # inductor is supposed to be "conductor inside marker"
+    #######################################################
+    conductor1 = layer_geometry[0]
+    conductor2 = layer_geometry[1]
+    inductor   = layer_geometry[2]
+    bulk       = layer_geometry[3]
+
+    inductor_merged = inductor.merged
+    bulk_merged2     = bulk.merged
+
+    # this will be the edge where the inductor turns into conductor
+    marker_edges  = (conductor1.merged.edges & inductor_merged.edges)
+    marker_edges2 = (conductor2.merged.edges & inductor_merged.edges)
+
+    inductor_merged.each do |r|
+
+      # identify the edges where this inductor shape ends
+      interface_edges = marker_edges.interacting(RBA::Region::new(r))
+
+      # form terminal shapes from these edges
+      terminals = interface_edges.extended_out(1)
+      terminals2 = marker_edges2.extended_out(1)
+      
+      if terminals2.size > 0
+
+        device = create_device
+        #device.set_parameter(RBA::DeviceClassinductor::PARAM_R, @sheet_rho * l / w);
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_S, 0, terminals[0]);
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_G, 0, terminals[1]);
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_D, 1, terminals2[0]);
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_B, 3, bulk_merged2[0]);
+
+      end
+      
+    end
+
+  end
+
+  def get_connectivity(layout, layers)
+
+    # the layer definition is marker, conductor, inductor  
+    # * inductor is used for extraction
+    # * conductor is used for producing the terminals
+    conductor1 = layers[0]
+    conductor2 = layers[1]
+    inductor   = layers[2]
+    bulk       = layers[3]
+    conn = RBA::Connectivity::new
+    conn.connect(inductor, inductor)
+    conn.connect(conductor1, inductor)
+    conn.connect(conductor2, inductor)
+    conn.connect(bulk, inductor)
+
+    return conn
+
+  end
+
+end
+
+# Capacitor device extraction
+class CustomCapacitorExtraction < RBA::GenericDeviceExtractor
+
+  def initialize(name)
+    self.name = name
+  end
+
+  def setup
+
+    define_layer("C1", "Conductor1")
+    define_layer("C2", "Conductor2")
+    define_layer("M", "Capacitor")
+    define_layer("B", "Bulk")
+
+    register_device_class(RBA::DeviceClassMOS4Transistor::new)
+
+  end
+
+  def extract_devices(layer_geometry)
+
+    # layer_geometry provides the input layers in the order they are 
+    # defined with "define_layer"
+    # conductor is supposed to be "conductor outside marker"
+    # capacitor is supposed to be "conductor inside marker"
+    #######################################################
+    conductor1 = layer_geometry[0]
+    conductor2 = layer_geometry[1]
+    capacitor  = layer_geometry[2]
+    bulk       = layer_geometry[3]
+
+    capacitor_merged = capacitor.merged
+    bulk_merged2     = bulk.merged
+
+    # this will be the edge where the capacitor turns into conductor
+    marker_edges  = (conductor1.merged.edges & capacitor_merged.edges)
+    terminals2    = (conductor2.merged & capacitor_merged)
+
+    capacitor_merged.each do |r|
+
+      # identify the edges where this capacitor shape ends
+      interface_edges = marker_edges.interacting(RBA::Region::new(r))
+
+      # form terminal shapes from these edges
+      terminals = interface_edges.extended_out(1)
+      
+      if terminals2.size > 0
+
+        device = create_device
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_S, 0, terminals[0]);
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_G, 0, terminals[1]);
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_D, 1, terminals2[0]);
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_B, 3, bulk_merged2[0]);
+
+      end
+      
+    end
+
+  end
+
+  def get_connectivity(layout, layers)
+
+    # the layer definition is marker, conductor, capacitor  
+    # * capacitor is used for extraction
+    # * conductor is used for producing the terminals
+    conductor1 = layers[0]
+    conductor2 = layers[1]
+    capacitor  = layers[2]
+    bulk       = layers[3]
+    conn = RBA::Connectivity::new
+    conn.connect(capacitor, capacitor)
+    conn.connect(conductor1, capacitor)
+    conn.connect(conductor2, capacitor)
+    conn.connect(bulk, capacitor)
+
+    return conn
+
+  end
+
 end
 
 #================================================
@@ -867,7 +1065,20 @@ varactor_nsd_hv   = tap.and(nsdm).not(hvtp).not(ncm).and(hvi).and(lvtn).and(nwel
 
 logger.info("Starting VPP CAP DERIVATIONS")
 
-# 
+#
+vpp_c0 = met2_pin.interacting(vpp)
+vpp_c1 = met4_pin.interacting(vpp)
+
+
+#==================================
+# ----- INDUCTOR DERIVATIONS ------
+#==================================
+
+logger.info("Startng INDUCTOR DERIVATIONS")
+
+#
+ind_c0 = met3_pin.interacting(inductor)
+ind_c1 = met2_pin.interacting(inductor)
 
 
 #================================================
@@ -1125,6 +1336,15 @@ connect(varactor_nsd_hv  ,  licon)
 #================================
 
 logger.info("Starting LVS VPP CAP CONNECTIONS")
+
+#
+
+
+#================================
+# ---- INDUCTOR CONNECTIONS -----
+#================================
+
+logger.info("Starting LVS INDUCTOR CONNECTIONS")
 
 #
 
@@ -1550,6 +1770,17 @@ extract_devices(mos3("sky130_fd_pr__cap_var_hv"), { "SD" => varactor_nsd_hv, "G"
 logger.info("Starting VPP CAP EXTRACTION")
 
 #
+extract_devices(CustomCapacitorExtraction::new("VPP"), {"C0" => vpp_c0, "C1" => vpp_c1, "M" => vpp, "B" => pwell_pin })
+
+
+#==================================
+# ------ INDUCTOR EXTRACTION ------
+#==================================
+
+logger.info("Starting INDUCTOR EXTRACTION")
+
+#
+extract_devices(CustomInductorExtraction::new("IND"), {"C0" => ind_c0, "C1" => ind_c1, "M" => inductor, "B" => pwell_pin })
 
 
 #================================================
