@@ -605,6 +605,20 @@ sub = polygon_layer
 
 logger.info("Evaluate switches start.")
 
+# SONOS
+if $sonos
+  SONOS = $sonos
+else
+  SONOS = "star"
+end # SONOS
+
+# FUSE
+if $fuse
+  FUSE = $fuse
+else
+  FUSE = "m4"
+end # FUSE
+
 # SCH_SIMPLE
 if $schematic_simplify
   SCH_SIMPLE = $schematic_simplify
@@ -698,13 +712,13 @@ pgate         = psdm.and(tgate)
 psd           = pcomp.inside(nwell).interacting(pgate).not(pgate).not(diff_res)
 ntap          = tap.and(nsdm).inside(nwell).not(diff_res)
 
-poly_con      = poly.not(poly_res)
-li_con        =   li.not( li_res )
-met1_con      = met1.not(met1_res)
-met2_con      = met2.not(met2_res)
-met3_con      = met3.not(met3_res)
-met4_con      = met2.not(met4_res)
-met5_con      = met3.not(met5_res)
+poly_con      = poly.not(poly_res).not(vpp)
+li_con        =   li.not( li_res ).not(vpp)
+met1_con      = met1.not(met1_res).not(vpp)
+met2_con      = met2.not(met2_res).not(inductor).not(met2_fuse).not(vpp)
+met3_con      = met3.not(met3_res).not(inductor).not(met3_fuse).not(vpp)
+met4_con      = met2.not(met4_res).not(met4_fuse).not(vpp)
+met5_con      = met3.not(met5_res).not(vpp)
 
 #==================================
 # ------ MOSFET DERIVATIONS -------
@@ -1014,17 +1028,22 @@ met5_res_layer  = met5.and(met5_res)
 
 logger.info("Starting FUSE DERIVATIONS")
 
-# Metal2 fuse
-met2_fuse_res_layer  = met2_con.and(met2_fuse)
-met2_fuse_con_layer  = met2_con.not(met2_fuse)
+if FUSE == "m2"
 
-# Metal3 fuse
-met3_fuse_res_layer  = met3_con.and(met3_fuse)
-met3_fuse_con_layer  = met3_con.not(met3_fuse)
+  # Metal2 fuse
+  met2_fuse_res_layer  = met2.and(met2_fuse)
 
-# Metal4 fuse
-met4_fuse_res_layer  = met4_con.and(met4_fuse)
-met4_fuse_con_layer  = met4_con.not(met4_fuse)
+elsif FUSE == "m3"
+
+  # Metal3 fuse
+  met3_fuse_res_layer  = met3.and(met3_fuse)
+
+else
+
+  # Metal4 fuse
+  met4_fuse_res_layer  = met4.and(met4_fuse)
+
+end
 
 
 #==================================
@@ -1076,9 +1095,24 @@ vpp_c1 = met4_pin.interacting(vpp)
 
 logger.info("Startng INDUCTOR DERIVATIONS")
 
-#
-ind_c0 = met3_pin.interacting(inductor)
-ind_c1 = met2_pin.interacting(inductor)
+# RF Inductor with 3 turns and internal diameter of 90um
+coil_1 = inductor.interacting(met3.or(met2).and(inductor.covering(met2.and(inductor), 3, 3)).holes.width(100.um, projection).with_distance(89.um, 91.um).polygons)
+
+# RF Inductor with 5 turns and internal diameter of 125um
+coil_2 = inductor.interacting(met3.or(met2).and(inductor.covering(met2.and(inductor), 5, 5)).holes.width(135.um, projection).with_distance(124.um, 126.um).polygons)
+
+# RF Inductor with 5 turns and internal diameter of 220um
+coil_3 = inductor.interacting(met3.or(met2).and(inductor.covering(met2.and(inductor), 5, 5)).holes.width(230.um, projection).with_distance(219.um, 221.um).polygons)
+
+
+#==================================
+# ------- SONOS DERIVATIONS -------
+#==================================
+
+logger.info("Startng SONOS DERIVATIONS")
+
+# Build space flash special SONOSFET original/star
+sonos = ngate.not(hvtp).not(ncm).not(hvi).and(lvtn).not(nwell).and(dnwell).and(tunm).and(ldntm).interacting(areaid_ce)
 
 
 #================================================
@@ -1289,14 +1323,22 @@ connect(pwell_cont    , licon)
 
 logger.info("Starting LVS FUSE CONNECTIONS")
 
-# Metal2 fuse
-connect(met2_fuse_con_layer    , via2)
+if FUSE == "m2"
 
-# Metal3 fuse
-connect(met3_fuse_con_layer    , via3)
+  # Metal2 fuse
+  connect(met2_fuse_con_layer    , via2)
 
-# Metal4 fuse
-connect(met4_fuse_con_layer    , via4)
+elsif FUSE == "m3"
+
+  # Metal3 fuse
+  connect(met3_fuse_con_layer    , via3)
+
+else
+
+  # Metal4 fuse
+  connect(met4_fuse_con_layer    , via4)
+
+end
 
 
 #==================================
@@ -1339,14 +1381,6 @@ logger.info("Starting LVS VPP CAP CONNECTIONS")
 
 #
 
-
-#================================
-# ---- INDUCTOR CONNECTIONS -----
-#================================
-
-logger.info("Starting LVS INDUCTOR CONNECTIONS")
-
-#
 
 
 #================================================
@@ -1714,18 +1748,25 @@ extract_devices(resistor("sky130_fd_pr__res_generic_m5", 29, NResistor), { "R" =
 
 logger.info("Starting FUSE EXTRACTION")
 
-# sky130_fd_pr__fuse_m2
-logger.info("Extracting sky130_fd_pr__fuse_m2 device")
-extract_devices(resistor("sky130_fd_pr__fuse_m2", 120, NResistor), { "R" => met2_fuse_res_layer, "C" => met2_fuse_con_layer })
+if FUSE == "m2"
 
-# sky130_fd_pr__fuse_m3
-logger.info("Extracting sky130_fd_pr__fuse_m3 device")
-extract_devices(resistor("sky130_fd_pr__fuse_m3", 47, NResistor), { "R" => met3_fuse_res_layer, "C" => met3_fuse_con_layer })
+  # sky130_fd_pr__fuse_m2
+  logger.info("Extracting sky130_fd_pr__fuse_m2 device")
+  extract_devices(resistor("sky130_fd_pr__fuse_m2", 120, NResistor), { "R" => met2_fuse_res_layer, "C" => met2_con })
 
-# sky130_fd_pr__fuse_m4
-logger.info("Extracting sky130_fd_pr__fuse_m4 device")
-extract_devices(resistor("sky130_fd_pr__fuse_m4", 47, NResistor), { "R" => met4_fuse_res_layer, "C" => met4_fuse_con_layer })
+elsif FUSE == "m3"
 
+  # sky130_fd_pr__fuse_m3
+  logger.info("Extracting sky130_fd_pr__fuse_m3 device")
+  extract_devices(resistor("sky130_fd_pr__fuse_m3", 47, NResistor), { "R" => met3_fuse_res_layer, "C" => met3_con })
+
+else
+
+  # sky130_fd_pr__fuse_m4
+  logger.info("Extracting sky130_fd_pr__fuse_m4 device")
+  extract_devices(resistor("sky130_fd_pr__fuse_m4", 47, NResistor), { "R" => met4_fuse_res_layer, "C" => met4_con })
+
+end
 
 #==================================
 # ------- MIMCAP EXTRACTION -------
@@ -1779,8 +1820,38 @@ extract_devices(CustomCapacitorExtraction::new("VPP"), {"C0" => vpp_c0, "C1" => 
 
 logger.info("Starting INDUCTOR EXTRACTION")
 
-#
-extract_devices(CustomInductorExtraction::new("IND"), {"C0" => ind_c0, "C1" => ind_c1, "M" => inductor, "B" => pwell_pin })
+# RF Inductor with 3 turns and internal diameter of 90um
+logger.info("Extracting RF Inductor with 3 turns and internal diameter of 90um")
+extract_devices(CustomInductorExtraction::new("sky130_fd_pr__rf_ind_03_90"), {"C0" => met3_con, "C1" => met2_con, "M" => coil_1, "B" => pwell_pin })
+
+# RF Inductor with 5 turns and internal diameter of 125um
+logger.info("Extracting RF Inductor with 5 turns and internal diameter of 125um")
+extract_devices(CustomInductorExtraction::new("sky130_fd_pr__rf_ind_03_90"), {"C0" => met3_con, "C1" => met2_con, "M" => coil_2, "B" => pwell_pin })
+
+# RF Inductor with 5 turns and internal diameter of 220um
+logger.info("Extracting RF Inductor with 5 turns and internal diameter of 220um")
+extract_devices(CustomInductorExtraction::new("sky130_fd_pr__rf_ind_03_90"), {"C0" => met3_con, "C1" => met2_con, "M" => coil_3, "B" => pwell_pin })
+
+
+#==================================
+# ------- SONOS EXTRACTION --------
+#==================================
+
+logger.info("Starting SONOS EXTRACTION")
+
+if SONOS == "original"
+  
+  # Build space flash special SONOSFET original
+  logger.info("Extracting Build space flash special SONOSFET original")
+  extract_devices(mos4("sky130_fd_bs_flash__special_sonosfet_original"), { "SD" => nsd, "G" => sonos, "tS" => nsd, "tD" => nsd, "tG" => poly_con, "W" => sub })
+
+else
+
+  # Build space flash special SONOSFET star
+  logger.info("Extracting Build space flash special SONOSFET star")
+  extract_devices(mos4("sky130_fd_bs_flash__special_sonosfet_star"), { "SD" => nsd, "G" => sonos, "tS" => nsd, "tD" => nsd, "tG" => poly_con, "W" => sub })
+
+end
 
 
 #================================================
