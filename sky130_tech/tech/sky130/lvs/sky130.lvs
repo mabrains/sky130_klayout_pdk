@@ -76,8 +76,10 @@ class SubcircuitModels < RBA::NetlistSpiceWriterDelegate
 
   def write_device(device)
     device_class = device.device_class
-    if device_class.name.include?('sky130')
-      str = "X" + device.expanded_name
+    if device_class.name.include?('ind')
+      str = "L" + device.expanded_name
+    elsif device_class.name.include?('vpp')
+      str = "C" + device.expanded_name
     else
       str = device.id + device.expanded_name
     end
@@ -191,35 +193,42 @@ class SubcircuitModelsReader < RBA::NetlistSpiceReaderDelegate
     end
   end
 
-  # implements the delegate interface:
-  def wants_subcircuit(name)
-    name.include?('vpp') || name.include?('ind')
-  end
-
   # take and translate the element
   def element(circuit, el, name, model, value, nets, params)
 
-    unless el == "X" && ((model.include?('vpp')) || (model.include?('ind')))
-      # all other elements are left to the standard implementation
-      return super
-    end
+    if el == "C" && model.include?('SKY130') && model.include?('VPP')
 
-    # provide a device class
-    if model.include?('vpp')
-      cls = RBA::DeviceClassMOS3Transistor::new
-      cls.name = model
-      circuit.netlist.add(cls)
+      # provide a device class
+      if !(model.include?('FLOAT'))
+        cls = RBA::DeviceClassMOS3Transistor::new
+        cls.name = model
+        circuit.netlist.add(cls)
 
-      # create a device
-      device = circuit.create_device(cls, name)
+        # create a device
+        device = circuit.create_device(cls, name)
 
-      # and configure the device
-      [ "S", "G", "D" ].each_with_index do |t,index|
-        device.connect_terminal(t, nets[index])
+        # and configure the device
+        [ "S", "G", "D" ].each_with_index do |t,index|
+          device.connect_terminal(t, nets[index])
+        end
       end
-    end
-    
-    if model.include?('ind')
+      
+      if model.include?('FLOAT')
+        cls = RBA::DeviceClassMOS4Transistor::new
+        cls.name = model
+        circuit.netlist.add(cls)
+
+        # create a device
+        device = circuit.create_device(cls, name)
+
+        # and configure the device
+        [ "S", "G", "D", "B" ].each_with_index do |t,index|
+          device.connect_terminal(t, nets[index])
+        end
+      end
+
+    elsif el == "L" && model.include?('SKY130') && model.include?('IND')
+
       cls = RBA::DeviceClassMOS4Transistor::new
       cls.name = model
       circuit.netlist.add(cls)
@@ -231,6 +240,10 @@ class SubcircuitModelsReader < RBA::NetlistSpiceReaderDelegate
       [ "S", "G", "D", "B" ].each_with_index do |t,index|
         device.connect_terminal(t, nets[index])
       end
+
+    else
+      # all other elements are left to the standard implementation
+      return super
     end
 
     return true
@@ -278,8 +291,8 @@ class MIMCap < RBA::DeviceClassCapacitor
   end
 end
 
-# Inductor device extraction
-class CustomInductorExtraction < RBA::GenericDeviceExtractor
+#====================== CUSTOM FOUR TERMINAL EXTRACTOR =========================
+class Custom4TerminalExtractor < RBA::GenericDeviceExtractor
 
   def initialize(name)
     self.name = name
@@ -289,7 +302,7 @@ class CustomInductorExtraction < RBA::GenericDeviceExtractor
 
     define_layer("C1", "Conductor1")
     define_layer("C2", "Conductor2")
-    define_layer("M", "Inductor")
+    define_layer("M", "Marker")
     define_layer("B", "Bulk")
 
     register_device_class(RBA::DeviceClassMOS4Transistor::new)
@@ -301,37 +314,34 @@ class CustomInductorExtraction < RBA::GenericDeviceExtractor
     # layer_geometry provides the input layers in the order they are 
     # defined with "define_layer"
     # conductor is supposed to be "conductor outside marker"
-    # inductor is supposed to be "conductor inside marker"
-    #######################################################
     conductor1 = layer_geometry[0]
     conductor2 = layer_geometry[1]
-    inductor   = layer_geometry[2]
+    marker     = layer_geometry[2]
     bulk       = layer_geometry[3]
 
-    inductor_merged = inductor.merged
-    bulk_merged2     = bulk.merged
+    marker_merged = marker.merged
+    bulk_merged   = bulk.merged
 
-    # this will be the edge where the inductor turns into conductor
-    marker_edges  = (conductor1.merged.edges & inductor_merged.edges)
-    marker_edges2 = (conductor2.merged.edges & inductor_merged.edges)
+    # this will be the edge where the marker turns into conductor
+    marker_edges  = (conductor1.merged.edges & marker_merged.edges)
+    marker_edges2 = (conductor2.merged.edges & marker_merged.edges)
 
-    inductor_merged.each do |r|
+    marker_merged.each do |r|
 
-      # identify the edges where this inductor shape ends
+      # identify the edges where this marker shape ends
       interface_edges = marker_edges.interacting(RBA::Region::new(r))
 
       # form terminal shapes from these edges
-      terminals = interface_edges.extended_out(1)
-      terminals2 = marker_edges2.extended_out(1)
+      terminals  = interface_edges.extended_out(1).merged
+      terminals2 = marker_edges2.extended_out(1).merged
       
-      if terminals2.size > 0
+      if terminals.size > 1
 
         device = create_device
-        #device.set_parameter(RBA::DeviceClassinductor::PARAM_R, @sheet_rho * l / w);
-        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_S, 0, terminals[0]);
-        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_G, 0, terminals[1]);
-        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_D, 1, terminals2[0]);
-        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_B, 3, bulk_merged2[0]);
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_S, 0,   terminals[0]);
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_G, 0,   terminals[1]);
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_D, 1,  terminals2[0]);
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_B, 3, bulk_merged[0]);
 
       end
       
@@ -340,19 +350,18 @@ class CustomInductorExtraction < RBA::GenericDeviceExtractor
   end
 
   def get_connectivity(layout, layers)
-
-    # the layer definition is marker, conductor, inductor  
-    # * inductor is used for extraction
-    # * conductor is used for producing the terminals
+  
+    # marker is used for extraction
+    # conductor is used for producing the terminals
     conductor1 = layers[0]
     conductor2 = layers[1]
-    inductor   = layers[2]
+    marker     = layers[2]
     bulk       = layers[3]
     conn = RBA::Connectivity::new
-    conn.connect(inductor, inductor)
-    conn.connect(conductor1, inductor)
-    conn.connect(conductor2, inductor)
-    conn.connect(bulk, inductor)
+    conn.connect(marker    , marker)
+    conn.connect(conductor1, marker)
+    conn.connect(conductor2, marker)
+    conn.connect(bulk      , marker)
 
     return conn
 
@@ -360,8 +369,9 @@ class CustomInductorExtraction < RBA::GenericDeviceExtractor
 
 end
 
-# Capacitor device extraction
-class CustomCapacitorExtraction < RBA::GenericDeviceExtractor
+
+#====================== CUSTOM THREE TERMINAL EXTRACTOR =========================
+class Custom3TerminalExtractor < RBA::GenericDeviceExtractor
 
   def initialize(name)
     self.name = name
@@ -369,12 +379,11 @@ class CustomCapacitorExtraction < RBA::GenericDeviceExtractor
 
   def setup
 
-    define_layer("C1", "Conductor1")
-    define_layer("C2", "Conductor2")
-    define_layer("M", "Capacitor")
+    define_layer("C", "Conductor")
+    define_layer("M", "Marker")
     define_layer("B", "Bulk")
 
-    register_device_class(RBA::DeviceClassMOS4Transistor::new)
+    register_device_class(RBA::DeviceClassMOS3Transistor::new)
 
   end
 
@@ -383,35 +392,30 @@ class CustomCapacitorExtraction < RBA::GenericDeviceExtractor
     # layer_geometry provides the input layers in the order they are 
     # defined with "define_layer"
     # conductor is supposed to be "conductor outside marker"
-    # capacitor is supposed to be "conductor inside marker"
-    #######################################################
-    conductor1 = layer_geometry[0]
-    conductor2 = layer_geometry[1]
-    capacitor  = layer_geometry[2]
-    bulk       = layer_geometry[3]
+    conductor  = layer_geometry[0]
+    marker     = layer_geometry[1]
+    bulk       = layer_geometry[2]
 
-    capacitor_merged = capacitor.merged
-    bulk_merged2     = bulk.merged
+    marker_merged = marker.merged
+    bulk_merged   = bulk.merged
 
-    # this will be the edge where the capacitor turns into conductor
-    marker_edges  = (conductor1.merged.edges & capacitor_merged.edges)
-    terminals2    = (conductor2.merged & capacitor_merged)
+    # this will be the edge where the marker turns into conductor
+    marker_edges  = (conductor.merged.edges & marker_merged.edges)
 
-    capacitor_merged.each do |r|
+    marker_merged.each do |r|
 
-      # identify the edges where this capacitor shape ends
+      # identify the edges where this marker shape ends
       interface_edges = marker_edges.interacting(RBA::Region::new(r))
 
       # form terminal shapes from these edges
-      terminals = interface_edges.extended_out(1)
+      terminals  = interface_edges.extended_out(1).merged
       
-      if terminals2.size > 0
+      if terminals.size > 1
 
         device = create_device
-        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_S, 0, terminals[0]);
-        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_G, 0, terminals[1]);
-        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_D, 1, terminals2[0]);
-        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_B, 3, bulk_merged2[0]);
+        define_terminal(device, RBA::DeviceClassMOS3Transistor::TERMINAL_S, 0,   terminals[0]);
+        define_terminal(device, RBA::DeviceClassMOS3Transistor::TERMINAL_G, 0,   terminals[1]);
+        define_terminal(device, RBA::DeviceClassMOS3Transistor::TERMINAL_D, 2, bulk_merged[0]);
 
       end
       
@@ -420,25 +424,23 @@ class CustomCapacitorExtraction < RBA::GenericDeviceExtractor
   end
 
   def get_connectivity(layout, layers)
-
-    # the layer definition is marker, conductor, capacitor  
-    # * capacitor is used for extraction
-    # * conductor is used for producing the terminals
-    conductor1 = layers[0]
-    conductor2 = layers[1]
-    capacitor  = layers[2]
-    bulk       = layers[3]
+  
+    # marker is used for extraction
+    # conductor is used for producing the terminals
+    conductor  = layers[0]
+    marker     = layers[1]
+    bulk       = layers[2]
     conn = RBA::Connectivity::new
-    conn.connect(capacitor, capacitor)
-    conn.connect(conductor1, capacitor)
-    conn.connect(conductor2, capacitor)
-    conn.connect(bulk, capacitor)
+    conn.connect(marker   , marker)
+    conn.connect(conductor, marker)
+    conn.connect(bulk     , marker)
 
     return conn
 
   end
 
 end
+
 
 #================================================
 #------------- LAYERS DERIVATIONS ---------------
@@ -1084,9 +1086,17 @@ varactor_nsd_hv   = tap.and(nsdm).not(hvtp).not(ncm).and(hvi).and(lvtn).and(nwel
 
 logger.info("Starting VPP CAP DERIVATIONS")
 
-#
-vpp_c0 = met2_pin.interacting(vpp)
-vpp_c1 = met4_pin.interacting(vpp)
+# General VPP capacitor derivation
+met2_vpp = met2.interacting(met2_pin).and(vpp)
+
+# Float metal 3 VPP capacitor
+met3_vpp = met3.interacting(met3_pin).and(vpp)
+
+# Float metal 4 VPP capacitor
+met4_vpp = met4.interacting(met4_pin).and(vpp)
+
+# Float metal 5 VPP capacitor
+met5_vpp = met5.interacting(met5_pin).and(vpp)
 
 
 #==================================
@@ -1181,6 +1191,7 @@ logger.info("Starting SKY130 LVS connectivity setup (Global connections)")
 
 # Global
 connect_global(sub  , substrate_name)
+connect(pwell_label ,      pwell_pin)
 
 logger.info("Starting SKY130 LVS connectivity setup (Multifinger Devices)")
 
@@ -1379,8 +1390,25 @@ connect(varactor_nsd_hv  ,  licon)
 
 logger.info("Starting LVS VPP CAP CONNECTIONS")
 
-#
+# General VPP capacitor connections
+connect(met2_vpp     ,   met2_con)
+connect(met2_vpp     ,   met2_pin)
+connect(met2_vpp     , met2_label)
 
+# Float metal 3 VPP capacitor
+connect(met3_vpp     ,  met3_ncap)
+connect(met3_vpp     ,   met3_pin)
+connect(met3_vpp     , met3_label)
+
+# Float metal 4 VPP capacitor
+connect(met4_vpp     ,  met4_ncap)
+connect(met4_vpp     ,   met4_pin)
+connect(met4_vpp     , met4_label)
+
+# Float metal 5 VPP capacitor
+connect(met5_vpp     ,   met5_con)
+connect(met5_vpp     ,   met5_pin)
+connect(met5_vpp     , met5_label)
 
 
 #================================================
@@ -1811,7 +1839,7 @@ extract_devices(mos3("sky130_fd_pr__cap_var_hv"), { "SD" => varactor_nsd_hv, "G"
 logger.info("Starting VPP CAP EXTRACTION")
 
 #
-extract_devices(CustomCapacitorExtraction::new("VPP"), {"C0" => vpp_c0, "C1" => vpp_c1, "M" => vpp, "B" => pwell_pin })
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_02p4x04p6_m1m2_noshield"), {"C" => met2_vpp, "M" => vpp, "B" => pwell_pin })
 
 
 #==================================
@@ -1822,15 +1850,15 @@ logger.info("Starting INDUCTOR EXTRACTION")
 
 # RF Inductor with 3 turns and internal diameter of 90um
 logger.info("Extracting RF Inductor with 3 turns and internal diameter of 90um")
-extract_devices(CustomInductorExtraction::new("sky130_fd_pr__rf_ind_03_90"), {"C0" => met3_con, "C1" => met2_con, "M" => coil_1, "B" => pwell_pin })
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__rf_ind_03_90"), {"C1" => met3_con, "C2" => met2_con, "M" => coil_1, "B" => pwell_pin })
 
 # RF Inductor with 5 turns and internal diameter of 125um
 logger.info("Extracting RF Inductor with 5 turns and internal diameter of 125um")
-extract_devices(CustomInductorExtraction::new("sky130_fd_pr__rf_ind_03_90"), {"C0" => met3_con, "C1" => met2_con, "M" => coil_2, "B" => pwell_pin })
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__rf_ind_05_125"), {"C1" => met3_con, "C2" => met2_con, "M" => coil_2, "B" => pwell_pin })
 
 # RF Inductor with 5 turns and internal diameter of 220um
 logger.info("Extracting RF Inductor with 5 turns and internal diameter of 220um")
-extract_devices(CustomInductorExtraction::new("sky130_fd_pr__rf_ind_03_90"), {"C0" => met3_con, "C1" => met2_con, "M" => coil_3, "B" => pwell_pin })
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__rf_ind_05_220"), {"C1" => met3_con, "C1" => met2_con, "M" => coil_3, "B" => pwell_pin })
 
 
 #==================================
