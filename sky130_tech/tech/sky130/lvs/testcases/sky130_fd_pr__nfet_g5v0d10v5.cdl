@@ -15,8 +15,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-.SUBCKT sky130_fd_pr__cap_vpp_02p4x04p6_m1m2_noshield C0 C1 SUB
+.SUBCKT sky130_fd_pr__nfet_g5v0d10v5 DRAIN GATE SOURCE SUBSTRATE
 
-C1 C0 C1 SUB sky130_fd_pr__cap_vpp_02p4x04p6_m1m2_noshield
+X1 DRAIN GATE SOURCE SUBSTRATE sky130_fd_pr__nfet_g5v0d10v5
 
 .ENDS 

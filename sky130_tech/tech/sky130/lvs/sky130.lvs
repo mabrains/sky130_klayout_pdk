@@ -71,14 +71,43 @@ else
   logger.info("No substrate name given, default name is sky130_gnd")
 end
 
+#=== CUSTOM WRITER CLASS ===
+class SubcircuitModels < RBA::NetlistSpiceWriterDelegate
+
+  def write_device(device)
+    device_class = device.device_class
+    if device_class.name.include?('ind')
+      str = "L" + device.expanded_name
+    elsif device_class.name.include?('vpp')
+      str = "C" + device.expanded_name
+    else
+      str = device.id + device.expanded_name
+    end
+    device_class.terminal_definitions.each do |td|
+      str += " " + net_to_string(device.net_for_terminal(td.id))
+    end
+    str += " " + device_class.name
+    if device_class.name.include?('nfet') || device_class.name.include?('pfet')
+      device_class.parameter_definitions.each do |pd|
+        str += " " + pd.name + ("=%.12g" % device.parameter(pd.id))
+      end
+    end
+    emit_line(str)
+  end      
+
+end
+
+#=== CUSTOM WRITER ===
+custom_spice_writer = RBA::NetlistSpiceWriter::new(SubcircuitModels::new)
+
 #=== NET NAMES OPTION ===
 # true: use net names instead of numbers
 # false: use numbers for nets
-if $spice_net_names == "true"
-  spice_with_net_names = true
+if $spice_net_names == "false"
+  custom_spice_writer.use_net_names = false
   logger.info("Extracted netlist with net names: #{$spice_net_names}")
 else
-  spice_with_net_names = true
+  custom_spice_writer.use_net_names = true
   logger.info("Extracted netlist with net names: true")
 end
 
@@ -86,18 +115,18 @@ end
 # true: put in comments with details
 # false: no comments
 if $spice_comments == "true"
-  spice_with_comments = true
+  custom_spice_writer.with_comments = true
   logger.info("Extracted netlist with comments in details: #{$spice_comments}")
 else
-  spice_with_comments = false
+  custom_spice_writer.with_comments = false
   logger.info("Extracted netlist with comments in details: false")
 end
 
 if $target_netlist
-  target_netlist($target_netlist)
+  target_netlist($target_netlist, custom_spice_writer, "Extracted by KLayout with SKY130 LVS runset on : #{Time.now.strftime("%d/%m/%Y %H:%M")}")
   logger.info("Extracted netlist file: #{$target_netlist}")
 else
-  target_netlist(File.join(File.dirname(RBA::CellView::active.filename), source.cell_name+"_extracted.cir"), write_spice(spice_with_net_names, spice_with_comments),  "Extracted by KLayout with SKY130 LVS runset on : #{Time.now.strftime("%d/%m/%Y %H:%M")}")
+  target_netlist(File.join(File.dirname(RBA::CellView::active.filename), source.cell_name+"_extracted.cir"), custom_spice_writer,  "Extracted by KLayout with SKY130 LVS runset on : #{Time.now.strftime("%d/%m/%Y %H:%M")}")
   logger.info("Extracted netlist file: #{source.cell_name}_extracted.cir")
 end
 
@@ -111,8 +140,8 @@ end
 
 #=== PRINT DETAILS ===
 if $verbose == "true"
-  logger.info("Verbose mode: #{$verbose}")
   verbose(true)
+  logger.info("Verbose mode: #{$verbose}")
 else
   verbose(false)
   logger.info("Verbose mode: false")
@@ -130,7 +159,7 @@ if $run_mode == "tiling"
 elsif $run_mode == "deep"
   #=== HIER MODE ===
   deep
-  logger.info("deep  mode is enabled.")
+  logger.info("deep mode is enabled.")
 
 elsif $run_mode == "flat"
   #=== FLAT MODE ===
@@ -139,8 +168,8 @@ elsif $run_mode == "flat"
 
 else
   #=== DEFAULT MODE ===
-  flat
-  logger.info("flat  mode is enabled.")
+  deep
+  logger.info("deep  mode is enabled.")
 
 end # run_mode
 
@@ -157,49 +186,69 @@ class SubcircuitModelsReader < RBA::NetlistSpiceReaderDelegate
       super(s + " C=2e-16", element)
     elsif element == "R"
       super(s + " R=0", element)
+    elsif element == "L"
+      super(s + " L=0", element)
     else
       super
     end
   end
 
-  # implements the delegate interface:
   # take and translate the element
-  # def element(circuit, el, name, model, value, nets, params)
+  def element(circuit, el, name, model, value, nets, params)
 
-  #   if el == "C"
-  #     if nets.size != 2
-  #       error("Capacitor needs two nodes")
-  #     end
+    if el == "C" && model.include?('SKY130') && model.include?('VPP')
 
-  #     # provide a device class
-  #     cls = circuit.netlist.device_class_by_name(model)
-  #     if ! cls
-  #       cls = RBA::DeviceClassCapacitor::new
-  #       cls.name = model
-  #       circuit.netlist.add(cls)
-  #     end
+      # provide a device class
+      if !(model.include?('FLOAT'))
+        cls = RBA::DeviceClassMOS3Transistor::new
+        cls.name = model
+        circuit.netlist.add(cls)
 
-  #     # create a device
-  #     device = circuit.create_device(cls, name)
+        # create a device
+        device = circuit.create_device(cls, name)
 
-  #     # and configure the device
-  #     [ "A", "B" ].each_with_index do |t,index|
-  #       device.connect_terminal(t, nets[index])
-  #     end
+        # and configure the device
+        [ "S", "G", "D" ].each_with_index do |t,index|
+          device.connect_terminal(t, nets[index])
+        end
+      end
+      
+      if model.include?('FLOAT')
+        cls = RBA::DeviceClassMOS4Transistor::new
+        cls.name = model
+        circuit.netlist.add(cls)
 
-  #     # parameters in the model are given in micrometer units, so
-  #     # we need to translate the parameter values from SI to um values:
-  #     device.set_parameter("A", ((params["W"] || 0.0) * (params["L"] || 0.0)) * 1e12)
-  #     device.set_parameter("P", ((params["W"] || 0.0) + (params["L"] || 0.0)) * 2e6)
-  #     device.set_parameter("C", (params["C"] || 0.0))
+        # create a device
+        device = circuit.create_device(cls, name)
 
-  #   else
-  #     return super
+        # and configure the device
+        [ "S", "G", "D", "B" ].each_with_index do |t,index|
+          device.connect_terminal(t, nets[index])
+        end
+      end
 
-  #   end
-  #   return true
+    elsif el == "L" && model.include?('SKY130') && model.include?('IND')
 
-  # end
+      cls = RBA::DeviceClassMOS4Transistor::new
+      cls.name = model
+      circuit.netlist.add(cls)
+
+      # create a device
+      device = circuit.create_device(cls, name)
+
+      # and configure the device
+      [ "S", "G", "D", "B" ].each_with_index do |t,index|
+        device.connect_terminal(t, nets[index])
+      end
+
+    else
+      # all other elements are left to the standard implementation
+      return super
+    end
+
+    return true
+
+  end
 
 end
 
@@ -241,6 +290,157 @@ class MIMCap < RBA::DeviceClassCapacitor
     enable_parameter("P", true)
   end
 end
+
+#====================== CUSTOM FOUR TERMINAL EXTRACTOR =========================
+class Custom4TerminalExtractor < RBA::GenericDeviceExtractor
+
+  def initialize(name)
+    self.name = name
+  end
+
+  def setup
+
+    define_layer("C1", "Conductor1")
+    define_layer("C2", "Conductor2")
+    define_layer("M", "Marker")
+    define_layer("B", "Bulk")
+
+    register_device_class(RBA::DeviceClassMOS4Transistor::new)
+
+  end
+
+  def extract_devices(layer_geometry)
+
+    # layer_geometry provides the input layers in the order they are 
+    # defined with "define_layer"
+    # conductor is supposed to be "conductor outside marker"
+    conductor1 = layer_geometry[0]
+    conductor2 = layer_geometry[1]
+    marker     = layer_geometry[2]
+    bulk       = layer_geometry[3]
+
+    marker_merged = marker.merged
+    bulk_merged   = bulk.merged
+
+    # this will be the edge where the marker turns into conductor
+    marker_edges  = (conductor1.merged.edges & marker_merged.edges)
+    marker_edges2 = (conductor2.merged.edges & marker_merged.edges)
+
+    marker_merged.each do |r|
+
+      # identify the edges where this marker shape ends
+      interface_edges = marker_edges.interacting(RBA::Region::new(r))
+
+      # form terminal shapes from these edges
+      terminals  = interface_edges.extended_out(1).merged
+      terminals2 = marker_edges2.extended_out(1).merged
+      
+      if terminals.size > 1
+
+        device = create_device
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_S, 0,   terminals[0]);
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_G, 0,   terminals[1]);
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_D, 1,  terminals2[0]);
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_B, 3, bulk_merged[0]);
+
+      end
+      
+    end
+
+  end
+
+  def get_connectivity(layout, layers)
+  
+    # marker is used for extraction
+    # conductor is used for producing the terminals
+    conductor1 = layers[0]
+    conductor2 = layers[1]
+    marker     = layers[2]
+    bulk       = layers[3]
+    conn = RBA::Connectivity::new
+    conn.connect(marker    , marker)
+    conn.connect(conductor1, marker)
+    conn.connect(conductor2, marker)
+    conn.connect(bulk      , marker)
+
+    return conn
+
+  end
+
+end
+
+
+#====================== CUSTOM THREE TERMINAL EXTRACTOR =========================
+class Custom3TerminalExtractor < RBA::GenericDeviceExtractor
+
+  def initialize(name)
+    self.name = name
+  end
+
+  def setup
+
+    define_layer("C", "Conductor")
+    define_layer("M", "Marker")
+    define_layer("B", "Bulk")
+
+    register_device_class(RBA::DeviceClassMOS3Transistor::new)
+
+  end
+
+  def extract_devices(layer_geometry)
+
+    # layer_geometry provides the input layers in the order they are 
+    # defined with "define_layer"
+    # conductor is supposed to be "conductor outside marker"
+    conductor  = layer_geometry[0]
+    marker     = layer_geometry[1]
+    bulk       = layer_geometry[2]
+
+    marker_merged = marker.merged
+    bulk_merged   = bulk.merged
+
+    # this will be the edge where the marker turns into conductor
+    marker_edges  = (conductor.merged.edges & marker_merged.edges)
+
+    marker_merged.each do |r|
+
+      # identify the edges where this marker shape ends
+      interface_edges = marker_edges.interacting(RBA::Region::new(r))
+
+      # form terminal shapes from these edges
+      terminals  = interface_edges.extended_out(1).merged
+      
+      if terminals.size > 1
+
+        device = create_device
+        define_terminal(device, RBA::DeviceClassMOS3Transistor::TERMINAL_S, 0,   terminals[0]);
+        define_terminal(device, RBA::DeviceClassMOS3Transistor::TERMINAL_G, 0,   terminals[1]);
+        define_terminal(device, RBA::DeviceClassMOS3Transistor::TERMINAL_D, 2, bulk_merged[0]);
+
+      end
+      
+    end
+
+  end
+
+  def get_connectivity(layout, layers)
+  
+    # marker is used for extraction
+    # conductor is used for producing the terminals
+    conductor  = layers[0]
+    marker     = layers[1]
+    bulk       = layers[2]
+    conn = RBA::Connectivity::new
+    conn.connect(marker   , marker)
+    conn.connect(conductor, marker)
+    conn.connect(bulk     , marker)
+
+    return conn
+
+  end
+
+end
+
 
 #================================================
 #------------- LAYERS DERIVATIONS ---------------
@@ -407,6 +607,20 @@ sub = polygon_layer
 
 logger.info("Evaluate switches start.")
 
+# SONOS
+if $sonos
+  SONOS = $sonos
+else
+  SONOS = "star"
+end # SONOS
+
+# FUSE
+if $fuse
+  FUSE = $fuse
+else
+  FUSE = "m4"
+end # FUSE
+
 # SCH_SIMPLE
 if $schematic_simplify
   SCH_SIMPLE = $schematic_simplify
@@ -500,13 +714,13 @@ pgate         = psdm.and(tgate)
 psd           = pcomp.inside(nwell).interacting(pgate).not(pgate).not(diff_res)
 ntap          = tap.and(nsdm).inside(nwell).not(diff_res)
 
-poly_con      = poly.not(poly_res)
-li_con        =   li.not( li_res )
-met1_con      = met1.not(met1_res)
-met2_con      = met2.not(met2_res)
-met3_con      = met3.not(met3_res)
-met4_con      = met2.not(met4_res)
-met5_con      = met3.not(met5_res)
+poly_con      = poly.not(poly_res).not(vpp)
+li_con        =   li.not( li_res ).not(vpp)
+met1_con      = met1.not(met1_res).not(vpp)
+met2_con      = met2.not(met2_res).not(inductor).not(met2_fuse).not(vpp)
+met3_con      = met3.not(met3_res).not(inductor).not(met3_fuse).not(vpp)
+met4_con      = met2.not(met4_res).not(met4_fuse).not(vpp)
+met5_con      = met3.not(met5_res).not(vpp)
 
 #==================================
 # ------ MOSFET DERIVATIONS -------
@@ -816,17 +1030,22 @@ met5_res_layer  = met5.and(met5_res)
 
 logger.info("Starting FUSE DERIVATIONS")
 
-# Metal2 fuse
-met2_fuse_res_layer  = met2_con.and(met2_fuse)
-met2_fuse_con_layer  = met2_con.not(met2_fuse)
+if FUSE == "m2"
 
-# Metal3 fuse
-met3_fuse_res_layer  = met3_con.and(met3_fuse)
-met3_fuse_con_layer  = met3_con.not(met3_fuse)
+  # Metal2 fuse
+  met2_fuse_res_layer  = met2.and(met2_fuse)
 
-# Metal4 fuse
-met4_fuse_res_layer  = met4_con.and(met4_fuse)
-met4_fuse_con_layer  = met4_con.not(met4_fuse)
+elsif FUSE == "m3"
+
+  # Metal3 fuse
+  met3_fuse_res_layer  = met3.and(met3_fuse)
+
+else
+
+  # Metal4 fuse
+  met4_fuse_res_layer  = met4.and(met4_fuse)
+
+end
 
 
 #==================================
@@ -867,7 +1086,43 @@ varactor_nsd_hv   = tap.and(nsdm).not(hvtp).not(ncm).and(hvi).and(lvtn).and(nwel
 
 logger.info("Starting VPP CAP DERIVATIONS")
 
-# 
+# General VPP capacitor derivation
+met2_vpp = met2.interacting(met2_pin).and(vpp)
+
+# Float metal 3 VPP capacitor
+met3_vpp = met3.interacting(met3_pin).and(vpp)
+
+# Float metal 4 VPP capacitor
+met4_vpp = met4.interacting(met4_pin).and(vpp)
+
+# Float metal 5 VPP capacitor
+met5_vpp = met5.interacting(met5_pin).and(vpp)
+
+
+#==================================
+# ----- INDUCTOR DERIVATIONS ------
+#==================================
+
+logger.info("Startng INDUCTOR DERIVATIONS")
+
+# RF Inductor with 3 turns and internal diameter of 90um
+coil_1 = inductor.interacting(met3.or(met2).and(inductor.covering(met2.and(inductor), 3, 3)).holes.width(100.um, projection).with_distance(89.um, 91.um).polygons)
+
+# RF Inductor with 5 turns and internal diameter of 125um
+coil_2 = inductor.interacting(met3.or(met2).and(inductor.covering(met2.and(inductor), 5, 5)).holes.width(135.um, projection).with_distance(124.um, 126.um).polygons)
+
+# RF Inductor with 5 turns and internal diameter of 220um
+coil_3 = inductor.interacting(met3.or(met2).and(inductor.covering(met2.and(inductor), 5, 5)).holes.width(230.um, projection).with_distance(219.um, 221.um).polygons)
+
+
+#==================================
+# ------- SONOS DERIVATIONS -------
+#==================================
+
+logger.info("Startng SONOS DERIVATIONS")
+
+# Build space flash special SONOSFET original/star
+sonos = ngate.not(hvtp).not(ncm).not(hvi).and(lvtn).not(nwell).and(dnwell).and(tunm).and(ldntm).interacting(areaid_ce)
 
 
 #================================================
@@ -936,6 +1191,7 @@ logger.info("Starting SKY130 LVS connectivity setup (Global connections)")
 
 # Global
 connect_global(sub  , substrate_name)
+connect(pwell_label ,      pwell_pin)
 
 logger.info("Starting SKY130 LVS connectivity setup (Multifinger Devices)")
 
@@ -1078,14 +1334,22 @@ connect(pwell_cont    , licon)
 
 logger.info("Starting LVS FUSE CONNECTIONS")
 
-# Metal2 fuse
-connect(met2_fuse_con_layer    , via2)
+if FUSE == "m2"
 
-# Metal3 fuse
-connect(met3_fuse_con_layer    , via3)
+  # Metal2 fuse
+  connect(met2_fuse_con_layer    , via2)
 
-# Metal4 fuse
-connect(met4_fuse_con_layer    , via4)
+elsif FUSE == "m3"
+
+  # Metal3 fuse
+  connect(met3_fuse_con_layer    , via3)
+
+else
+
+  # Metal4 fuse
+  connect(met4_fuse_con_layer    , via4)
+
+end
 
 
 #==================================
@@ -1126,7 +1390,25 @@ connect(varactor_nsd_hv  ,  licon)
 
 logger.info("Starting LVS VPP CAP CONNECTIONS")
 
-#
+# General VPP capacitor connections
+connect(met2_vpp     ,   met2_con)
+connect(met2_vpp     ,   met2_pin)
+connect(met2_vpp     , met2_label)
+
+# Float metal 3 VPP capacitor
+connect(met3_vpp     ,  met3_ncap)
+connect(met3_vpp     ,   met3_pin)
+connect(met3_vpp     , met3_label)
+
+# Float metal 4 VPP capacitor
+connect(met4_vpp     ,  met4_ncap)
+connect(met4_vpp     ,   met4_pin)
+connect(met4_vpp     , met4_label)
+
+# Float metal 5 VPP capacitor
+connect(met5_vpp     ,   met5_con)
+connect(met5_vpp     ,   met5_pin)
+connect(met5_vpp     , met5_label)
 
 
 #================================================
@@ -1494,18 +1776,25 @@ extract_devices(resistor("sky130_fd_pr__res_generic_m5", 29, NResistor), { "R" =
 
 logger.info("Starting FUSE EXTRACTION")
 
-# sky130_fd_pr__fuse_m2
-logger.info("Extracting sky130_fd_pr__fuse_m2 device")
-extract_devices(resistor("sky130_fd_pr__fuse_m2", 120, NResistor), { "R" => met2_fuse_res_layer, "C" => met2_fuse_con_layer })
+if FUSE == "m2"
 
-# sky130_fd_pr__fuse_m3
-logger.info("Extracting sky130_fd_pr__fuse_m3 device")
-extract_devices(resistor("sky130_fd_pr__fuse_m3", 47, NResistor), { "R" => met3_fuse_res_layer, "C" => met3_fuse_con_layer })
+  # sky130_fd_pr__fuse_m2
+  logger.info("Extracting sky130_fd_pr__fuse_m2 device")
+  extract_devices(resistor("sky130_fd_pr__fuse_m2", 120, NResistor), { "R" => met2_fuse_res_layer, "C" => met2_con })
 
-# sky130_fd_pr__fuse_m4
-logger.info("Extracting sky130_fd_pr__fuse_m4 device")
-extract_devices(resistor("sky130_fd_pr__fuse_m4", 47, NResistor), { "R" => met4_fuse_res_layer, "C" => met4_fuse_con_layer })
+elsif FUSE == "m3"
 
+  # sky130_fd_pr__fuse_m3
+  logger.info("Extracting sky130_fd_pr__fuse_m3 device")
+  extract_devices(resistor("sky130_fd_pr__fuse_m3", 47, NResistor), { "R" => met3_fuse_res_layer, "C" => met3_con })
+
+else
+
+  # sky130_fd_pr__fuse_m4
+  logger.info("Extracting sky130_fd_pr__fuse_m4 device")
+  extract_devices(resistor("sky130_fd_pr__fuse_m4", 47, NResistor), { "R" => met4_fuse_res_layer, "C" => met4_con })
+
+end
 
 #==================================
 # ------- MIMCAP EXTRACTION -------
@@ -1550,6 +1839,47 @@ extract_devices(mos3("sky130_fd_pr__cap_var_hv"), { "SD" => varactor_nsd_hv, "G"
 logger.info("Starting VPP CAP EXTRACTION")
 
 #
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_02p4x04p6_m1m2_noshield"), {"C" => met2_vpp, "M" => vpp, "B" => pwell_pin })
+
+
+#==================================
+# ------ INDUCTOR EXTRACTION ------
+#==================================
+
+logger.info("Starting INDUCTOR EXTRACTION")
+
+# RF Inductor with 3 turns and internal diameter of 90um
+logger.info("Extracting RF Inductor with 3 turns and internal diameter of 90um")
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__rf_ind_03_90"), {"C1" => met3_con, "C2" => met2_con, "M" => coil_1, "B" => pwell_pin })
+
+# RF Inductor with 5 turns and internal diameter of 125um
+logger.info("Extracting RF Inductor with 5 turns and internal diameter of 125um")
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__rf_ind_05_125"), {"C1" => met3_con, "C2" => met2_con, "M" => coil_2, "B" => pwell_pin })
+
+# RF Inductor with 5 turns and internal diameter of 220um
+logger.info("Extracting RF Inductor with 5 turns and internal diameter of 220um")
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__rf_ind_05_220"), {"C1" => met3_con, "C1" => met2_con, "M" => coil_3, "B" => pwell_pin })
+
+
+#==================================
+# ------- SONOS EXTRACTION --------
+#==================================
+
+logger.info("Starting SONOS EXTRACTION")
+
+if SONOS == "original"
+  
+  # Build space flash special SONOSFET original
+  logger.info("Extracting Build space flash special SONOSFET original")
+  extract_devices(mos4("sky130_fd_bs_flash__special_sonosfet_original"), { "SD" => nsd, "G" => sonos, "tS" => nsd, "tD" => nsd, "tG" => poly_con, "W" => sub })
+
+else
+
+  # Build space flash special SONOSFET star
+  logger.info("Extracting Build space flash special SONOSFET star")
+  extract_devices(mos4("sky130_fd_bs_flash__special_sonosfet_star"), { "SD" => nsd, "G" => sonos, "tS" => nsd, "tD" => nsd, "tG" => poly_con, "W" => sub })
+
+end
 
 
 #================================================
