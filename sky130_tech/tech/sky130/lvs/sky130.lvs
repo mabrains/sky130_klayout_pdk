@@ -199,7 +199,7 @@ class SubcircuitModelsReader < RBA::NetlistSpiceReaderDelegate
     if el == "C" && model.include?('SKY130') && model.include?('VPP')
 
       # provide a device class
-      if !(model.include?('FLOAT'))
+      if !(model.include?('FLOATM3') || ["M3","M4","M5"].any?{|substr| model.split("_")[7].include?(substr)})
         cls = RBA::DeviceClassMOS3Transistor::new
         cls.name = model
         circuit.netlist.add(cls)
@@ -213,7 +213,7 @@ class SubcircuitModelsReader < RBA::NetlistSpiceReaderDelegate
         end
       end
       
-      if model.include?('FLOAT')
+      if model.include?('FLOATM3') || ["M3","M4","M5"].any?{|substr| model.split("_")[7].include?(substr)}
         cls = RBA::DeviceClassMOS4Transistor::new
         cls.name = model
         circuit.netlist.add(cls)
@@ -798,7 +798,7 @@ ngate_flash_pass_ll = ngate.not(hvtp).not(ncm).and(hvi).not(lvtn).not(nwell).not
 ngate_3p0v_nvt = ngate.not(hvtp).not(ncm).and(hvi).and(lvtn).not(nwell).not(dnwell).and(areaid_le)
 
 # 5V NMOS transistor native voltage
-ngate_5p0v_nvt = ngate.not(hvtp).not(ncm).and(hvi).and(lvtn).not(nwell).not(dnwell).not(areaid_le).not_interacting(areaid_ed)
+ngate_5p0v_nvt = ngate.not(hvtp).not(ncm).and(hvi).and(lvtn).not(nwell).not(dnwell).not(areaid_le).not_interacting(areaid_ed).not_interacting(vpp)
 
 
 #================================
@@ -1087,16 +1087,723 @@ varactor_nsd_hv   = tap.and(nsdm).not(hvtp).not(ncm).and(hvi).and(lvtn).and(nwel
 logger.info("Starting VPP CAP DERIVATIONS")
 
 # General VPP capacitor derivation
-met2_vpp = met2.interacting(met2_pin).and(vpp)
+vpp_sized     = vpp.sized(0.17.um)
+vpp_met_sized = vpp.sized(0.01.um)
+met1_vpp      = met1.interacting(met1_pin).and(vpp_met_sized)
+met2_vpp      = met2.interacting(met2_pin).and(vpp_met_sized)
+met3_vpp      = met3.interacting(met3_pin).and(vpp_met_sized)
+met4_vpp      = met4.interacting(met4_pin).and(vpp_met_sized)
+met5_vpp      = met5.interacting(met5_pin).and(vpp_met_sized)
 
-# Float metal 3 VPP capacitor
-met3_vpp = met3.interacting(met3_pin).and(vpp)
+#===== DIMENSIONS ======
 
-# Float metal 4 VPP capacitor
-met4_vpp = met4.interacting(met4_pin).and(vpp)
+# VPP capacitor with dimensions of 2.4um x 4.6um
+vpp_dim_02p4x04p6 = vpp_sized.with_area(10.6925.um, 11.3925.um).interacting(vpp_sized.edges.with_length(4.55.um, 4.65.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
 
-# Float metal 5 VPP capacitor
-met5_vpp = met5.interacting(met5_pin).and(vpp)
+# VPP capacitor with dimensions of 2.7um x 6.1um
+vpp_dim_02p7x06p1_fingercap = vpp_sized.with_area(16.0325.um, 16.9125.um).interacting(vpp_sized.edges.with_length(6.05.um, 6.15.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 2.7um x 11.1um
+vpp_dim_02p7x11p1_fingercap = vpp_sized.with_area(29.2825.um, 30.6625.um).interacting(vpp_sized.edges.with_length(11.05.um, 11.15.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 2.7um x 21.1um
+vpp_dim_02p7x21p1_fingercap = vpp_sized.with_area(55.7825.um, 58.1625.um).interacting(vpp_sized.edges.with_length(21.05.um, 21.15.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 2.7um x 41.1um
+vpp_dim_02p7x41p1_fingercap = vpp_sized.with_area(108.7825.um, 113.1625.um).interacting(vpp_sized.edges.with_length(41.05.um, 41.15.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 2.9um x 6.1um
+vpp_dim_02p9x06p1_fingercap2 = vpp_sized.with_area(17.2425.um, 18.1425.um).interacting(vpp_sized.edges.with_length(6.05.um, 6.15.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 3.9um x 3.9um
+vpp_dim_03p9x03p9_floatm3 = vpp_sized.with_area(14.8225.um, 15.6025.um).interacting(vpp_sized.edges.with_length(3.85.um, 3.95.um)).or(met3.with_area(14.8225.um, 15.6025.um).interacting(met3.edges.with_length(3.85.um, 3.95.um))).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 4.4um x 4.6um
+vpp_dim_04p4x04p6 = vpp_sized.with_area(19.7925.um, 20.6925.um).interacting(vpp_sized.edges.with_length(4.55.um, 4.65.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 4.4um x 4.6um
+vpp_dim_04p4x04p6_o2subcell = vpp.with_area(19.7925.um, 20.6925.um).interacting(vpp.edges.with_length(4.55.um, 4.65.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 4.4um x 4.6um
+vpp_dim_04p4x04p6_floatm3 = vpp_sized.with_area(19.7925.um, 20.6925.um).interacting(vpp_sized.edges.with_length(4.55.um, 4.65.um)).or(met3.with_area(19.7925.um, 20.6925.um).interacting(met3.edges.with_length(4.55.um, 4.65.um))).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 4.4um x 4.6um
+vpp_dim_04p4x04p6 = vpp_sized.with_area(19.7925.um, 20.6925.um).interacting(vpp_sized.edges.with_length(4.55.um, 4.65.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 4.4um x 4.6um
+vpp_dim_04p4x04p6_floatm4 = vpp_sized.with_area(19.7925.um, 20.6925.um).interacting(vpp_sized.edges.with_length(4.55.um, 4.65.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 4.4um x 4.6um
+vpp_dim_04p4x04p6_floatm4_top = vpp_sized.with_area(74.0921.um, 75.8241.um).interacting(vpp_sized.edges.with_length(8.81.um, 8.91.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 4.4um x 4.6um
+vpp_dim_04p4x04p6 = vpp_sized.with_area(19.7925.um, 20.6925.um).interacting(vpp_sized.edges.with_length(4.55.um, 4.65.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 4.4um x 4.6um
+vpp_dim_04p4x04p6_o2 = vpp_sized.with_area(19.7925.um, 20.6925.um).interacting(vpp_sized.edges.with_length(4.55.um, 4.65.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 4.4um x 4.6um
+vpp_dim_04p4x04p6 = vpp_sized.with_area(19.7925.um, 20.6925.um).interacting(vpp_sized.edges.with_length(4.55.um, 4.65.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 5.9um x 5.9um
+vpp_dim_05p9x05p9_wafflecap = vpp_sized.with_area(34.2225.um, 35.4025.um).interacting(vpp_sized.edges.with_length(5.85.um, 5.95.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 6.8um x 6.1um
+vpp_dim_06p8x06p1 = vpp_sized.with_area(40.8375.um, 42.1275.um).interacting(vpp_sized.edges.with_length(6.05.um, 6.15.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 6.8um x 6.1um
+vpp_dim_06p8x06p1_top = vpp_sized.with_area(156.0101.um, 158.5221.um).interacting(vpp_sized.edges.with_length(11.81.um, 11.91.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 6.8um x 6.1um
+vpp_dim_06p8x06p1 = vpp_sized.with_area(40.8375.um, 42.1275.um).interacting(vpp_sized.edges.with_length(6.05.um, 6.15.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 6.8um x 6.1um
+vpp_dim_06p8x06p1_top = vpp_sized.with_area(156.0101.um, 158.5221.um).interacting(vpp_sized.edges.with_length(11.81.um, 11.91.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 8.6um x 7.8um
+vpp_dim_08p6x07p8 = vpp_sized.with_area(66.2625.um, 67.9025.um).interacting(vpp_sized.edges.with_length(7.75.um, 7.85.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 8.6um x 7.8um
+vpp_dim_08p6x07p8_o2subcell = vpp.with_area(66.2625.um, 67.9025.um).interacting(vpp.edges.with_length(7.75.um, 7.85.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 8.6um x 7.8um
+vpp_dim_08p6x07p8_floatm3 = vpp_sized.with_area(66.2625.um, 67.9025.um).interacting(vpp_sized.edges.with_length(7.75.um, 7.85.um)).or(met3.with_area(66.2625.um, 67.9025.um).interacting(met3.edges.with_length(7.75.um, 7.85.um))).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 8.6um x 7.8um
+vpp_dim_08p6x07p8 = vpp_sized.with_area(66.2625.um, 67.9025.um).interacting(vpp_sized.edges.with_length(7.75.um, 7.85.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 8.6um x 7.8um
+vpp_dim_08p6x07p8_floatm4 = vpp_sized.with_area(66.2625.um, 67.9025.um).interacting(vpp_sized.edges.with_length(7.75.um, 7.85.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 8.6um x 7.8um
+vpp_dim_08p6x07p8_floatm4_top = vpp_sized.with_area(255.6801.um, 258.8921.um).interacting(vpp_sized.edges.with_length(15.21.um, 15.31.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 8.6um x 7.8um
+vpp_dim_08p6x07p8 = vpp_sized.with_area(66.2625.um, 67.9025.um).interacting(vpp_sized.edges.with_length(7.75.um, 7.85.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 8.6um x 7.8um
+vpp_dim_08p6x07p8 = vpp_sized.with_area(66.2625.um, 67.9025.um).interacting(vpp_sized.edges.with_length(7.75.um, 7.85.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.3um x 11.3um
+vpp_dim_11p3x11p3_wafflecap = vpp_sized.with_area(126.5625.um, 128.8225.um).interacting(vpp_sized.edges.with_length(11.25.um, 11.35.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.3um x 11.8um
+ngate_5p0v_nvt_vpp = ngate.not(hvtp).not(ncm).and(hvi).and(lvtn).not(nwell).not(dnwell).not(areaid_le).not_interacting(areaid_ed).interacting(vpp)
+vpp_dim_11p3x11p8_nhv = vpp_sized.with_area(127.6275.um, 139.1775.um).interacting(vpp_sized.edges.with_length(11.55.um, 12.05.um)).not_covering(met5.extents).interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.3um x 11.8um
+ngate_5p0v_nvt_vpp = ngate.not(hvtp).not(ncm).and(hvi).and(lvtn).not(nwell).not(dnwell).not(areaid_le).not_interacting(areaid_ed).interacting(vpp)
+vpp_dim_11p3x11p8_nhvtop = vpp_sized.with_area(506.4501.um, 529.2101.um).interacting(vpp_sized.edges.with_length(23.01.um, 23.51.um)).not_covering(met5.extents).interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7 = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7_top = vpp_sized.with_area(520.2561.um, 524.8281.um).interacting(vpp_sized.edges.with_length(23.01.um, 23.11.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7 = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7_top = vpp_sized.with_area(520.2561.um, 524.8281.um).interacting(vpp_sized.edges.with_length(23.01.um, 23.11.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7_x6 = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7_x7 = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7_x8 = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7_x9 = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7_x = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7_xtop = vpp_sized.with_area(520.2561.um, 524.8281.um).interacting(vpp_sized.edges.with_length(23.01.um, 23.11.um)).covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7 = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7_top = vpp_sized.with_area(520.2561.um, 524.8281.um).interacting(vpp_sized.edges.with_length(23.01.um, 23.11.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7 = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7_top = vpp_sized.with_area(520.2561.um, 524.8281.um).interacting(vpp_sized.edges.with_length(23.01.um, 23.11.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7 = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7 = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).or(met3.with_area(133.3925.um, 135.7125.um).interacting(met3.edges.with_length(11.65.um, 11.75.um))).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7 = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).or(met3.with_area(133.3925.um, 135.7125.um).interacting(met3.edges.with_length(11.65.um, 11.75.um))).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7_top = vpp_sized.with_area(520.2561.um, 524.8281.um).interacting(vpp_sized.edges.with_length(23.01.um, 23.11.um)).or(met3.with_area(133.3925.um, 135.7125.um).interacting(met3.edges.with_length(11.65.um, 11.75.um))).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7 = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).or(met3.with_area(133.3925.um, 135.7125.um).interacting(met3.edges.with_length(11.65.um, 11.75.um))).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7 = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7_floatm4 = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7_floatm4_top = vpp_sized.with_area(520.2561.um, 524.8281.um).interacting(vpp_sized.edges.with_length(23.01.um, 23.11.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7 = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7 = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7 = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um
+vpp_dim_11p5x11p7 = vpp_sized.with_area(133.3925.um, 135.7125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 11.5um x 23.1um
+vpp_dim_11p5x23p1 = vpp_sized.with_area(263.9225.um, 267.3825.um).interacting(vpp_sized.edges.with_length(23.05.um, 23.15.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 22.5um x 11.7um
+vpp_dim_22p5x11p7 = vpp_sized.with_area(261.5425.um, 264.9625.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 22.5um x 23.1um
+vpp_dim_22p5x23p1 = vpp_sized.with_area(517.4725.um, 522.0325.um).interacting(vpp_sized.edges.with_length(23.05.um, 23.15.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 33.6um x 11.7um
+vpp_dim_33p6x11p7 = vpp_sized.with_area(390.8575.um, 395.3875.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 33.6um x 23.1um
+vpp_dim_33p6x23p1 = vpp_sized.with_area(773.3275.um, 778.9975.um).interacting(vpp_sized.edges.with_length(23.05.um, 23.15.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 44.7um x 11.7um
+vpp_dim_44p7x11p7 = vpp_sized.with_area(520.1725.um, 525.8125.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 44.7um x 23.1um
+vpp_dim_44p7x23p1 = vpp_sized.with_area(1029.1825.um, 1035.9625.um).interacting(vpp_sized.edges.with_length(23.05.um, 23.15.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 55.8um x 11.7um
+vpp_dim_55p8x11p7 = vpp_sized.with_area(649.4875.um, 656.2375.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 55.8um x 11.7um
+vpp_dim_55p8x11p7_m5pullin = vpp_sized.with_area(649.4875.um, 656.2375.um).interacting(vpp_sized.edges.with_length(11.65.um, 11.75.um)).covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 55.8um x 23.1um
+vpp_dim_55p8x23p1 = vpp_sized.with_area(1285.0375.um, 1292.9275.um).interacting(vpp_sized.edges.with_length(23.05.um, 23.15.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 55.8um x 23.1um
+vpp_dim_55p8x23p1_m5pullin = vpp_sized.with_area(1285.0375.um, 1292.9275.um).interacting(vpp_sized.edges.with_length(23.05.um, 23.15.um)).covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+# VPP capacitor with dimensions of 55.8um x 23.1um
+vpp_dim_55p8x23p1_test = vpp_sized.with_area(1285.0375.um, 1292.9275.um).interacting(vpp_sized.edges.with_length(23.05.um, 23.15.um)).not_covering(met5.extents).not_interacting(ngate_5p0v_nvt_vpp)
+
+
+#===== LAYERS ======
+
+# VPP capacitor with layers of m1m2
+vpp_m1m2_noshield_metals = vpp.not_interacting(poly).not_interacting(li).interacting(met1).interacting(met2).not_interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_m1m2_noshield_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).not_interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3m4
+vpp_m1m2m3m4_shieldl1_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).not_interacting(met5)
+vpp_m1m2m3m4_shieldl1_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3m4
+vpp_m1m2m3m4_shieldl1_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).not_interacting(met5)
+vpp_m1m2m3m4_shieldl1_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3m4
+vpp_m1m2m3m4_shieldl1_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).not_interacting(met5)
+vpp_m1m2m3m4_shieldl1_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3m4
+vpp_m1m2m3m4_shieldl1_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).not_interacting(met5)
+vpp_m1m2m3m4_shieldl1_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3m4
+vpp_m1m2m3m4_shieldl1_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).not_interacting(met5)
+vpp_m1m2m3m4_shieldl1_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2
+vpp_m1m2_shieldl1_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_m1m2_shieldl1_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).not_interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2
+vpp_l1m1m2_noshield_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).not_interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_l1m1m2_noshield_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).not_interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2
+vpp_l1m1m2_noshield_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).not_interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_l1m1m2_noshield_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).not_interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2
+vpp_l1m1m2_shieldpo_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_l1m1m2_shieldpo_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).not_interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3
+vpp_m1m2m3_shieldl1_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_m1m2m3_shieldl1_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3
+vpp_m1m2m3_shieldl1m5_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_m1m2m3_shieldl1m5_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3
+vpp_m1m2m3_shieldl1m5_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_m1m2m3_shieldl1m5_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2
+vpp_m1m2_noshield_metals = vpp.not_interacting(poly).not_interacting(li).interacting(met1).interacting(met2).not_interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_m1m2_noshield_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).not_interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2
+vpp_m1m2_noshield_metals = vpp.not_interacting(poly).not_interacting(li).interacting(met1).interacting(met2).not_interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_m1m2_noshield_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).not_interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2
+vpp_m1m2_shieldl1_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).not_interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_m1m2_shieldl1_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).not_interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3m4
+vpp_m1m2m3m4_shieldl1_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).not_interacting(met5)
+vpp_m1m2m3m4_shieldl1_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2m3
+vpp_l1m1m2m3_shieldpom4_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).not_interacting(met5)
+vpp_l1m1m2m3_shieldpom4_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2m3
+vpp_l1m1m2m3_shieldpom4_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).not_interacting(met5)
+vpp_l1m1m2m3_shieldpom4_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3
+vpp_m1m2m3_shieldl1m4_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).not_interacting(met5)
+vpp_m1m2m3_shieldl1m4_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3
+vpp_m1m2m3_shieldl1m4_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).not_interacting(met5)
+vpp_m1m2m3_shieldl1m4_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2
+vpp_l1m1m2_noshield_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).not_interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_l1m1m2_noshield_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).not_interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2
+vpp_l1m1m2_noshield_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).not_interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_l1m1m2_noshield_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).not_interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2
+vpp_l1m1m2_shieldpo_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_l1m1m2_shieldpo_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).not_interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3
+vpp_m1m2m3_shieldl1_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_m1m2m3_shieldl1_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3
+vpp_m1m2m3_shieldl1m5_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_m1m2m3_shieldl1m5_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3
+vpp_m1m2m3_shieldl1m5_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_m1m2m3_shieldl1m5_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2
+vpp_m1m2_noshield_metals = vpp.not_interacting(poly).not_interacting(li).interacting(met1).interacting(met2).not_interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_m1m2_noshield_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).not_interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2
+vpp_m1m2_shieldl1_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).not_interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_m1m2_shieldl1_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).not_interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3m4
+vpp_m1m2m3m4_shieldl1_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).not_interacting(met5)
+vpp_m1m2m3m4_shieldl1_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2m3m4
+vpp_l1m1m2m3m4_shieldm5_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_l1m1m2m3m4_shieldm5_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2m3m4
+vpp_l1m1m2m3m4_shieldm5_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_l1m1m2m3m4_shieldm5_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2m3m4
+vpp_l1m1m2m3m4_shieldm5_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_l1m1m2m3m4_shieldm5_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2m3m4
+vpp_l1m1m2m3m4_shieldm5_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_l1m1m2m3m4_shieldm5_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2m3m4
+vpp_l1m1m2m3m4_shieldpom5_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_l1m1m2m3m4_shieldpom5_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2m3m4
+vpp_l1m1m2m3m4_shieldpom5_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_l1m1m2m3m4_shieldpom5_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2m3m4
+vpp_l1m1m2m3m4_shieldpom5_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_l1m1m2m3m4_shieldpom5_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2m3m4
+vpp_l1m1m2m3m4_shieldpom5_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_l1m1m2m3m4_shieldpom5_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2m3m4
+vpp_l1m1m2m3m4_shieldpom5_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_l1m1m2m3m4_shieldpom5_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2m3m4
+vpp_l1m1m2m3m4_shieldpom5_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_l1m1m2m3m4_shieldpom5_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2m3m4
+vpp_l1m1m2m3m4_shieldpom5_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_l1m1m2m3m4_shieldpom5_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2m3m4
+vpp_l1m1m2m3m4_shieldpom5_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_l1m1m2m3m4_shieldpom5_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2m3
+vpp_l1m1m2m3_shieldm4_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).not_interacting(met5)
+vpp_l1m1m2m3_shieldm4_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2m3
+vpp_l1m1m2m3_shieldm4_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).not_interacting(met5)
+vpp_l1m1m2m3_shieldm4_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2m3
+vpp_l1m1m2m3_shieldpom4_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).not_interacting(met5)
+vpp_l1m1m2m3_shieldpom4_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2m3
+vpp_l1m1m2m3_shieldpom4_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).not_interacting(met5)
+vpp_l1m1m2m3_shieldpom4_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2
+vpp_l1m1m2_noshield_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).not_interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_l1m1m2_noshield_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).not_interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of l1m1m2
+vpp_l1m1m2_shieldpom3_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_l1m1m2_shieldpom3_vias = vpp.not_interacting(licon).interacting(mcon).interacting(via1).not_interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3m4
+vpp_m1m2m3m4_shieldl1m5_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_m1m2m3m4_shieldl1m5_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3m4
+vpp_m1m2m3m4_shieldl1m5_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_m1m2m3m4_shieldl1m5_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3m4
+vpp_m1m2m3m4_shieldm5_metals = vpp.not_interacting(poly).not_interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_m1m2m3m4_shieldm5_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3
+vpp_m1m2m3_shieldl1_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_m1m2m3_shieldl1_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3
+vpp_m1m2m3_shieldl1m5_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_m1m2m3_shieldl1m5_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2m3
+vpp_m1m2m3_shieldl1m5_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_m1m2m3_shieldl1m5_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2
+vpp_m1m2_noshield_metals = vpp.not_interacting(poly).not_interacting(li).interacting(met1).interacting(met2).not_interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_m1m2_noshield_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).not_interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m2
+vpp_m1m2_shieldl1_metals = vpp.not_interacting(poly).interacting(li).interacting(met1).interacting(met2).not_interacting(met3).not_interacting(met4).not_interacting(met5)
+vpp_m1m2_shieldl1_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).not_interacting(via2).not_interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of m1m4
+vpp_m1m4_noshield_metals = vpp.not_interacting(poly).not_interacting(li).interacting(met1).not_interacting(met2).not_interacting(met3).interacting(met4).not_interacting(met5)
+vpp_m1m4_noshield_vias = vpp.not_interacting(licon).not_interacting(mcon).interacting(via1).interacting(via2).interacting(via3).not_interacting(via4)
+
+# VPP capacitor with layers of pol1m1m2m3m4m5
+vpp_pol1m1m2m3m4m5_noshield_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_pol1m1m2m3m4m5_noshield_vias = vpp.interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).interacting(via4)
+
+# VPP capacitor with layers of pol1m1m2m3m4m5
+vpp_pol1m1m2m3m4m5_noshield_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_pol1m1m2m3m4m5_noshield_vias = vpp.interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).interacting(via4)
+
+# VPP capacitor with layers of pol1m1m2m3m4m5
+vpp_pol1m1m2m3m4m5_noshield_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_pol1m1m2m3m4m5_noshield_vias = vpp.interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).interacting(via4)
+
+# VPP capacitor with layers of pol1m1m2m3m4m5
+vpp_pol1m1m2m3m4m5_noshield_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_pol1m1m2m3m4m5_noshield_vias = vpp.interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).interacting(via4)
+
+# VPP capacitor with layers of pol1m1m2m3m4m5
+vpp_pol1m1m2m3m4m5_noshield_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_pol1m1m2m3m4m5_noshield_vias = vpp.interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).interacting(via4)
+
+# VPP capacitor with layers of pol1m1m2m3m4m5
+vpp_pol1m1m2m3m4m5_noshield_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_pol1m1m2m3m4m5_noshield_vias = vpp.interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).interacting(via4)
+
+# VPP capacitor with layers of pol1m1m2m3m4m5
+vpp_pol1m1m2m3m4m5_noshield_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_pol1m1m2m3m4m5_noshield_vias = vpp.interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).interacting(via4)
+
+# VPP capacitor with layers of pol1m1m2m3m4m5
+vpp_pol1m1m2m3m4m5_noshield_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_pol1m1m2m3m4m5_noshield_vias = vpp.interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).interacting(via4)
+
+# VPP capacitor with layers of pol1m1m2m3m4m5
+vpp_pol1m1m2m3m4m5_noshield_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_pol1m1m2m3m4m5_noshield_vias = vpp.interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).interacting(via4)
+
+# VPP capacitor with layers of pol1m1m2m3m4m5
+vpp_pol1m1m2m3m4m5_noshield_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_pol1m1m2m3m4m5_noshield_vias = vpp.interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).interacting(via4)
+
+# VPP capacitor with layers of pol1m1m2m3m4m5
+vpp_pol1m1m2m3m4m5_noshield_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_pol1m1m2m3m4m5_noshield_vias = vpp.interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).interacting(via4)
+
+# VPP capacitor with layers of pol1m1m2m3m4m5
+vpp_pol1m1m2m3m4m5_noshield_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_pol1m1m2m3m4m5_noshield_vias = vpp.interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).interacting(via4)
+
+# VPP capacitor with layers of pol1m1m2m3m4m5
+vpp_pol1m1m2m3m4m5_noshield_metals = vpp.interacting(poly).interacting(li).interacting(met1).interacting(met2).interacting(met3).interacting(met4).interacting(met5)
+vpp_pol1m1m2m3m4m5_noshield_vias = vpp.interacting(licon).interacting(mcon).interacting(via1).interacting(via2).interacting(via3).interacting(via4)
+
+
+#===== DEVICES ======
+
+# VPP capacitor with dimensions of 2.4um x 4.6um and with layers of m1m2
+vpp_02p4x04p6_m1m2_noshield_mk = vpp.not_covering(vpp_dim_02p4x04p6).interacting(vpp_dim_02p4x04p6).interacting(vpp_m1m2_noshield_metals).interacting(vpp_m1m2_noshield_vias)
+
+# VPP capacitor with dimensions of 2.7um x 6.1um and with layers of m1m2m3m4
+vpp_02p7x06p1_m1m2m3m4_shieldl1_fingercap_mk = vpp.not_covering(vpp_dim_02p7x06p1_fingercap).interacting(vpp_dim_02p7x06p1_fingercap).interacting(vpp_m1m2m3m4_shieldl1_metals).interacting(vpp_m1m2m3m4_shieldl1_vias)
+
+# VPP capacitor with dimensions of 2.7um x 11.1um and with layers of m1m2m3m4
+vpp_02p7x11p1_m1m2m3m4_shieldl1_fingercap_mk = vpp.not_covering(vpp_dim_02p7x11p1_fingercap).interacting(vpp_dim_02p7x11p1_fingercap).interacting(vpp_m1m2m3m4_shieldl1_metals).interacting(vpp_m1m2m3m4_shieldl1_vias)
+
+# VPP capacitor with dimensions of 2.7um x 21.1um and with layers of m1m2m3m4
+vpp_02p7x21p1_m1m2m3m4_shieldl1_fingercap_mk = vpp.not_covering(vpp_dim_02p7x21p1_fingercap).interacting(vpp_dim_02p7x21p1_fingercap).interacting(vpp_m1m2m3m4_shieldl1_metals).interacting(vpp_m1m2m3m4_shieldl1_vias)
+
+# VPP capacitor with dimensions of 2.7um x 41.1um and with layers of m1m2m3m4
+vpp_02p7x41p1_m1m2m3m4_shieldl1_fingercap_mk = vpp.not_covering(vpp_dim_02p7x41p1_fingercap).interacting(vpp_dim_02p7x41p1_fingercap).interacting(vpp_m1m2m3m4_shieldl1_metals).interacting(vpp_m1m2m3m4_shieldl1_vias)
+
+# VPP capacitor with dimensions of 2.9um x 6.1um and with layers of m1m2m3m4
+vpp_02p9x06p1_m1m2m3m4_shieldl1_fingercap2_mk = vpp.not_covering(vpp_dim_02p9x06p1_fingercap2).interacting(vpp_dim_02p9x06p1_fingercap2).interacting(vpp_m1m2m3m4_shieldl1_metals).interacting(vpp_m1m2m3m4_shieldl1_vias)
+
+# VPP capacitor with dimensions of 3.9um x 3.9um and with layers of m1m2
+vpp_03p9x03p9_m1m2_shieldl1_floatm3_mk = vpp.not_covering(vpp_dim_03p9x03p9_floatm3).interacting(vpp_dim_03p9x03p9_floatm3).interacting(vpp_m1m2_shieldl1_metals).interacting(vpp_m1m2_shieldl1_vias)
+
+# VPP capacitor with dimensions of 4.4um x 4.6um and with layers of l1m1m2
+vpp_04p4x04p6_l1m1m2_noshield_mk = vpp.not_covering(vpp_dim_04p4x04p6).interacting(vpp_dim_04p4x04p6).interacting(vpp_l1m1m2_noshield_metals).interacting(vpp_l1m1m2_noshield_vias)
+
+# VPP capacitor with dimensions of 4.4um x 4.6um and with layers of l1m1m2
+vpp_04p4x04p6_l1m1m2_noshield_o2subcell_mk = vpp.covering(vpp_dim_04p4x04p6_o2subcell).sized(-0.17.um).interacting(vpp_dim_04p4x04p6_o2subcell).interacting(vpp_l1m1m2_noshield_metals).interacting(vpp_l1m1m2_noshield_vias)
+
+# VPP capacitor with dimensions of 4.4um x 4.6um and with layers of l1m1m2
+vpp_04p4x04p6_l1m1m2_shieldpo_floatm3_mk = vpp.not_covering(vpp_dim_04p4x04p6_floatm3).interacting(vpp_dim_04p4x04p6_floatm3).interacting(vpp_l1m1m2_shieldpo_metals).interacting(vpp_l1m1m2_shieldpo_vias)
+
+# VPP capacitor with dimensions of 4.4um x 4.6um and with layers of m1m2m3
+vpp_04p4x04p6_m1m2m3_shieldl1_mk = vpp.not_covering(vpp_dim_04p4x04p6).interacting(vpp_dim_04p4x04p6).interacting(vpp_m1m2m3_shieldl1_metals).interacting(vpp_m1m2m3_shieldl1_vias)
+
+# VPP capacitor with dimensions of 4.4um x 4.6um and with layers of m1m2m3
+vpp_04p4x04p6_m1m2m3_shieldl1m5_floatm4_mk = vpp.not_covering(vpp_dim_04p4x04p6_floatm4).interacting(vpp_dim_04p4x04p6_floatm4).interacting(vpp_m1m2m3_shieldl1m5_metals).interacting(vpp_m1m2m3_shieldl1m5_vias)
+
+# VPP capacitor with dimensions of 4.4um x 4.6um and with layers of m1m2m3
+vpp_04p4x04p6_m1m2m3_shieldl1m5_floatm4_top_mk = vpp.not_covering(vpp_dim_04p4x04p6_floatm4_top).interacting(vpp_dim_04p4x04p6_floatm4_top).interacting(vpp_m1m2m3_shieldl1m5_metals).interacting(vpp_m1m2m3_shieldl1m5_vias)
+
+# VPP capacitor with dimensions of 4.4um x 4.6um and with layers of m1m2
+vpp_04p4x04p6_m1m2_noshield_mk = vpp.not_covering(vpp_dim_04p4x04p6).interacting(vpp_dim_04p4x04p6).interacting(vpp_m1m2_noshield_metals).interacting(vpp_m1m2_noshield_vias)
+
+# VPP capacitor with dimensions of 4.4um x 4.6um and with layers of m1m2
+vpp_04p4x04p6_m1m2_noshield_o2_mk = vpp.not_covering(vpp_dim_04p4x04p6_o2).interacting(vpp_dim_04p4x04p6_o2).interacting(vpp_m1m2_noshield_metals).interacting(vpp_m1m2_noshield_vias)
+
+# VPP capacitor with dimensions of 4.4um x 4.6um and with layers of m1m2
+vpp_04p4x04p6_m1m2_shieldl1_mk = vpp.not_covering(vpp_dim_04p4x04p6).interacting(vpp_dim_04p4x04p6).interacting(vpp_m1m2_shieldl1_metals).interacting(vpp_m1m2_shieldl1_vias)
+
+# VPP capacitor with dimensions of 5.9um x 5.9um and with layers of m1m2m3m4
+vpp_05p9x05p9_m1m2m3m4_shieldl1_wafflecap_mk = vpp.not_covering(vpp_dim_05p9x05p9_wafflecap).interacting(vpp_dim_05p9x05p9_wafflecap).interacting(vpp_m1m2m3m4_shieldl1_metals).interacting(vpp_m1m2m3m4_shieldl1_vias)
+
+# VPP capacitor with dimensions of 6.8um x 6.1um and with layers of l1m1m2m3
+vpp_06p8x06p1_l1m1m2m3_shieldpom4_mk = vpp.not_covering(vpp_dim_06p8x06p1).interacting(vpp_dim_06p8x06p1).interacting(vpp_l1m1m2m3_shieldpom4_metals).interacting(vpp_l1m1m2m3_shieldpom4_vias)
+
+# VPP capacitor with dimensions of 6.8um x 6.1um and with layers of l1m1m2m3
+vpp_06p8x06p1_l1m1m2m3_shieldpom4_top_mk = vpp.not_covering(vpp_dim_06p8x06p1_top).interacting(vpp_dim_06p8x06p1_top).interacting(vpp_l1m1m2m3_shieldpom4_metals).interacting(vpp_l1m1m2m3_shieldpom4_vias)
+
+# VPP capacitor with dimensions of 6.8um x 6.1um and with layers of m1m2m3
+vpp_06p8x06p1_m1m2m3_shieldl1m4_mk = vpp.not_covering(vpp_dim_06p8x06p1).interacting(vpp_dim_06p8x06p1).interacting(vpp_m1m2m3_shieldl1m4_metals).interacting(vpp_m1m2m3_shieldl1m4_vias)
+
+# VPP capacitor with dimensions of 6.8um x 6.1um and with layers of m1m2m3
+vpp_06p8x06p1_m1m2m3_shieldl1m4_top_mk = vpp.not_covering(vpp_dim_06p8x06p1_top).interacting(vpp_dim_06p8x06p1_top).interacting(vpp_m1m2m3_shieldl1m4_metals).interacting(vpp_m1m2m3_shieldl1m4_vias)
+
+# VPP capacitor with dimensions of 8.6um x 7.8um and with layers of l1m1m2
+vpp_08p6x07p8_l1m1m2_noshield_mk = vpp.not_covering(vpp_dim_08p6x07p8).interacting(vpp_dim_08p6x07p8).interacting(vpp_l1m1m2_noshield_metals).interacting(vpp_l1m1m2_noshield_vias)
+
+# VPP capacitor with dimensions of 8.6um x 7.8um and with layers of l1m1m2
+vpp_08p6x07p8_l1m1m2_noshield_o2subcell_mk = vpp.covering(vpp_dim_08p6x07p8_o2subcell).sized(-0.17.um).interacting(vpp_dim_08p6x07p8_o2subcell).interacting(vpp_l1m1m2_noshield_metals).interacting(vpp_l1m1m2_noshield_vias)
+
+# VPP capacitor with dimensions of 8.6um x 7.8um and with layers of l1m1m2
+vpp_08p6x07p8_l1m1m2_shieldpo_floatm3_mk = vpp.not_covering(vpp_dim_08p6x07p8_floatm3).interacting(vpp_dim_08p6x07p8_floatm3).interacting(vpp_l1m1m2_shieldpo_metals).interacting(vpp_l1m1m2_shieldpo_vias)
+
+# VPP capacitor with dimensions of 8.6um x 7.8um and with layers of m1m2m3
+vpp_08p6x07p8_m1m2m3_shieldl1_mk = vpp.not_covering(vpp_dim_08p6x07p8).interacting(vpp_dim_08p6x07p8).interacting(vpp_m1m2m3_shieldl1_metals).interacting(vpp_m1m2m3_shieldl1_vias)
+
+# VPP capacitor with dimensions of 8.6um x 7.8um and with layers of m1m2m3
+vpp_08p6x07p8_m1m2m3_shieldl1m5_floatm4_mk = vpp.not_covering(vpp_dim_08p6x07p8_floatm4).interacting(vpp_dim_08p6x07p8_floatm4).interacting(vpp_m1m2m3_shieldl1m5_metals).interacting(vpp_m1m2m3_shieldl1m5_vias)
+
+# VPP capacitor with dimensions of 8.6um x 7.8um and with layers of m1m2m3
+vpp_08p6x07p8_m1m2m3_shieldl1m5_floatm4_top_mk = vpp.not_covering(vpp_dim_08p6x07p8_floatm4_top).interacting(vpp_dim_08p6x07p8_floatm4_top).interacting(vpp_m1m2m3_shieldl1m5_metals).interacting(vpp_m1m2m3_shieldl1m5_vias)
+
+# VPP capacitor with dimensions of 8.6um x 7.8um and with layers of m1m2
+vpp_08p6x07p8_m1m2_noshield_mk = vpp.not_covering(vpp_dim_08p6x07p8).interacting(vpp_dim_08p6x07p8).interacting(vpp_m1m2_noshield_metals).interacting(vpp_m1m2_noshield_vias)
+
+# VPP capacitor with dimensions of 8.6um x 7.8um and with layers of m1m2
+vpp_08p6x07p8_m1m2_shieldl1_mk = vpp.not_covering(vpp_dim_08p6x07p8).interacting(vpp_dim_08p6x07p8).interacting(vpp_m1m2_shieldl1_metals).interacting(vpp_m1m2_shieldl1_vias)
+
+# VPP capacitor with dimensions of 11.3um x 11.3um and with layers of m1m2m3m4
+vpp_11p3x11p3_m1m2m3m4_shieldl1_wafflecap_mk = vpp.not_covering(vpp_dim_11p3x11p3_wafflecap).interacting(vpp_dim_11p3x11p3_wafflecap).interacting(vpp_m1m2m3m4_shieldl1_metals).interacting(vpp_m1m2m3m4_shieldl1_vias)
+
+# VPP capacitor with dimensions of 11.3um x 11.8um and with layers of l1m1m2m3m4
+vpp_11p3x11p8_l1m1m2m3m4_shieldm5_nhv_mk = vpp.not_covering(vpp_dim_11p3x11p8_nhv).interacting(vpp_dim_11p3x11p8_nhv).interacting(vpp_l1m1m2m3m4_shieldm5_metals).interacting(vpp_l1m1m2m3m4_shieldm5_vias)
+
+# VPP capacitor with dimensions of 11.3um x 11.8um and with layers of l1m1m2m3m4
+vpp_11p3x11p8_l1m1m2m3m4_shieldm5_nhvtop_mk = vpp.not_covering(vpp_dim_11p3x11p8_nhvtop).interacting(vpp_dim_11p3x11p8_nhvtop).interacting(vpp_l1m1m2m3m4_shieldm5_metals).interacting(vpp_l1m1m2m3m4_shieldm5_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+vpp_11p5x11p7_l1m1m2m3m4_shieldm5_mk = vpp.not_covering(vpp_dim_11p5x11p7).interacting(vpp_dim_11p5x11p7).interacting(vpp_l1m1m2m3m4_shieldm5_metals).interacting(vpp_l1m1m2m3m4_shieldm5_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+vpp_11p5x11p7_l1m1m2m3m4_shieldm5_top_mk = vpp.not_covering(vpp_dim_11p5x11p7_top).interacting(vpp_dim_11p5x11p7_top).interacting(vpp_l1m1m2m3m4_shieldm5_metals).interacting(vpp_l1m1m2m3m4_shieldm5_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_mk = vpp.not_covering(vpp_dim_11p5x11p7).interacting(vpp_dim_11p5x11p7).interacting(vpp_l1m1m2m3m4_shieldpom5_metals).interacting(vpp_l1m1m2m3m4_shieldpom5_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_top_mk = vpp.not_covering(vpp_dim_11p5x11p7_top).interacting(vpp_dim_11p5x11p7_top).interacting(vpp_l1m1m2m3m4_shieldpom5_metals).interacting(vpp_l1m1m2m3m4_shieldpom5_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x6_mk = vpp.not_covering(vpp_dim_11p5x11p7_x6).interacting(vpp_dim_11p5x11p7_x6).interacting(vpp_l1m1m2m3m4_shieldpom5_metals).interacting(vpp_l1m1m2m3m4_shieldpom5_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x7_mk = vpp.not_covering(vpp_dim_11p5x11p7_x7).interacting(vpp_dim_11p5x11p7_x7).interacting(vpp_l1m1m2m3m4_shieldpom5_metals).interacting(vpp_l1m1m2m3m4_shieldpom5_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x8_mk = vpp.not_covering(vpp_dim_11p5x11p7_x8).interacting(vpp_dim_11p5x11p7_x8).interacting(vpp_l1m1m2m3m4_shieldpom5_metals).interacting(vpp_l1m1m2m3m4_shieldpom5_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x9_mk = vpp.not_covering(vpp_dim_11p5x11p7_x9).interacting(vpp_dim_11p5x11p7_x9).interacting(vpp_l1m1m2m3m4_shieldpom5_metals).interacting(vpp_l1m1m2m3m4_shieldpom5_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x_mk = vpp.not_covering(vpp_dim_11p5x11p7_x).interacting(vpp_dim_11p5x11p7_x).interacting(vpp_l1m1m2m3m4_shieldpom5_metals).interacting(vpp_l1m1m2m3m4_shieldpom5_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_xtop_mk = vpp.not_covering(vpp_dim_11p5x11p7_xtop).interacting(vpp_dim_11p5x11p7_xtop).interacting(vpp_l1m1m2m3m4_shieldpom5_metals).interacting(vpp_l1m1m2m3m4_shieldpom5_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3
+vpp_11p5x11p7_l1m1m2m3_shieldm4_mk = vpp.not_covering(vpp_dim_11p5x11p7).interacting(vpp_dim_11p5x11p7).interacting(vpp_l1m1m2m3_shieldm4_metals).interacting(vpp_l1m1m2m3_shieldm4_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3
+vpp_11p5x11p7_l1m1m2m3_shieldm4_top_mk = vpp.not_covering(vpp_dim_11p5x11p7_top).interacting(vpp_dim_11p5x11p7_top).interacting(vpp_l1m1m2m3_shieldm4_metals).interacting(vpp_l1m1m2m3_shieldm4_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3
+vpp_11p5x11p7_l1m1m2m3_shieldpom4_mk = vpp.not_covering(vpp_dim_11p5x11p7).interacting(vpp_dim_11p5x11p7).interacting(vpp_l1m1m2m3_shieldpom4_metals).interacting(vpp_l1m1m2m3_shieldpom4_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3
+vpp_11p5x11p7_l1m1m2m3_shieldpom4_top_mk = vpp.not_covering(vpp_dim_11p5x11p7_top).interacting(vpp_dim_11p5x11p7_top).interacting(vpp_l1m1m2m3_shieldpom4_metals).interacting(vpp_l1m1m2m3_shieldpom4_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2
+vpp_11p5x11p7_l1m1m2_noshield_mk = vpp.not_covering(vpp_dim_11p5x11p7).interacting(vpp_dim_11p5x11p7).interacting(vpp_l1m1m2_noshield_metals).interacting(vpp_l1m1m2_noshield_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2
+vpp_11p5x11p7_l1m1m2_shieldpom3_mk = vpp.not_covering(vpp_dim_11p5x11p7).interacting(vpp_dim_11p5x11p7).interacting(vpp_l1m1m2_shieldpom3_metals).interacting(vpp_l1m1m2_shieldpom3_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2m3m4
+vpp_11p5x11p7_m1m2m3m4_shieldl1m5_mk = vpp.not_covering(vpp_dim_11p5x11p7).interacting(vpp_dim_11p5x11p7).interacting(vpp_m1m2m3m4_shieldl1m5_metals).interacting(vpp_m1m2m3m4_shieldl1m5_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2m3m4
+vpp_11p5x11p7_m1m2m3m4_shieldl1m5_top_mk = vpp.not_covering(vpp_dim_11p5x11p7_top).interacting(vpp_dim_11p5x11p7_top).interacting(vpp_m1m2m3m4_shieldl1m5_metals).interacting(vpp_m1m2m3m4_shieldl1m5_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2m3m4
+vpp_11p5x11p7_m1m2m3m4_shieldm5_mk = vpp.not_covering(vpp_dim_11p5x11p7).interacting(vpp_dim_11p5x11p7).interacting(vpp_m1m2m3m4_shieldm5_metals).interacting(vpp_m1m2m3m4_shieldm5_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2m3
+vpp_11p5x11p7_m1m2m3_shieldl1_mk = vpp.not_covering(vpp_dim_11p5x11p7).interacting(vpp_dim_11p5x11p7).interacting(vpp_m1m2m3_shieldl1_metals).interacting(vpp_m1m2m3_shieldl1_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2m3
+vpp_11p5x11p7_m1m2m3_shieldl1m5_floatm4_mk = vpp.not_covering(vpp_dim_11p5x11p7_floatm4).interacting(vpp_dim_11p5x11p7_floatm4).interacting(vpp_m1m2m3_shieldl1m5_metals).interacting(vpp_m1m2m3_shieldl1m5_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2m3
+vpp_11p5x11p7_m1m2m3_shieldl1m5_floatm4_top_mk = vpp.not_covering(vpp_dim_11p5x11p7_floatm4_top).interacting(vpp_dim_11p5x11p7_floatm4_top).interacting(vpp_m1m2m3_shieldl1m5_metals).interacting(vpp_m1m2m3_shieldl1m5_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2
+vpp_11p5x11p7_m1m2_noshield_mk = vpp.not_covering(vpp_dim_11p5x11p7).interacting(vpp_dim_11p5x11p7).interacting(vpp_m1m2_noshield_metals).interacting(vpp_m1m2_noshield_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2
+vpp_11p5x11p7_m1m2_shieldl1_mk = vpp.not_covering(vpp_dim_11p5x11p7).interacting(vpp_dim_11p5x11p7).interacting(vpp_m1m2_shieldl1_metals).interacting(vpp_m1m2_shieldl1_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m4
+vpp_11p5x11p7_m1m4_noshield_mk = vpp.not_covering(vpp_dim_11p5x11p7).interacting(vpp_dim_11p5x11p7).interacting(vpp_m1m4_noshield_metals).interacting(vpp_m1m4_noshield_vias)
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of pol1m1m2m3m4m5
+vpp_11p5x11p7_pol1m1m2m3m4m5_noshield_mk = vpp.not_covering(vpp_dim_11p5x11p7).interacting(vpp_dim_11p5x11p7).interacting(vpp_pol1m1m2m3m4m5_noshield_metals).interacting(vpp_pol1m1m2m3m4m5_noshield_vias)
+
+# VPP capacitor with dimensions of 11.5um x 23.1um and with layers of pol1m1m2m3m4m5
+vpp_11p5x23p1_pol1m1m2m3m4m5_noshield_mk = vpp.not_covering(vpp_dim_11p5x23p1).interacting(vpp_dim_11p5x23p1).interacting(vpp_pol1m1m2m3m4m5_noshield_metals).interacting(vpp_pol1m1m2m3m4m5_noshield_vias)
+
+# VPP capacitor with dimensions of 22.5um x 11.7um and with layers of pol1m1m2m3m4m5
+vpp_22p5x11p7_pol1m1m2m3m4m5_noshield_mk = vpp.not_covering(vpp_dim_22p5x11p7).interacting(vpp_dim_22p5x11p7).interacting(vpp_pol1m1m2m3m4m5_noshield_metals).interacting(vpp_pol1m1m2m3m4m5_noshield_vias)
+
+# VPP capacitor with dimensions of 22.5um x 23.1um and with layers of pol1m1m2m3m4m5
+vpp_22p5x23p1_pol1m1m2m3m4m5_noshield_mk = vpp.not_covering(vpp_dim_22p5x23p1).interacting(vpp_dim_22p5x23p1).interacting(vpp_pol1m1m2m3m4m5_noshield_metals).interacting(vpp_pol1m1m2m3m4m5_noshield_vias)
+
+# VPP capacitor with dimensions of 33.6um x 11.7um and with layers of pol1m1m2m3m4m5
+vpp_33p6x11p7_pol1m1m2m3m4m5_noshield_mk = vpp.not_covering(vpp_dim_33p6x11p7).interacting(vpp_dim_33p6x11p7).interacting(vpp_pol1m1m2m3m4m5_noshield_metals).interacting(vpp_pol1m1m2m3m4m5_noshield_vias)
+
+# VPP capacitor with dimensions of 33.6um x 23.1um and with layers of pol1m1m2m3m4m5
+vpp_33p6x23p1_pol1m1m2m3m4m5_noshield_mk = vpp.not_covering(vpp_dim_33p6x23p1).interacting(vpp_dim_33p6x23p1).interacting(vpp_pol1m1m2m3m4m5_noshield_metals).interacting(vpp_pol1m1m2m3m4m5_noshield_vias)
+
+# VPP capacitor with dimensions of 44.7um x 11.7um and with layers of pol1m1m2m3m4m5
+vpp_44p7x11p7_pol1m1m2m3m4m5_noshield_mk = vpp.not_covering(vpp_dim_44p7x11p7).interacting(vpp_dim_44p7x11p7).interacting(vpp_pol1m1m2m3m4m5_noshield_metals).interacting(vpp_pol1m1m2m3m4m5_noshield_vias)
+
+# VPP capacitor with dimensions of 44.7um x 23.1um and with layers of pol1m1m2m3m4m5
+vpp_44p7x23p1_pol1m1m2m3m4m5_noshield_mk = vpp.not_covering(vpp_dim_44p7x23p1).interacting(vpp_dim_44p7x23p1).interacting(vpp_pol1m1m2m3m4m5_noshield_metals).interacting(vpp_pol1m1m2m3m4m5_noshield_vias)
+
+# VPP capacitor with dimensions of 55.8um x 11.7um and with layers of pol1m1m2m3m4m5
+vpp_55p8x11p7_pol1m1m2m3m4m5_noshield_mk = vpp.not_covering(vpp_dim_55p8x11p7).interacting(vpp_dim_55p8x11p7).interacting(vpp_pol1m1m2m3m4m5_noshield_metals).interacting(vpp_pol1m1m2m3m4m5_noshield_vias)
+
+# VPP capacitor with dimensions of 55.8um x 11.7um and with layers of pol1m1m2m3m4m5
+vpp_55p8x11p7_pol1m1m2m3m4m5_noshield_m5pullin_mk = vpp.not_covering(vpp_dim_55p8x11p7_m5pullin).interacting(vpp_dim_55p8x11p7_m5pullin).interacting(vpp_pol1m1m2m3m4m5_noshield_metals).interacting(vpp_pol1m1m2m3m4m5_noshield_vias)
+
+# VPP capacitor with dimensions of 55.8um x 23.1um and with layers of pol1m1m2m3m4m5
+vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_mk = vpp.not_covering(vpp_dim_55p8x23p1).interacting(vpp_dim_55p8x23p1).interacting(vpp_pol1m1m2m3m4m5_noshield_metals).interacting(vpp_pol1m1m2m3m4m5_noshield_vias)
+
+# VPP capacitor with dimensions of 55.8um x 23.1um and with layers of pol1m1m2m3m4m5
+vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_m5pullin_mk = vpp.not_covering(vpp_dim_55p8x23p1_m5pullin).interacting(vpp_dim_55p8x23p1_m5pullin).interacting(vpp_pol1m1m2m3m4m5_noshield_metals).interacting(vpp_pol1m1m2m3m4m5_noshield_vias)
+
+# VPP capacitor with dimensions of 55.8um x 23.1um and with layers of pol1m1m2m3m4m5
+vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_test_mk = vpp.not_covering(vpp_dim_55p8x23p1_test).interacting(vpp_dim_55p8x23p1_test).interacting(vpp_pol1m1m2m3m4m5_noshield_metals).interacting(vpp_pol1m1m2m3m4m5_noshield_vias)
 
 
 #==================================
@@ -1187,11 +1894,23 @@ connect(met4_ncap   ,       met4_pin)
 connect(met5_con    ,       met5_pin)
 connect(rdl         ,        rdl_pin)
 
+# Attaching pins & labels
+connect(sub_label   ,        sub_pin)
+connect(pwell_label ,      pwell_pin)
+connect(nwell_label ,      nwell_pin)
+connect(poly_label  ,       poly_pin)
+connect(li_label    ,         li_pin)
+connect(met1_label  ,       met1_pin)
+connect(met2_label  ,       met2_pin)
+connect(met3_label  ,       met3_pin)
+connect(met4_label  ,       met4_pin)
+connect(met5_label  ,       met5_pin)
+connect(rdl_label   ,        rdl_pin)
+
 logger.info("Starting SKY130 LVS connectivity setup (Global connections)")
 
 # Global
 connect_global(sub  , substrate_name)
-connect(pwell_label ,      pwell_pin)
 
 logger.info("Starting SKY130 LVS connectivity setup (Multifinger Devices)")
 
@@ -1391,21 +2110,22 @@ connect(varactor_nsd_hv  ,  licon)
 logger.info("Starting LVS VPP CAP CONNECTIONS")
 
 # General VPP capacitor connections
+connect(met1_vpp     ,   met1_con)
+connect(met1_vpp     ,   met1_pin)
+connect(met1_vpp     , met1_label)
+
 connect(met2_vpp     ,   met2_con)
 connect(met2_vpp     ,   met2_pin)
 connect(met2_vpp     , met2_label)
 
-# Float metal 3 VPP capacitor
 connect(met3_vpp     ,  met3_ncap)
 connect(met3_vpp     ,   met3_pin)
 connect(met3_vpp     , met3_label)
 
-# Float metal 4 VPP capacitor
 connect(met4_vpp     ,  met4_ncap)
 connect(met4_vpp     ,   met4_pin)
 connect(met4_vpp     , met4_label)
 
-# Float metal 5 VPP capacitor
 connect(met5_vpp     ,   met5_con)
 connect(met5_vpp     ,   met5_pin)
 connect(met5_vpp     , met5_label)
@@ -1838,8 +2558,215 @@ extract_devices(mos3("sky130_fd_pr__cap_var_hv"), { "SD" => varactor_nsd_hv, "G"
 
 logger.info("Starting VPP CAP EXTRACTION")
 
-#
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_02p4x04p6_m1m2_noshield"), {"C" => met2_vpp, "M" => vpp, "B" => pwell_pin })
+# VPP capacitor with dimensions of 2.4um x 4.6um and with layers of m1m2
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_02p4x04p6_m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_02p4x04p6_m1m2_noshield_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 2.7um x 6.1um and with layers of m1m2m3m4
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_02p7x06p1_m1m2m3m4_shieldl1_fingercap"), {"C" => met2_vpp, "M" => vpp_02p7x06p1_m1m2m3m4_shieldl1_fingercap_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 2.7um x 11.1um and with layers of m1m2m3m4
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_02p7x11p1_m1m2m3m4_shieldl1_fingercap"), {"C" => met2_vpp, "M" => vpp_02p7x11p1_m1m2m3m4_shieldl1_fingercap_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 2.7um x 21.1um and with layers of m1m2m3m4
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_02p7x21p1_m1m2m3m4_shieldl1_fingercap"), {"C" => met2_vpp, "M" => vpp_02p7x21p1_m1m2m3m4_shieldl1_fingercap_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 2.7um x 41.1um and with layers of m1m2m3m4
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_02p7x41p1_m1m2m3m4_shieldl1_fingercap"), {"C" => met2_vpp, "M" => vpp_02p7x41p1_m1m2m3m4_shieldl1_fingercap_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 2.9um x 6.1um and with layers of m1m2m3m4
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_02p9x06p1_m1m2m3m4_shieldl1_fingercap2"), {"C" => met2_vpp, "M" => vpp_02p9x06p1_m1m2m3m4_shieldl1_fingercap2_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 3.9um x 3.9um and with layers of m1m2
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_03p9x03p9_m1m2_shieldl1_floatm3"), {"C1" => met2_vpp, "C2" => met3_vpp, "M" => vpp_03p9x03p9_m1m2_shieldl1_floatm3_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 4.4um x 4.6um and with layers of l1m1m2
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_l1m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_04p4x04p6_l1m1m2_noshield_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 4.4um x 4.6um and with layers of l1m1m2
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_l1m1m2_noshield_o2subcell"), {"C" => met2_vpp, "M" => vpp_04p4x04p6_l1m1m2_noshield_o2subcell_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 4.4um x 4.6um and with layers of l1m1m2
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_l1m1m2_shieldpo_floatm3"), {"C1" => met2_vpp, "C2" => met3_vpp, "M" => vpp_04p4x04p6_l1m1m2_shieldpo_floatm3_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 4.4um x 4.6um and with layers of m1m2m3
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_m1m2m3_shieldl1"), {"C" => met2_vpp, "M" => vpp_04p4x04p6_m1m2m3_shieldl1_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 4.4um x 4.6um and with layers of m1m2m3
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_m1m2m3_shieldl1m5_floatm4"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_04p4x04p6_m1m2m3_shieldl1m5_floatm4_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 4.4um x 4.6um and with layers of m1m2m3
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_m1m2m3_shieldl1m5_floatm4_top"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_04p4x04p6_m1m2m3_shieldl1m5_floatm4_top_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 4.4um x 4.6um and with layers of m1m2
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_04p4x04p6_m1m2_noshield_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 4.4um x 4.6um and with layers of m1m2
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_m1m2_noshield_o2"), {"C" => met2_vpp, "M" => vpp_04p4x04p6_m1m2_noshield_o2_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 4.4um x 4.6um and with layers of m1m2
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_m1m2_shieldl1"), {"C" => met2_vpp, "M" => vpp_04p4x04p6_m1m2_shieldl1_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 5.9um x 5.9um and with layers of m1m2m3m4
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_05p9x05p9_m1m2m3m4_shieldl1_wafflecap"), {"C" => met2_vpp, "M" => vpp_05p9x05p9_m1m2m3m4_shieldl1_wafflecap_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 6.8um x 6.1um and with layers of l1m1m2m3
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_06p8x06p1_l1m1m2m3_shieldpom4"), {"C1" => met2_vpp, "C2" => met4_vpp, "M" => vpp_06p8x06p1_l1m1m2m3_shieldpom4_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 6.8um x 6.1um and with layers of l1m1m2m3
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_06p8x06p1_l1m1m2m3_shieldpom4_top"), {"C1" => met2_vpp, "C2" => met4_vpp, "M" => vpp_06p8x06p1_l1m1m2m3_shieldpom4_top_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 6.8um x 6.1um and with layers of m1m2m3
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_06p8x06p1_m1m2m3_shieldl1m4"), {"C1" => met2_vpp, "C2" => met4_vpp, "M" => vpp_06p8x06p1_m1m2m3_shieldl1m4_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 6.8um x 6.1um and with layers of m1m2m3
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_06p8x06p1_m1m2m3_shieldl1m4_top"), {"C1" => met2_vpp, "C2" => met4_vpp, "M" => vpp_06p8x06p1_m1m2m3_shieldl1m4_top_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 8.6um x 7.8um and with layers of l1m1m2
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_l1m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_08p6x07p8_l1m1m2_noshield_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 8.6um x 7.8um and with layers of l1m1m2
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_l1m1m2_noshield_o2subcell"), {"C" => met2_vpp, "M" => vpp_08p6x07p8_l1m1m2_noshield_o2subcell_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 8.6um x 7.8um and with layers of l1m1m2
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_l1m1m2_shieldpo_floatm3"), {"C1" => met2_vpp, "C2" => met3_vpp, "M" => vpp_08p6x07p8_l1m1m2_shieldpo_floatm3_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 8.6um x 7.8um and with layers of m1m2m3
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_m1m2m3_shieldl1"), {"C" => met2_vpp, "M" => vpp_08p6x07p8_m1m2m3_shieldl1_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 8.6um x 7.8um and with layers of m1m2m3
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_m1m2m3_shieldl1m5_floatm4"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_08p6x07p8_m1m2m3_shieldl1m5_floatm4_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 8.6um x 7.8um and with layers of m1m2m3
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_m1m2m3_shieldl1m5_floatm4_top"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_08p6x07p8_m1m2m3_shieldl1m5_floatm4_top_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 8.6um x 7.8um and with layers of m1m2
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_08p6x07p8_m1m2_noshield_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 8.6um x 7.8um and with layers of m1m2
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_m1m2_shieldl1"), {"C" => met2_vpp, "M" => vpp_08p6x07p8_m1m2_shieldl1_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.3um x 11.3um and with layers of m1m2m3m4
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p3x11p3_m1m2m3m4_shieldl1_wafflecap"), {"C" => met2_vpp, "M" => vpp_11p3x11p3_m1m2m3m4_shieldl1_wafflecap_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.3um x 11.8um and with layers of l1m1m2m3m4
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p3x11p8_l1m1m2m3m4_shieldm5_nhv"), {"C1" => met1_vpp, "C2" => met2_vpp, "M" => vpp_11p3x11p8_l1m1m2m3m4_shieldm5_nhv_mk, "B" => met5_pin })
+
+# VPP capacitor with dimensions of 11.3um x 11.8um and with layers of l1m1m2m3m4
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p3x11p8_l1m1m2m3m4_shieldm5_nhvtop"), {"C1" => met1_vpp, "C2" => met2_vpp, "M" => vpp_11p3x11p8_l1m1m2m3m4_shieldm5_nhvtop_mk, "B" => met5_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldm5"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldm5_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldm5_top"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldm5_top_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_top"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_top_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x6"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x6_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x7"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x7_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x8"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x8_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x9"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x9_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_xtop"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_xtop_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3_shieldm4"), {"C1" => met2_vpp, "C2" => met4_vpp, "M" => vpp_11p5x11p7_l1m1m2m3_shieldm4_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3_shieldm4_top"), {"C1" => met2_vpp, "C2" => met4_vpp, "M" => vpp_11p5x11p7_l1m1m2m3_shieldm4_top_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3_shieldpom4"), {"C1" => met2_vpp, "C2" => met4_vpp, "M" => vpp_11p5x11p7_l1m1m2m3_shieldpom4_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3_shieldpom4_top"), {"C1" => met2_vpp, "C2" => met4_vpp, "M" => vpp_11p5x11p7_l1m1m2m3_shieldpom4_top_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_11p5x11p7_l1m1m2_noshield_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2_shieldpom3"), {"C1" => met2_vpp, "C2" => met3_vpp, "M" => vpp_11p5x11p7_l1m1m2_shieldpom3_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2m3m4
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2m3m4_shieldl1m5"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_m1m2m3m4_shieldl1m5_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2m3m4
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2m3m4_shieldl1m5_top"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_m1m2m3m4_shieldl1m5_top_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2m3m4
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2m3m4_shieldm5"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_m1m2m3m4_shieldm5_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2m3
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2m3_shieldl1"), {"C" => met2_vpp, "M" => vpp_11p5x11p7_m1m2m3_shieldl1_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2m3
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2m3_shieldl1m5_floatm4"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_m1m2m3_shieldl1m5_floatm4_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2m3
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2m3_shieldl1m5_floatm4_top"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_m1m2m3_shieldl1m5_floatm4_top_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_11p5x11p7_m1m2_noshield_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2_shieldl1"), {"C" => met2_vpp, "M" => vpp_11p5x11p7_m1m2_shieldl1_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m4
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m4_noshield"), {"C" => met2_vpp, "M" => vpp_11p5x11p7_m1m4_noshield_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 11.7um and with layers of pol1m1m2m3m4m5
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_11p5x11p7_pol1m1m2m3m4m5_noshield_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 11.5um x 23.1um and with layers of pol1m1m2m3m4m5
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x23p1_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_11p5x23p1_pol1m1m2m3m4m5_noshield_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 22.5um x 11.7um and with layers of pol1m1m2m3m4m5
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_22p5x11p7_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_22p5x11p7_pol1m1m2m3m4m5_noshield_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 22.5um x 23.1um and with layers of pol1m1m2m3m4m5
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_22p5x23p1_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_22p5x23p1_pol1m1m2m3m4m5_noshield_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 33.6um x 11.7um and with layers of pol1m1m2m3m4m5
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_33p6x11p7_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_33p6x11p7_pol1m1m2m3m4m5_noshield_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 33.6um x 23.1um and with layers of pol1m1m2m3m4m5
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_33p6x23p1_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_33p6x23p1_pol1m1m2m3m4m5_noshield_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 44.7um x 11.7um and with layers of pol1m1m2m3m4m5
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_44p7x11p7_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_44p7x11p7_pol1m1m2m3m4m5_noshield_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 44.7um x 23.1um and with layers of pol1m1m2m3m4m5
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_44p7x23p1_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_44p7x23p1_pol1m1m2m3m4m5_noshield_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 55.8um x 11.7um and with layers of pol1m1m2m3m4m5
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_55p8x11p7_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_55p8x11p7_pol1m1m2m3m4m5_noshield_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 55.8um x 11.7um and with layers of pol1m1m2m3m4m5
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_55p8x11p7_pol1m1m2m3m4m5_noshield_m5pullin"), {"C" => met2_vpp, "M" => vpp_55p8x11p7_pol1m1m2m3m4m5_noshield_m5pullin_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 55.8um x 23.1um and with layers of pol1m1m2m3m4m5
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_55p8x23p1_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 55.8um x 23.1um and with layers of pol1m1m2m3m4m5
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_m5pullin"), {"C" => met2_vpp, "M" => vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_m5pullin_mk, "B" => pwell_pin })
+
+# VPP capacitor with dimensions of 55.8um x 23.1um and with layers of pol1m1m2m3m4m5
+extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_test"), {"C" => met2_vpp, "M" => vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_test_mk, "B" => pwell_pin })
 
 
 #==================================
