@@ -747,12 +747,12 @@ pgate_1p8v_hvt = pgate.and(hvtp).not(ncm).not(hvi).not(lvtn).and(nwell).not(dnwe
 pgate_5p0v_hv = pgate.not(hvtp).not(ncm).and(hvi).not(lvtn).and(nwell).not(dnwell).not_interacting(areaid_ed)
 
 # 5V gate 16V drain PMOS transistor
-pgate_5p0v_vhv = pgate.not(hvtp).not(ncm).and(hvi).not(lvtn).and(nwell).and(dnwell).not_interacting(lvtn).and(areaid_en)
+pgate_5p0v_vhv = pgate.not(hvtp).not(ncm).and(hvi).not_interacting(lvtn).and(nwell).and(dnwell).and(areaid_en)
 pd_5p0v_vhv    = ptap.not(hvtp).not(ncm).and(hvi).not(lvtn).not(nwell).and(dnwell).and(areaid_en)
 ps_5p0v_vhv    = pcomp.not(hvtp).not(ncm).and(hvi).not(lvtn).and(nwell).and(dnwell).and(areaid_en).not(poly)
 psd_5p0v_vhv   = pd_5p0v_vhv.or(pcomp.interacting(ps_5p0v_vhv)).sized(0.6.um).sized(-0.6.um).extents.not(pgate_5p0v_vhv).and(areaid_en)
 
-# 5V gate 20V drain PMOS transistor with ptap
+# 5V gate 20V drain PMOS transistor
 pgate_5p0v_uhv = pgate.not(hvtp).not(ncm).and(hvi).not(lvtn).and(nwell).and(dnwell).interacting(lvtn).and(areaid_en20)
 pd_5p0v_uhv    = ptap.not(hvtp).not(ncm).and(hvi).and(lvtn).not(nwell).and(dnwell).and(areaid_en20)
 ps_5p0v_uhv    = pcomp.not(hvtp).not(ncm).and(hvi).not(lvtn).and(nwell).and(dnwell).and(areaid_en20).not(poly)
@@ -780,16 +780,40 @@ ngate_1p8v_lvt = ngate.not(hvtp).not(ncm).not(hvi).and(lvtn).not(nwell).not(dnwe
 ngate_5p0v_hv = ngate.not(hvtp).not(ncm).and(hvi).not(lvtn).not(nwell).not(dnwell).not(ldntm).not_interacting(areaid_ce).not_interacting(areaid_ed).not_interacting(poly_model).not_interacting(areaid_en)
 
 # 5V gate 16V drain NMOS transistor
-ngate_5p0v_vhv = ngate.not(hvtp).not(ncm).and(hvi).not(lvtn).not(nwell).not(dnwell).not_interacting(lvtn).and(areaid_en)
+ngate_5p0v_vhv = ngate.not(hvtp).not(ncm).and(hvi).not_interacting(lvtn).not(nwell).not(dnwell).and(areaid_en)
 nd_5p0v_vhv    = ntap.not(hvtp).not(ncm).and(hvi).not(lvtn).and(nwell).not(dnwell).and(areaid_en)
 ns_5p0v_vhv    = ncomp.not(hvtp).not(ncm).and(hvi).not(lvtn).not(nwell).not(dnwell).and(areaid_en).not(poly)
 nsd_5p0v_vhv   = nd_5p0v_vhv.or(ncomp.interacting(ns_5p0v_vhv)).sized(0.8.um).sized(-0.8.um).extents.not(ngate_5p0v_vhv).and(areaid_en)
 
-# 5V gate 20V drain NMOS transistor without ptap
-ngate_5p0v_uhv_noptap = ngate.not(hvtp).not(ncm).and(hvi).not(lvtn).not(nwell).and(dnwell).interacting(lvtn).and(areaid_en20)
-nd_5p0v_uhv_noptap    = ntap.not(hvtp).not(ncm).and(hvi).and(lvtn).and(nwell).and(dnwell).and(areaid_en20)
-ns_5p0v_uhv_noptap    = ncomp.not(hvtp).not(ncm).and(hvi).not(lvtn).not(nwell).and(dnwell).and(areaid_en20)
-nsd_5p0v_uhv_noptap   = nd_5p0v_uhv.or(ncomp.interacting(ns_5p0v_uhv)).sized(1.um).sized(-1.um).extents.not(ngate_5p0v_uhv).and(areaid_en20)
+# 5V gate 20V drain NMOS transistor
+ngate_5p0v_uhv = ngate.not(hvtp).not(ncm).and(hvi).interacting(lvtn).not(nwell).and(dnwell).and(areaid_en20)
+nd_5p0v_uhv    = ntap.not(hvtp).not(ncm).and(hvi).and(lvtn).and(nwell).and(areaid_en20)
+ns_5p0v_uhv    = ncomp.not(hvtp).not(ncm).and(hvi).not(lvtn).not(nwell).and(areaid_en20).not(poly)
+nsd_5p0v_uhv   = nd_5p0v_uhv.or(ncomp.interacting(ns_5p0v_uhv)).sized(1.um).sized(-1.um).extents.not(ngate_5p0v_uhv).and(dnwell.covering(nd_5p0v_uhv).not_interacting(ns_5p0v_uhv)).and(areaid_en20)
+
+# 5V gate 20V drain NMOS transistor isolated
+ngate_5p0v_uhv_iso = ngate.not(hvtp).not(ncm).and(hvi).interacting(lvtn).not(nwell).and(dnwell).and(areaid_en20)
+nd_5p0v_uhv_iso    = ntap.not(hvtp).not(ncm).and(hvi).and(lvtn).and(nwell).and(dnwell).and(areaid_en20)
+ns_5p0v_uhv_iso    = ncomp.not(hvtp).not(ncm).and(hvi).not(lvtn).not(nwell).and(dnwell).and(areaid_en20).not(poly)
+nsd_5p0v_uhv_iso   = nd_5p0v_uhv_iso.or(ncomp.interacting(ns_5p0v_uhv_iso)).sized(1.um).sized(-1.um).extents.not(ngate_5p0v_uhv_iso).and(dnwell.covering(nd_5p0v_uhv_iso.or(ns_5p0v_uhv_iso))).and(areaid_en20)
+
+# 5V gate 20V drain NMOS transistor native voltage
+ngate_5p0v_uhv_nvt = ngate.not(hvtp).not(ncm).and(hvi).and(lvtn).not(nwell).and(dnwell).and(areaid_en20)
+nd_5p0v_uhv_nvt    = ntap.not(hvtp).not(ncm).and(hvi).and(lvtn).and(nwell).and(areaid_en20)
+ns_5p0v_uhv_nvt    = ncomp.not(hvtp).not(ncm).and(hvi).and(lvtn).not(nwell).and(areaid_en20).not(poly)
+nsd_5p0v_uhv_nvt   = nd_5p0v_uhv_nvt.or(ncomp.interacting(ns_5p0v_uhv_nvt)).sized(1.um).sized(-1.um).extents.not(ngate_5p0v_uhv_nvt).and(dnwell.covering(nd_5p0v_uhv_nvt).not_interacting(ns_5p0v_uhv_nvt)).and(areaid_en20)
+
+# 5V gate 20V drain NMOS transistor native voltage isolated
+ngate_5p0v_uhv_nvt_iso = ngate.not(hvtp).not(ncm).and(hvi).and(lvtn).not(nwell).and(dnwell).and(areaid_en20)
+nd_5p0v_uhv_nvt_iso    = ntap.not(hvtp).not(ncm).and(hvi).and(lvtn).and(nwell).and(dnwell).and(areaid_en20)
+ns_5p0v_uhv_nvt_iso    = ncomp.not(hvtp).not(ncm).and(hvi).and(lvtn).not(nwell).and(dnwell).and(areaid_en20).not(poly)
+nsd_5p0v_uhv_nvt_iso   = nd_5p0v_uhv_nvt.or(ncomp.interacting(ns_5p0v_uhv_nvt)).sized(1.um).sized(-1.um).extents.not(ngate_5p0v_uhv_nvt).and(areaid_en20)
+
+# 5V gate 20V drain NMOS transistor zero threshold voltage
+ngate_5p0v_uhv_zvt = ngate.not(hvtp).not(ncm).and(hvi).interacting(lvtn).not(nwell).and(dnwell).and(areaid_en20)
+nd_5p0v_uhv_zvt    = ntap.not(hvtp).not(ncm).and(hvi).and(lvtn).and(nwell).and(dnwell).and(areaid_en20)
+ns_5p0v_uhv_zvt    = ncomp.not(hvtp).not(ncm).and(hvi).not(lvtn).not(nwell).and(dnwell).and(areaid_en20).not(poly)
+nsd_5p0v_uhv_zvt   = nd_5p0v_uhv_zvt.or(ncomp.interacting(ns_5p0v_uhv_zvt)).sized(1.um).sized(-1.um).extents.not(ngate_5p0v_uhv_zvt).interacting(met1.extents.covering(ngate_5p0v_uhv_zvt).covering(nd_5p0v_uhv_zvt).covering(ns_5p0v_uhv_zvt).not_covering(ptap)).and(areaid_en20)
 
 # Pass NMOS transistor
 ngate_pass = ngate.not(hvtp).not(ncm).not(hvi).not(lvtn).not(nwell).not(dnwell).not(ldntm).and(areaid_ce).interacting(poly_model.texts("sky130_fd_pr__special_nfet_pass"))
@@ -2300,6 +2324,66 @@ ngate_01v8_mcM04W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_mcM.a
 # 1.8V RF PMOS transistor with multiplier of 4 width of 5.0um and length of 0.15um type mcM
 ngate_01v8_mcM04W5p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_mcM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p15).interacting(poly_model)
 
+# 5V gate 20V drain RF PMOS transistor with ptap
+pgate_5p0v_uhv_withptap = pgate_5p0v_uhv.inside(ptap.holes).with_area(11.96.um, 18.06.um).interacting(pgate_5p0v_uhv.edges.with_length(0.4.um, 0.6.um))
+pd_5p0v_uhv_withptap    = pd_5p0v_uhv.inside(ptap.holes)
+ps_5p0v_uhv_withptap    = ps_5p0v_uhv.inside(ptap.holes)
+psd_5p0v_uhv_withptap   = psd_5p0v_uhv.inside(ptap.holes).interacting(pgate_5p0v_uhv_withptap, 2, 2)
+
+# 5V gate 20V drain RF NMOS transistor AUP
+ngate_5p0v_uhv_aup = ngate_5p0v_uhv.inside(ptap.holes).with_area(41.86.um, 48.16.um).interacting(ngate_5p0v_uhv.edges.with_length(1.4.um, 1.6.um))
+nd_5p0v_uhv_aup    = nd_5p0v_uhv.inside(ptap.holes)
+ns_5p0v_uhv_aup    = ns_5p0v_uhv.inside(ptap.holes)
+nsd_5p0v_uhv_aup   = nsd_5p0v_uhv.inside(ptap.holes).interacting(ngate_5p0v_uhv_aup, 2, 2).interacting(met1.extents.not_covering(ngate_5p0v_uhv_aup).not_covering(nsd_5p0v_uhv).not_covering(ptap))
+
+# 5V gate 20V drain RF NMOS transistor with ptap
+ngate_5p0v_uhv_withptap = ngate_5p0v_uhv.inside(ptap.holes).with_area(41.86.um, 48.16.um).interacting(ngate_5p0v_uhv.edges.with_length(1.4.um, 1.6.um))
+nd_5p0v_uhv_withptap    = nd_5p0v_uhv.inside(ptap.holes)
+ns_5p0v_uhv_withptap    = ns_5p0v_uhv.inside(ptap.holes)
+nsd_5p0v_uhv_withptap   = nsd_5p0v_uhv.inside(ptap.holes).interacting(ngate_5p0v_uhv_withptap, 2, 2).interacting(met1.extents.covering(ngate_5p0v_uhv_withptap).covering(nsd_5p0v_uhv).covering(ptap))
+
+# 5V gate 20V drain RF NMOS transistor isolated without ptap
+ngate_5p0v_uhv_iso_noptap = ngate_5p0v_uhv_iso.not_inside(ptap.holes).with_area(41.86.um, 48.16.um).interacting(ngate_5p0v_uhv_iso.edges.with_length(1.4.um, 1.6.um))
+nd_5p0v_uhv_iso_noptap    = nd_5p0v_uhv_iso.not_inside(ptap.holes)
+ns_5p0v_uhv_iso_noptap    = ns_5p0v_uhv_iso.not_inside(ptap.holes)
+nsd_5p0v_uhv_iso_noptap   = nsd_5p0v_uhv_iso.not_inside(ptap.holes).interacting(ngate_5p0v_uhv_iso_noptap, 2, 2)
+
+# 5V gate 20V drain RF NMOS transistor isolated with ptap
+ngate_5p0v_uhv_iso_withptap = ngate_5p0v_uhv_iso.inside(ptap.holes).with_area(41.86.um, 48.16.um).interacting(ngate_5p0v_uhv_iso.edges.with_length(1.4.um, 1.6.um))
+nd_5p0v_uhv_iso_withptap    = nd_5p0v_uhv_iso.inside(ptap.holes)
+ns_5p0v_uhv_iso_withptap    = ns_5p0v_uhv_iso.inside(ptap.holes)
+nsd_5p0v_uhv_iso_withptap   = nsd_5p0v_uhv_iso.inside(ptap.holes).interacting(ngate_5p0v_uhv_iso_withptap, 2, 2).interacting(met1.extents.covering(ngate_5p0v_uhv_iso_withptap).covering(nsd_5p0v_uhv_iso).covering(ptap))
+
+# 5V gate 20V drain RF NMOS transistor native voltage AUP
+ngate_5p0v_uhv_nvt_aup = ngate_5p0v_uhv_nvt.inside(ptap.holes).with_area(41.86.um, 48.16.um).interacting(ngate_5p0v_uhv_nvt.edges.with_length(1.4.um, 1.6.um))
+nd_5p0v_uhv_nvt_aup    = nd_5p0v_uhv_nvt.inside(ptap.holes)
+ns_5p0v_uhv_nvt_aup    = ns_5p0v_uhv_nvt.inside(ptap.holes)
+nsd_5p0v_uhv_nvt_aup   = nsd_5p0v_uhv_nvt.inside(ptap.holes).interacting(ngate_5p0v_uhv_nvt_aup, 2, 2).interacting(met1.extents.not_covering(ngate_5p0v_uhv_nvt_aup).not_covering(nsd_5p0v_uhv_nvt).not_covering(ptap))
+
+# 5V gate 20V drain RF NMOS transistor native voltage with ptap
+ngate_5p0v_uhv_nvt_withptap = ngate_5p0v_uhv_nvt.inside(ptap.holes).with_area(41.86.um, 48.16.um).interacting(ngate_5p0v_uhv_nvt.edges.with_length(1.4.um, 1.6.um))
+nd_5p0v_uhv_nvt_withptap    = nd_5p0v_uhv_nvt.inside(ptap.holes)
+ns_5p0v_uhv_nvt_withptap    = ns_5p0v_uhv_nvt.inside(ptap.holes)
+nsd_5p0v_uhv_nvt_withptap   = nsd_5p0v_uhv_nvt.inside(ptap.holes).interacting(ngate_5p0v_uhv_nvt_withptap, 2, 2).interacting(met1.extents.covering(ngate_5p0v_uhv_nvt_withptap).covering(nsd_5p0v_uhv_nvt).covering(ptap))
+
+# 5V gate 20V drain RF NMOS transistor native voltage isolated without ptap
+ngate_5p0v_uhv_nvt_iso_noptap = ngate_5p0v_uhv_nvt_iso.not_inside(ptap.holes).with_area(41.86.um, 48.16.um).interacting(ngate_5p0v_uhv_nvt_iso.edges.with_length(1.4.um, 1.6.um))
+nd_5p0v_uhv_nvt_iso_noptap    = nd_5p0v_uhv_nvt_iso.not_inside(ptap.holes)
+ns_5p0v_uhv_nvt_iso_noptap    = ns_5p0v_uhv_nvt_iso.not_inside(ptap.holes)
+nsd_5p0v_uhv_nvt_iso_noptap   = nsd_5p0v_uhv_nvt_iso.not_inside(ptap.holes).interacting(ngate_5p0v_uhv_nvt_iso_noptap, 2, 2)
+
+# 5V gate 20V drain RF NMOS transistor native voltage isolated with ptap
+ngate_5p0v_uhv_nvt_iso_withptap = ngate_5p0v_uhv_nvt_iso.inside(ptap.holes).with_area(41.86.um, 48.16.um).interacting(ngate_5p0v_uhv_nvt_iso.edges.with_length(1.4.um, 1.6.um))
+nd_5p0v_uhv_nvt_iso_withptap    = nd_5p0v_uhv_nvt_iso.inside(ptap.holes)
+ns_5p0v_uhv_nvt_iso_withptap    = ns_5p0v_uhv_nvt_iso.inside(ptap.holes)
+nsd_5p0v_uhv_nvt_iso_withptap   = nsd_5p0v_uhv_nvt_iso.inside(ptap.holes).interacting(ngate_5p0v_uhv_nvt_iso_withptap, 2, 2).interacting(met1.extents.covering(ngate_5p0v_uhv_nvt_iso_withptap).covering(nsd_5p0v_uhv_nvt_iso).covering(ptap))
+
+# 5V gate 20V drain RF NMOS transistor zero threshold voltage
+ngate_5p0v_uhv_zvt_rf = ngate_5p0v_uhv_zvt.inside(ptap.holes).with_area(176.41.um, 183.61.um).interacting(ngate_5p0v_uhv_zvt.edges.with_length(5.9.um, 6.1.um))
+nd_5p0v_uhv_zvt_rf    = nd_5p0v_uhv_zvt.inside(ptap.holes)
+ns_5p0v_uhv_zvt_rf    = ns_5p0v_uhv_zvt.inside(ptap.holes)
+nsd_5p0v_uhv_zvt_rf   = nsd_5p0v_uhv_zvt.inside(ptap.holes).interacting(ngate_5p0v_uhv_zvt_rf, 2, 2)
+
 
 #================================
 # ----- RF BJT DERIVATIONS ------
@@ -2450,9 +2534,21 @@ connect(ps_5p0v_uhv, licon)
 connect(nd_5p0v_vhv, licon)
 connect(ns_5p0v_vhv, licon)
 
-# 5V gate 20V drain NMOS transistor without ptap
-connect(nd_5p0v_uhv_noptap, licon)
-connect(ns_5p0v_uhv_noptap, licon)
+# 5V gate 20V drain NMOS transistor
+connect(nd_5p0v_uhv, licon)
+connect(ns_5p0v_uhv, licon)
+
+# 5V gate 20V drain NMOS transistor isolated
+connect(nd_5p0v_uhv_iso, licon)
+connect(ns_5p0v_uhv_iso, licon)
+
+# 5V gate 20V drain NMOS transistor native voltage
+connect(nd_5p0v_uhv_nvt, licon)
+connect(ns_5p0v_uhv_nvt, licon)
+
+# 5V gate 20V drain NMOS transistor zero threshold voltage
+connect(nd_5p0v_uhv_zvt, licon)
+connect(ns_5p0v_uhv_zvt, licon)
 
 
 #================================
@@ -2660,7 +2756,54 @@ connect(met5_vpp     , met5_label)
 
 
 #================================
-# ------ RF BJT CONNECTIONS --------
+# ---- RF MOSFET CONNECTIONS ----
+#================================
+
+logger.info("Starting LVS RF MOSFET CONNECTIONS")
+
+# 5V gate 20V drain PMOS transistor with ptap
+connect(pd_5p0v_uhv_withptap, licon)
+connect(ps_5p0v_uhv_withptap, licon)
+
+# 5V gate 20V drain NMOS transistor AUP
+connect(nd_5p0v_uhv_aup, licon)
+connect(ns_5p0v_uhv_aup, licon)
+
+# 5V gate 20V drain NMOS transistor with ptap
+connect(nd_5p0v_uhv_withptap, licon)
+connect(ns_5p0v_uhv_withptap, licon)
+
+# 5V gate 20V drain NMOS transistor isolated without ptap
+connect(nd_5p0v_uhv_iso_noptap, licon)
+connect(ns_5p0v_uhv_iso_noptap, licon)
+
+# 5V gate 20V drain NMOS transistor isolated with ptap
+connect(nd_5p0v_uhv_iso_withptap, licon)
+connect(ns_5p0v_uhv_iso_withptap, licon)
+
+# 5V gate 20V drain NMOS transistor native voltage AUP
+connect(nd_5p0v_uhv_nvt_aup, licon)
+connect(ns_5p0v_uhv_nvt_aup, licon)
+
+# 5V gate 20V drain NMOS transistor native voltage with ptap
+connect(nd_5p0v_uhv_nvt_withptap, licon)
+connect(ns_5p0v_uhv_nvt_withptap, licon)
+
+# 5V gate 20V drain NMOS transistor native voltage isolated without ptap
+connect(nd_5p0v_uhv_nvt_iso_noptap, licon)
+connect(ns_5p0v_uhv_nvt_iso_noptap, licon)
+
+# 5V gate 20V drain NMOS transistor native voltage isolated with ptap
+connect(nd_5p0v_uhv_nvt_iso_withptap, licon)
+connect(ns_5p0v_uhv_nvt_iso_withptap, licon)
+
+# 5V gate 20V drain NMOS transistor zero threshold voltage
+connect(nd_5p0v_uhv_zvt_rf, licon)
+connect(ns_5p0v_uhv_zvt_rf, licon)
+
+
+#================================
+# ----- RF BJT CONNECTIONS ------
 #================================
 
 logger.info("Starting LVS RF BJT CONNECTIONS")
@@ -2732,11 +2875,11 @@ extract_devices(mos4("sky130_fd_pr__pfet_g5v0d10v5"), { "SD" => psd, "G" => pgat
 
 # 5V gate 16V drain PMOS transistor
 logger.info("Extracting 5V gate 16V drain PMOS transistor")
-extract_devices(mos4("sky130_fd_pr__pfet_g5v0d16v0"), { "SD" => psd_5p0v_vhv, "G" => pgate_5p0v_vhv, "tS" => ps_5p0v_vhv, "tD" => pd_5p0v_vhv, "tG" => poly_con, "W" => dnwell })
+extract_devices(mos4("sky130_fd_pr__pfet_g5v0d16v0"), { "SD" => psd_5p0v_vhv, "G" => pgate_5p0v_vhv, "tS" => ps_5p0v_vhv, "tD" => pd_5p0v_vhv, "tG" => poly_con, "W" => dnwell, "tW" => ntap })
 
-# 5V gate 20V drain PMOS transistor with ptap
-logger.info("Extracting 5V gate 20V drain PMOS transistor with ptap")
-extract_devices(mos4("sky130_fd_pr__pfet_20v0"), { "SD" => psd_5p0v_uhv, "G" => pgate_5p0v_uhv, "tS" => ps_5p0v_uhv, "tD" => pd_5p0v_uhv, "tG" => poly_con, "W" => dnwell })
+# 5V gate 20V drain PMOS transistor
+logger.info("Extracting 5V gate 20V drain PMOS transistor")
+extract_devices(mos4("sky130_fd_pr__pfet_20v0"), { "SD" => psd_5p0v_uhv, "G" => pgate_5p0v_uhv, "tS" => ps_5p0v_uhv, "tD" => pd_5p0v_uhv, "tG" => poly_con, "W" => dnwell, "tW" => ntap })
 
 # Pass PMOS transistor
 logger.info("Extracting Pass PMOS transistor")
@@ -2766,11 +2909,27 @@ extract_devices(mos4("sky130_fd_pr__nfet_g5v0d10v5"), { "SD" => nsd, "G" => ngat
 
 # 5V gate 16V drain NMOS transistor
 logger.info("Extracting 5V gate 16V drain NMOS transistor")
-extract_devices(mos4("sky130_fd_pr__nfet_g5v0d16v0"), { "SD" => nsd_5p0v_vhv, "G" => ngate_5p0v_vhv, "tS" => ns_5p0v_vhv, "tD" => nd_5p0v_vhv, "tG" => poly_con, "W" => sub })
+extract_devices(mos4("sky130_fd_pr__nfet_g5v0d16v0"), { "SD" => nsd_5p0v_vhv, "G" => ngate_5p0v_vhv, "tS" => ns_5p0v_vhv, "tD" => nd_5p0v_vhv, "tG" => poly_con, "W" => sub, "tW" => ptap })
 
-# 5V gate 20V drain NMOS transistor without ptap
-logger.info("Extracting 5V gate 20V drain NMOS transistor without ptap")
-extract_devices(mos4("sky130_fd_pr__nfet_20v0"), { "SD" => nsd_5p0v_uhv_noptap, "G" => ngate_5p0v_uhv_noptap, "tS" => ns_5p0v_uhv_noptap, "tD" => nd_5p0v_uhv_noptap, "tG" => poly_con, "W" => dnwell })
+# 5V gate 20V drain NMOS transistor
+logger.info("Extracting 5V gate 20V drain NMOS transistor")
+extract_devices(mos4("sky130_fd_pr__nfet_20v0"), { "SD" => nsd_5p0v_uhv, "G" => ngate_5p0v_uhv, "tS" => ns_5p0v_uhv, "tD" => nd_5p0v_uhv, "tG" => poly_con, "W" => sub, "tW" => ptap  })
+
+# 5V gate 20V drain NMOS transistor isolated
+logger.info("Extracting 5V gate 20V drain NMOS transistor isolated")
+extract_devices(mos4("sky130_fd_pr__nfet_20v0_iso"), { "SD" => nsd_5p0v_uhv_iso, "G" => ngate_5p0v_uhv_iso, "tS" => ns_5p0v_uhv_iso, "tD" => nd_5p0v_uhv_iso, "tG" => poly_con, "W" => sub, "tW" => ptap })
+
+# 5V gate 20V drain NMOS transistor native voltage
+logger.info("Extracting 5V gate 20V drain NMOS transistor native voltage")
+extract_devices(mos4("sky130_fd_pr__nfet_20v0_nvt"), { "SD" => nsd_5p0v_uhv_nvt, "G" => ngate_5p0v_uhv_nvt, "tS" => ns_5p0v_uhv_nvt, "tD" => nd_5p0v_uhv_nvt, "tG" => poly_con, "W" => sub, "tW" => ptap })
+
+# 5V gate 20V drain NMOS transistor native voltage isolated
+logger.info("Extracting 5V gate 20V drain NMOS transistor native voltage isolated")
+extract_devices(mos4("sky130_fd_pr__nfet_20v0_nvt_iso"), { "SD" => nsd_5p0v_uhv_nvt_iso, "G" => ngate_5p0v_uhv_nvt_iso, "tS" => ns_5p0v_uhv_nvt_iso, "tD" => nd_5p0v_uhv_nvt_iso, "tG" => poly_con, "W" => sub, "tW" => ptap })
+
+# 5V gate 20V drain NMOS transistor zero threshold voltage
+logger.info("Extracting 5V gate 20V drain NMOS transistor zero threshold voltage")
+extract_devices(mos4("sky130_fd_pr__nfet_20v0_zvt"), { "SD" => nsd_5p0v_uhv_zvt, "G" => ngate_5p0v_uhv_zvt, "tS" => ns_5p0v_uhv_zvt, "tD" => nd_5p0v_uhv_zvt, "tG" => poly_con, "W" => sub, "tW" => ptap })
 
 # Pass NMOS transistor
 logger.info("Extracting Pass NMOS transistor")
@@ -4226,6 +4385,46 @@ extract_devices(mos4("sky130_fd_pr__rf_pfet_01v8_mcM04W5p00L0p15"), {"SD" => psd
 # 1.8V RF PMOS transistor with multiplier of 2 width of 0.84um and length of 0.15um type aF
 logger.info("Extracting 1.8V RF PMOS transistor with multiplier of 2 width of 0.84um and length of 0.15um type aF")
 extract_devices(mos4("sky130_fd_pr__rf_pfet_01v8_mvt_aF02W0p84L0p15"), {"SD" => psd, "G" => pgate_01v8_aF02W0p84L0p15, "tS" => psd, "tD" => psd, "tG" => poly_con, "W" => nwell,  "tW" => nwell_pin })
+
+# 5V gate 20V drain RF PMOS transistor with ptap
+logger.info("Extracting 5V gate 20V drain RF PMOS transistor with ptap")
+extract_devices(mos4("sky130_fd_pr__pfet_20v0"), { "SD" => psd_5p0v_uhv_withptap, "G" => pgate_5p0v_uhv_withptap, "tS" => ps_5p0v_uhv_withptap, "tD" => pd_5p0v_uhv_withptap, "tG" => poly_con, "W" => dnwell, "tW" => ntap })
+
+# 5V gate 20V drain RF NMOS transistor AUP
+logger.info("Extracting 5V gate 20V drain RF NMOS transistor AUP")
+extract_devices(mos4("sky130_fd_pr__rf_nfet_20v0_aup"), { "SD" => nsd_5p0v_uhv_aup, "G" => ngate_5p0v_uhv_aup, "tS" => ns_5p0v_uhv_aup, "tD" => nd_5p0v_uhv_aup, "tG" => poly_con, "W" => sub, "tW" => ptap })
+
+# 5V gate 20V drain RF NMOS transistor with ptap
+logger.info("Extracting 5V gate 20V drain RF NMOS transistor with ptap")
+extract_devices(mos4("sky130_fd_pr__rf_nfet_20v0_withptap"), { "SD" => nsd_5p0v_uhv_withptap, "G" => ngate_5p0v_uhv_withptap, "tS" => ns_5p0v_uhv_withptap, "tD" => nd_5p0v_uhv_withptap, "tG" => poly_con, "W" => sub, "tW" => ptap })
+
+# 5V gate 20V drain RF NMOS transistor isolated without ptap
+logger.info("Extracting 5V gate 20V drain RF NMOS transistor isolated without ptap")
+extract_devices(mos4("sky130_fd_pr__rf_nfet_20v0_noptap_iso"), { "SD" => nsd_5p0v_uhv_iso_noptap, "G" => ngate_5p0v_uhv_iso_noptap, "tS" => ns_5p0v_uhv_iso_noptap, "tD" => nd_5p0v_uhv_iso_noptap, "tG" => poly_con, "W" => sub, "tW" => ptap })
+
+# 5V gate 20V drain RF NMOS transistor isolated with ptap
+logger.info("Extracting 5V gate 20V drain RF NMOS transistor isolated with ptap")
+extract_devices(mos4("sky130_fd_pr__rf_nfet_20v0_withptap_iso"), { "SD" => nsd_5p0v_uhv_iso_withptap, "G" => ngate_5p0v_uhv_iso_withptap, "tS" => ns_5p0v_uhv_iso_withptap, "tD" => nd_5p0v_uhv_iso_withptap, "tG" => poly_con, "W" => sub, "tW" => ptap })
+
+# 5V gate 20V drain RF NMOS transistor native voltage AUP
+logger.info("Extracting 5V gate 20V drain RF NMOS transistor native voltage AUP")
+extract_devices(mos4("sky130_fd_pr__rf_nfet_20v0_nvt_aup"), { "SD" => nsd_5p0v_uhv_nvt_aup, "G" => ngate_5p0v_uhv_nvt_aup, "tS" => ns_5p0v_uhv_nvt_aup, "tD" => nd_5p0v_uhv_nvt_aup, "tG" => poly_con, "W" => sub, "tW" => ptap })
+
+# 5V gate 20V drain RF NMOS transistor native voltage with ptap
+logger.info("Extracting 5V gate 20V drain RF NMOS transistor native voltage with ptap")
+extract_devices(mos4("sky130_fd_pr__rf_nfet_20v0_nvt_withptap"), { "SD" => nsd_5p0v_uhv_nvt_withptap, "G" => ngate_5p0v_uhv_nvt_withptap, "tS" => ns_5p0v_uhv_nvt_withptap, "tD" => nd_5p0v_uhv_nvt_withptap, "tG" => poly_con, "W" => sub, "tW" => ptap })
+
+# 5V gate 20V drain RF NMOS transistor native voltage isolated without ptap
+logger.info("Extracting 5V gate 20V drain RF NMOS transistor native voltage isolated without ptap")
+extract_devices(mos4("sky130_fd_pr__rf_nfet_20v0_nvt_noptap_iso"), { "SD" => nsd_5p0v_uhv_nvt_iso_noptap, "G" => ngate_5p0v_uhv_nvt_iso_noptap, "tS" => ns_5p0v_uhv_nvt_iso_noptap, "tD" => nd_5p0v_uhv_nvt_iso_noptap, "tG" => poly_con, "W" => sub, "tW" => ptap })
+
+# 5V gate 20V drain RF NMOS transistor native voltage isolated with ptap
+logger.info("Extracting 5V gate 20V drain RF NMOS transistor native voltage isolated with ptap")
+extract_devices(mos4("sky130_fd_pr__rf_nfet_20v0_nvt_withptap_iso"), { "SD" => nsd_5p0v_uhv_nvt_iso_withptap, "G" => ngate_5p0v_uhv_nvt_iso_withptap, "tS" => ns_5p0v_uhv_nvt_iso_withptap, "tD" => nd_5p0v_uhv_nvt_iso_withptap, "tG" => poly_con, "W" => sub, "tW" => ptap })
+
+# 5V gate 20V drain RF NMOS transistor zero threshold voltage
+logger.info("Extracting 5V gate 20V drain RF NMOS transistor zero threshold voltage")
+extract_devices(mos4("sky130_fd_pr__rf_nfet_20v0_zvt_withptap"), { "SD" => nsd_5p0v_uhv_zvt_rf, "G" => ngate_5p0v_uhv_zvt_rf, "tS" => ns_5p0v_uhv_zvt_rf, "tD" => nd_5p0v_uhv_zvt_rf, "tG" => poly_con, "W" => sub, "tW" => ptap })
 
 
 #================================
