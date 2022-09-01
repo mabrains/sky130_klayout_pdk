@@ -17,6 +17,6 @@
 
 .SUBCKT sky130_fd_pr__pnp_05v5_W0p68L0p68 Base Collector Emitter
 
-X1 Base Collector Emitter sky130_fd_pr__pnp_05v5_W0p68L0p68
+Qx Base Collector Emitter sky130_fd_pr__pnp_05v5_W0p68L0p68
 
 .ENDS 

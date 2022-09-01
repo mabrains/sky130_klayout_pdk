@@ -17,6 +17,6 @@
 
 .SUBCKT sky130_fd_pr__model__cap_mim_m4 C0 C1
 
-X1 C0 C1 sky130_fd_pr__model__cap_mim_m4
+Cx C0 C1 sky130_fd_pr__model__cap_mim_m4
 
 .ENDS 

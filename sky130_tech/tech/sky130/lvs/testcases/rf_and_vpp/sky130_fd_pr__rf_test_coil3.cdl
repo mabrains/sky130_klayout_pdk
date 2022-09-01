@@ -17,6 +17,6 @@
 
 .SUBCKT sky130_fd_pr__rf_test_coil3 
 
-X1  sky130_fd_pr__rf_test_coil3
+Lx  sky130_fd_pr__rf_test_coil3
 
 .ENDS 

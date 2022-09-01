@@ -17,6 +17,6 @@
 
 .SUBCKT sky130_fd_pr__esd_rf_nfet_20v0_iec_32vW60p00 
 
-X1  sky130_fd_pr__esd_rf_nfet_20v0_iec_32vW60p00
+Mx  sky130_fd_pr__esd_rf_nfet_20v0_iec_32vW60p00
 
 .ENDS 

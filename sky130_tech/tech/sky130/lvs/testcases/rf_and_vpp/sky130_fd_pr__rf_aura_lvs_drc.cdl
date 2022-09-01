@@ -17,6 +17,6 @@
 
 .SUBCKT sky130_fd_pr__rf_aura_lvs_drc B_P D_P G G_P NWELL S S_P VGND VPWR
 
-X1 B_P D_P G G_P NWELL S S_P VGND VPWR sky130_fd_pr__rf_aura_lvs_drc
+Xx B_P D_P G G_P NWELL S S_P VGND VPWR sky130_fd_pr__rf_aura_lvs_drc
 
 .ENDS 

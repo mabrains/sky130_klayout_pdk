@@ -17,6 +17,6 @@
 
 .SUBCKT sky130_fd_pr__res_xhigh_po_0p69 R0 R1
 
-X1 R0 R1 sky130_fd_pr__res_xhigh_po_0p69
+Rx R0 R1 sky130_fd_pr__res_xhigh_po_0p69
 
 .ENDS 

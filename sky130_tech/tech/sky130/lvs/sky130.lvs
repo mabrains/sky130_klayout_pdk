@@ -41,7 +41,7 @@ if $input
   source($input)
   logger.info("Layout file: #{$input}")
 else
-  logger.info("No layout loaded, please add your layout file")
+  logger.error("No layout loaded, please add your layout file")
 end
 
 #=== GET THREADS ===
@@ -260,8 +260,13 @@ if $schematic
   schematic($schematic, reader)
   logger.info("Netlist file: #{$schematic}")
 else
-  puts "No schematic loaded , please add your netlist file"
-  logger.info("No schematic loaded , please add your netlist file")
+  begin  
+    schematic("#{source.cell_name}.cdl", reader)
+    logger.info("Netlist file: #{source.cell_name}.cdl")
+  rescue 
+    puts "No schematic loaded , please add your netlist file"
+    logger.error("No schematic loaded , please add your netlist file")
+  end 
 end
 
 class BResistor < RBA::DeviceClassResistorWithBulk

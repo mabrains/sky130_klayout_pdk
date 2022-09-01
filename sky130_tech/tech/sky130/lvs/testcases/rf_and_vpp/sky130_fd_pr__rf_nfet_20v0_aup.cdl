@@ -17,6 +17,6 @@
 
 .SUBCKT sky130_fd_pr__rf_nfet_20v0_aup 
 
-X1  sky130_fd_pr__rf_nfet_20v0_aup
+Mx  sky130_fd_pr__rf_nfet_20v0_aup
 
 .ENDS 

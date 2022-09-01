@@ -17,6 +17,6 @@
 
 .SUBCKT sky130_fd_pr__rf_aura_drc_flag_check B_P NWELL VGND
 
-X1 B_P NWELL VGND sky130_fd_pr__rf_aura_drc_flag_check
+Xx B_P NWELL VGND sky130_fd_pr__rf_aura_drc_flag_check
 
 .ENDS 

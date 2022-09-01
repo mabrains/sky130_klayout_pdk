@@ -17,6 +17,6 @@
 
 .SUBCKT sky130_fd_pr__cap_var_hvt C0 C1 SUBSTRATE
 
-X1 C0 C1 SUBSTRATE sky130_fd_pr__cap_var_hvt
+Cx C0 C1 SUBSTRATE sky130_fd_pr__cap_var_hvt
 
 .ENDS 

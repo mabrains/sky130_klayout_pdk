@@ -17,6 +17,6 @@
 
 .SUBCKT sky130_fd_pr__pfet_01v8_hvt DRAIN GATE SOURCE BULK
 
-X1 DRAIN GATE SOURCE BULK sky130_fd_pr__pfet_01v8_hvt
+Mx DRAIN GATE SOURCE BULK sky130_fd_pr__pfet_01v8_hvt
 
 .ENDS 

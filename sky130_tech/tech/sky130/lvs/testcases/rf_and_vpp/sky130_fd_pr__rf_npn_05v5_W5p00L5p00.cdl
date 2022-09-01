@@ -17,6 +17,6 @@
 
 .SUBCKT sky130_fd_pr__rf_npn_05v5_W5p00L5p00 
 
-X1  sky130_fd_pr__rf_npn_05v5_W5p00L5p00
+Qx  sky130_fd_pr__rf_npn_05v5_W5p00L5p00
 
 .ENDS 

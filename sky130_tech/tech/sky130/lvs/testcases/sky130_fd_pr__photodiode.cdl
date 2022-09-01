@@ -17,6 +17,6 @@
 
 .SUBCKT sky130_fd_pr__photodiode D0 D1
 
-X1 D0 D1 sky130_fd_pr__photodiode
+Dx D0 D1 sky130_fd_pr__photodiode
 
 .ENDS 

@@ -17,6 +17,6 @@
 
 .SUBCKT sky130_fd_pr__pnp_05v5_W3p40L3p40 
 
-X1  sky130_fd_pr__pnp_05v5_W3p40L3p40
+Qx  sky130_fd_pr__pnp_05v5_W3p40L3p40
 
 .ENDS 

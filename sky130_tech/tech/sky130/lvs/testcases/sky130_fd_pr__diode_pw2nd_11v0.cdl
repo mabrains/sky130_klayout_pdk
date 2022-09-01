@@ -17,6 +17,6 @@
 
 .SUBCKT sky130_fd_pr__diode_pw2nd_11v0 D0 D1
 
-X1 D0 D1 sky130_fd_pr__diode_pw2nd_11v0
+Dx D0 D1 sky130_fd_pr__diode_pw2nd_11v0
 
 .ENDS 
