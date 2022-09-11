@@ -20,6 +20,8 @@ import pya
 # from .via import ViaGenerator
 from sky130_pcells.PcViaStack import pcViaStackGenerator
 from sky130_pcells.PcGRing import pcGRingGenerator
+from sky130_pcells.PcMos18Finger import pcMos18FingerGenerator
+from sky130_pcells.PcNmos18 import pcNmos18Generator
 from sky130_pcells.nmos18 import NMOS18
 from sky130_pcells.pmos18 import PMOS18
 from sky130_pcells.polyres import PolyRes_gen
@@ -51,6 +53,7 @@ class Sky130(pya.Library):
         # Create the PCell declarations
         self.layout().register_pcell("PcViaStack", pcViaStackGenerator())
         self.layout().register_pcell("PcGRing", pcGRingGenerator())
+        self.layout().register_pcell("PcNmos18", pcNmos18Generator())
         self.layout().register_pcell("nmos18", NMOS18())
         self.layout().register_pcell("pmos18", PMOS18())
         self.layout().register_pcell("poly_res", PolyRes_gen())
