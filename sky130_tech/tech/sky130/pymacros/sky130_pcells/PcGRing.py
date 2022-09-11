@@ -52,19 +52,19 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
       self.layout = layout
       self.cell = cell
       prcn = 1000
-      w = w*prcn
-      l = l*prcn
-      h = h*prcn
-      grid = 0.005*prcn
+      w = w
+      l = l
+      h = h
+      grid = 0.005
       
-      npsdm_enc_diff = 0.125*prcn
-      npsdm_enc_tap = 0.125*prcn 
-      nwell_enc_ntap = 0.180*prcn
+      npsdm_enc_diff = 0.125
+      npsdm_enc_tap = 0.125 
+      nwell_enc_ntap = 0.180
       
       #cell center-mark
       l_prBpundary = self.layout.layer(prbndry_lay_num,prbndry_lay_dt)
-      self.cell.shapes(l_prBpundary).insert(pya.Box(-grid*10, -grid*2, grid*10 , grid*2))
-      self.cell.shapes(l_prBpundary).insert(pya.Box(-grid*2, -grid*10, grid*2, grid*10))
+      self.cell.shapes(l_prBpundary).insert(pya.DBox(-grid*10, -grid*2, grid*10 , grid*2))
+      self.cell.shapes(l_prBpundary).insert(pya.DBox(-grid*2, -grid*10, grid*2, grid*10))
       
       # active layers_definitions
       # match-case only possible thru py 3.10. check ur python version by print(sys.version)
@@ -74,7 +74,7 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
         # nwell blanket
         l_lay = self.layout.layer(nwell_lay_num,nwell_lay_dt)
         self.cell.shapes(l_lay).insert(
-          pya.Box(0-l/2.0+nwell_enc_ntap, 0-h/2.0+nwell_enc_ntap, 
+          pya.DBox(0-l/2.0+nwell_enc_ntap, 0-h/2.0+nwell_enc_ntap, 
           l/2.0+nwell_enc_ntap, h/2.0+nwell_enc_ntap))
       if well == "P+Tap":
         layList = ["li","tap","psdm"]
@@ -93,111 +93,111 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
         
         l_lay = self.layout.layer(eval(lay+"_lay_num"),eval(lay+"_lay_dt"))
         self.cell.shapes(l_lay).insert(
-          pya.Path([pya.Point(0-(l+w)/2.0, 0.0), 
-          pya.Point(0-(l+w)/2.0, 0+(h+w)/2.0),
-          pya.Point(0+(l+w)/2.0, 0+(h+w)/2.0), 
-          pya.Point(0+(l+w)/2.0, 0-(h+w)/2.0), 
-          pya.Point(0-(l+w)/2.0, 0-(h+w)/2.0),
-          pya.Point(0-(l+w)/2.0, 0.0)], w+2*l_lay_enc))
+          pya.DPath([pya.DPoint(0-(l+w)/2.0, 0.0), 
+          pya.DPoint(0-(l+w)/2.0, 0+(h+w)/2.0),
+          pya.DPoint(0+(l+w)/2.0, 0+(h+w)/2.0), 
+          pya.DPoint(0+(l+w)/2.0, 0-(h+w)/2.0), 
+          pya.DPoint(0-(l+w)/2.0, 0-(h+w)/2.0),
+          pya.DPoint(0-(l+w)/2.0, 0.0)], w+2*l_lay_enc))
       
       # active layer generation -- M1
       lay = "met1"
       l_lay_enc = 0.0
       l_lay = self.layout.layer(eval(lay+"_lay_num"),eval(lay+"_lay_dt"))
-      path_left = [pya.Point(0-(l+w)/2.0, 0-(h+2*w)/2.0), pya.Point(0-(l+w)/2.0, 0+(h+2*w)/2.0)]
-      path_bottom = [pya.Point(0+(l+2*w)/2.0, 0-(h+w)/2.0), pya.Point(0-(l+2*w)/2.0, 0-(h+w)/2.0)]
-      path_right = [pya.Point(0+(l+w)/2.0, 0+(h+2*w)/2.0),pya.Point(0+(l+w)/2.0, 0-(h+2*w)/2.0)]
-      path_top = [pya.Point(0-(l+2*w)/2.0, 0+(h+w)/2.0), pya.Point(0+(l+2*w)/2.0, 0+(h+w)/2.0)]
+      path_left = [pya.DPoint(0-(l+w)/2.0, 0-(h+2*w)/2.0), pya.DPoint(0-(l+w)/2.0, 0+(h+2*w)/2.0)]
+      path_bottom = [pya.DPoint(0+(l+2*w)/2.0, 0-(h+w)/2.0), pya.DPoint(0-(l+2*w)/2.0, 0-(h+w)/2.0)]
+      path_right = [pya.DPoint(0+(l+w)/2.0, 0+(h+2*w)/2.0),pya.DPoint(0+(l+w)/2.0, 0-(h+2*w)/2.0)]
+      path_top = [pya.DPoint(0-(l+2*w)/2.0, 0+(h+w)/2.0), pya.DPoint(0+(l+2*w)/2.0, 0+(h+w)/2.0)]
       
-      path_bl = [pya.Point(0+(l+2*w)/2.0, 0-(h+w)/2.0), pya.Point(0-(l+w)/2.0, 0-(h+w)/2.0),
-                 pya.Point(0-(l+w)/2.0, 0-(h+w)/2.0), pya.Point(0-(l+w)/2.0, 0+(h+2*w)/2.0)]
+      path_bl = [pya.DPoint(0+(l+2*w)/2.0, 0-(h+w)/2.0), pya.DPoint(0-(l+w)/2.0, 0-(h+w)/2.0),
+                 pya.DPoint(0-(l+w)/2.0, 0-(h+w)/2.0), pya.DPoint(0-(l+w)/2.0, 0+(h+2*w)/2.0)]
        
-      path_rb = [pya.Point(0+(l+w)/2.0, 0+(h+2*w)/2.0),pya.Point(0+(l+w)/2.0, 0-(h+w)/2.0),
-                 pya.Point(0+(l+w)/2.0, 0-(h+w)/2.0), pya.Point(0-(l+2*w)/2.0, 0-(h+w)/2.0)]
+      path_rb = [pya.DPoint(0+(l+w)/2.0, 0+(h+2*w)/2.0),pya.DPoint(0+(l+w)/2.0, 0-(h+w)/2.0),
+                 pya.DPoint(0+(l+w)/2.0, 0-(h+w)/2.0), pya.DPoint(0-(l+2*w)/2.0, 0-(h+w)/2.0)]
       
-      path_tr = [pya.Point(0-(l+2*w)/2.0, 0+(h+w)/2.0), pya.Point(0+(l+w)/2.0, 0+(h+w)/2.0),
-                 pya.Point(0+(l+w)/2.0, 0+(h+w)/2.0),pya.Point(0+(l+w)/2.0, 0-(h+2*w)/2.0)]
+      path_tr = [pya.DPoint(0-(l+2*w)/2.0, 0+(h+w)/2.0), pya.DPoint(0+(l+w)/2.0, 0+(h+w)/2.0),
+                 pya.DPoint(0+(l+w)/2.0, 0+(h+w)/2.0),pya.DPoint(0+(l+w)/2.0, 0-(h+2*w)/2.0)]
       
-      path_lt = [pya.Point(0-(l+w)/2.0, 0-(h+2*w)/2.0), pya.Point(0-(l+w)/2.0, 0+(h+w)/2.0),
-                 pya.Point(0-(l+w)/2.0, 0+(h+w)/2.0), pya.Point(0+(l+2*w)/2.0, 0+(h+w)/2.0)]
+      path_lt = [pya.DPoint(0-(l+w)/2.0, 0-(h+2*w)/2.0), pya.DPoint(0-(l+w)/2.0, 0+(h+w)/2.0),
+                 pya.DPoint(0-(l+w)/2.0, 0+(h+w)/2.0), pya.DPoint(0+(l+2*w)/2.0, 0+(h+w)/2.0)]
       
-      path_blt = [pya.Point(0+(l+2*w)/2.0, 0-(h+w)/2.0), pya.Point(0-(l+w)/2.0, 0-(h+w)/2.0),
-                  pya.Point(0-(l+w)/2.0, 0-(h+w)/2.0), pya.Point(0-(l+w)/2.0, 0+(h+w)/2.0),
-                  pya.Point(0-(l+w)/2.0, 0+(h+w)/2.0), pya.Point(0+(l+2*w)/2.0, 0+(h+w)/2.0)]
+      path_blt = [pya.DPoint(0+(l+2*w)/2.0, 0-(h+w)/2.0), pya.DPoint(0-(l+w)/2.0, 0-(h+w)/2.0),
+                  pya.DPoint(0-(l+w)/2.0, 0-(h+w)/2.0), pya.DPoint(0-(l+w)/2.0, 0+(h+w)/2.0),
+                  pya.DPoint(0-(l+w)/2.0, 0+(h+w)/2.0), pya.DPoint(0+(l+2*w)/2.0, 0+(h+w)/2.0)]
        
-      path_ltr = [pya.Point(0-(l+w)/2.0, 0-(h+2*w)/2.0), pya.Point(0-(l+w)/2.0, 0+(h+w)/2.0),
-                  pya.Point(0-(l+w)/2.0, 0+(h+w)/2.0), pya.Point(0+(l+w)/2.0, 0+(h+w)/2.0),
-                  pya.Point(0+(l+w)/2.0, 0+(h+w)/2.0),pya.Point(0+(l+w)/2.0, 0-(h+2*w)/2.0)]
+      path_ltr = [pya.DPoint(0-(l+w)/2.0, 0-(h+2*w)/2.0), pya.DPoint(0-(l+w)/2.0, 0+(h+w)/2.0),
+                  pya.DPoint(0-(l+w)/2.0, 0+(h+w)/2.0), pya.DPoint(0+(l+w)/2.0, 0+(h+w)/2.0),
+                  pya.DPoint(0+(l+w)/2.0, 0+(h+w)/2.0),pya.DPoint(0+(l+w)/2.0, 0-(h+2*w)/2.0)]
       
-      path_trb = [pya.Point(0-(l+2*w)/2.0, 0+(h+w)/2.0), pya.Point(0+(l+w)/2.0, 0+(h+w)/2.0),
-                  pya.Point(0+(l+w)/2.0, 0+(h+w)/2.0),pya.Point(0+(l+w)/2.0, 0-(h+w)/2.0),
-                 pya.Point(0+(l+w)/2.0, 0-(h+w)/2.0), pya.Point(0-(l+2*w)/2.0, 0-(h+w)/2.0)]
+      path_trb = [pya.DPoint(0-(l+2*w)/2.0, 0+(h+w)/2.0), pya.DPoint(0+(l+w)/2.0, 0+(h+w)/2.0),
+                  pya.DPoint(0+(l+w)/2.0, 0+(h+w)/2.0),pya.DPoint(0+(l+w)/2.0, 0-(h+w)/2.0),
+                 pya.DPoint(0+(l+w)/2.0, 0-(h+w)/2.0), pya.DPoint(0-(l+2*w)/2.0, 0-(h+w)/2.0)]
       
-      path_rbl = [pya.Point(0+(l+w)/2.0, 0+(h+2*w)/2.0),pya.Point(0+(l+w)/2.0, 0-(h+w)/2.0),
-                  pya.Point(0+(l+w)/2.0, 0-(h+w)/2.0), pya.Point(0-(l+w)/2.0, 0-(h+w)/2.0),
-                  pya.Point(0-(l+w)/2.0, 0-(h+w)/2.0), pya.Point(0-(l+w)/2.0, 0+(h+2*w)/2.0)]
+      path_rbl = [pya.DPoint(0+(l+w)/2.0, 0+(h+2*w)/2.0),pya.DPoint(0+(l+w)/2.0, 0-(h+w)/2.0),
+                  pya.DPoint(0+(l+w)/2.0, 0-(h+w)/2.0), pya.DPoint(0-(l+w)/2.0, 0-(h+w)/2.0),
+                  pya.DPoint(0-(l+w)/2.0, 0-(h+w)/2.0), pya.DPoint(0-(l+w)/2.0, 0+(h+2*w)/2.0)]
       
-      path_all = [pya.Point(0-(l+w)/2.0, 0.0), pya.Point(0-(l+w)/2.0, 0+(h+w)/2.0),
-                  pya.Point(0+(l+w)/2.0, 0+(h+w)/2.0), pya.Point(0+(l+w)/2.0, 0-(h+w)/2.0), 
-                  pya.Point(0-(l+w)/2.0, 0-(h+w)/2.0),pya.Point(0-(l+w)/2.0, 0.0)]
+      path_all = [pya.DPoint(0-(l+w)/2.0, 0.0), pya.DPoint(0-(l+w)/2.0, 0+(h+w)/2.0),
+                  pya.DPoint(0+(l+w)/2.0, 0+(h+w)/2.0), pya.DPoint(0+(l+w)/2.0, 0-(h+w)/2.0), 
+                  pya.DPoint(0-(l+w)/2.0, 0-(h+w)/2.0),pya.DPoint(0-(l+w)/2.0, 0.0)]
       
       if LmCON&BmCON&RmCON&TmCON == True:
-        self.cell.shapes(l_lay).insert(pya.Path(path_all, w+2*l_lay_enc))
+        self.cell.shapes(l_lay).insert(pya.DPath(path_all, w+2*l_lay_enc))
         
       #2 connected shapes
       if (RmCON+TmCON == 0) & (LmCON+BmCON == 2):
-        self.cell.shapes(l_lay).insert(pya.Path(path_bl, w+2*l_lay_enc))
+        self.cell.shapes(l_lay).insert(pya.DPath(path_bl, w+2*l_lay_enc))
       if (LmCON+TmCON == 0) & (RmCON+BmCON == 2):
-        self.cell.shapes(l_lay).insert(pya.Path(path_rb, w+2*l_lay_enc))
+        self.cell.shapes(l_lay).insert(pya.DPath(path_rb, w+2*l_lay_enc))
       if (LmCON+BmCON == 0) & (TmCON+RmCON == 2):
-        self.cell.shapes(l_lay).insert(pya.Path(path_tr, w+2*l_lay_enc))
+        self.cell.shapes(l_lay).insert(pya.DPath(path_tr, w+2*l_lay_enc))
       if (RmCON+BmCON == 0) & (LmCON+TmCON == 2):
-        self.cell.shapes(l_lay).insert(pya.Path(path_lt, w+2*l_lay_enc))
+        self.cell.shapes(l_lay).insert(pya.DPath(path_lt, w+2*l_lay_enc))
         
       #2 unconnected shapes
       if (BmCON+TmCON == 0) & (LmCON+RmCON == 2):
-        self.cell.shapes(l_lay).insert(pya.Path(path_left, w+2*l_lay_enc))
-        self.cell.shapes(l_lay).insert(pya.Path(path_right, w+2*l_lay_enc))
+        self.cell.shapes(l_lay).insert(pya.DPath(path_left, w+2*l_lay_enc))
+        self.cell.shapes(l_lay).insert(pya.DPath(path_right, w+2*l_lay_enc))
         
       if (BmCON+TmCON == 2) & (LmCON+RmCON == 0):
-        self.cell.shapes(l_lay).insert(pya.Path(path_bottom, w+2*l_lay_enc))
-        self.cell.shapes(l_lay).insert(pya.Path(path_top, w+2*l_lay_enc))
+        self.cell.shapes(l_lay).insert(pya.DPath(path_bottom, w+2*l_lay_enc))
+        self.cell.shapes(l_lay).insert(pya.DPath(path_top, w+2*l_lay_enc))
       
       # 3 connected shapes 
       if (RmCON == False) & (BmCON+LmCON+TmCON == 3):
-        self.cell.shapes(l_lay).insert(pya.Path(path_blt, w+2*l_lay_enc))
+        self.cell.shapes(l_lay).insert(pya.DPath(path_blt, w+2*l_lay_enc))
       if (BmCON == False) & (LmCON+TmCON+RmCON == 3):
-        self.cell.shapes(l_lay).insert(pya.Path(path_ltr, w+2*l_lay_enc))
+        self.cell.shapes(l_lay).insert(pya.DPath(path_ltr, w+2*l_lay_enc))
       if (LmCON == False) & (TmCON+RmCON+BmCON == 3):
-        self.cell.shapes(l_lay).insert(pya.Path(path_trb, w+2*l_lay_enc))
+        self.cell.shapes(l_lay).insert(pya.DPath(path_trb, w+2*l_lay_enc))
       if (TmCON == False) & (RmCON+BmCON+LmCON == 3):
         self.cell.shapes(l_lay).insert(pya.Path(path_rbl, w+2*l_lay_enc))
        
       # 1 shape 
       if (BmCON+RmCON+TmCON == 0) & (LmCON == True):
-        self.cell.shapes(l_lay).insert(pya.Path(path_left, w+2*l_lay_enc))  
+        self.cell.shapes(l_lay).insert(pya.DPath(path_left, w+2*l_lay_enc))  
       if (LmCON+RmCON+TmCON == 0) & (BmCON == True):
-        self.cell.shapes(l_lay).insert( pya.Path(path_bottom, w+2*l_lay_enc))
+        self.cell.shapes(l_lay).insert( pya.DPath(path_bottom, w+2*l_lay_enc))
       if (LmCON+BmCON+TmCON == 0) & (RmCON == True):  
-        self.cell.shapes(l_lay).insert(pya.Path(path_right, w+2*l_lay_enc))
+        self.cell.shapes(l_lay).insert(pya.DPath(path_right, w+2*l_lay_enc))
       if (LmCON+BmCON+RmCON == 0) & (TmCON == True):  
-        self.cell.shapes(l_lay).insert(pya.Path(path_top, w+2*l_lay_enc))
+        self.cell.shapes(l_lay).insert(pya.DPath(path_top, w+2*l_lay_enc))
       
       
       # active contacts generation
       
       # enclosures
-      diff_enc_licon = 0.06*prcn
-      li_enc_licon = 0.08*prcn 
-      met1_enc_mcon = 0.06*prcn
+      diff_enc_licon = 0.06
+      li_enc_licon = 0.08
+      met1_enc_mcon = 0.06
       
       # sizes 
-      licon_size = 0.17*prcn
-      mcon_size = 0.17*prcn
+      licon_size = 0.17
+      mcon_size = 0.17
       
       # spaces
-      licon_spc = 0.17*prcn
-      mcon_spc = 0.19*prcn
+      licon_spc = 0.17
+      mcon_spc = 0.19
       
       l_licon = self.layout.layer(licon_lay_num, licon_lay_dt)
       l_mcon = self.layout.layer(mcon_lay_num, mcon_lay_dt)
@@ -206,41 +206,41 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
       #--------------------------
       # length of contacts row: bottom
       pathLen = int((l+w)/grid)*grid  
-      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, 0.005*prcn, 0-(l+w)/2.0, 0-(h+w)/2.0, "R0" )
+      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, grid, 0-(l+w)/2.0, 0-(h+w)/2.0, "R0" )
       
       # length of contacts row: Top
       pathLen = int((l+w)/grid)*grid  
-      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, 0.005*prcn, 0-(l+w)/2.0, 0+(h+w)/2.0, "R0" )
+      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, grid, 0-(l+w)/2.0, 0+(h+w)/2.0, "R0" )
       
       # Heights of contacts row: Left
       pathLen = int((h+w)/grid)*grid  
-      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, 0.005*prcn, 0-(h+w)/2.0, 0-(l+w)/2.0, "R90" )
+      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, grid, 0-(h+w)/2.0, 0-(l+w)/2.0, "R90" )
       
       # Heights of contacts row: Right
       pathLen = int((h+w)/grid)*grid  
-      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, 0.005*prcn, 0-(h+w)/2.0, 0+(l+w)/2.0, "R90" )
+      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, grid, 0-(h+w)/2.0, 0+(l+w)/2.0, "R90" )
       
       # Generate mcon contacts
       #--------------------------
       # length of contacts row: bottom
       if BmCON:
         pathLen = int((l+w)/grid)*grid  
-        self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, 0.005*prcn, 0-(l+w)/2.0, 0-(h+w)/2.0, "R0" )
+        self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, grid, 0-(l+w)/2.0, 0-(h+w)/2.0, "R0" )
       
       # length of contacts row: Top
       if TmCON:
         pathLen = int((l+w)/grid)*grid  
-        self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, 0.005*prcn, 0-(l+w)/2.0, 0+(h+w)/2.0, "R0" )
+        self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, grid, 0-(l+w)/2.0, 0+(h+w)/2.0, "R0" )
       
       # Heights of contacts row: Left
       if LmCON:
         pathLen = int((h+w)/grid)*grid  
-        self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, 0.005*prcn, 0-(h+w)/2.0, 0-(l+w)/2.0, "R90" )
+        self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, grid, 0-(h+w)/2.0, 0-(l+w)/2.0, "R90" )
       
       # Heights of contacts row: Right
       if RmCON:
         pathLen = int((h+w)/grid)*grid  
-        self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, 0.005*prcn, 0-(h+w)/2.0, 0+(l+w)/2.0, "R90" )
+        self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, grid, 0-(h+w)/2.0, 0+(l+w)/2.0, "R90" )
     
     def rectRowCenterToCenter(self, l_rect, pathLen, min_rect_spc, rect_size, grid, varCrd, fixCrd, R):
       """
@@ -268,17 +268,17 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
           
           #expectional contact placement
           if R == "R0":
-            self.cell.shapes(l_rect).insert(pya.Box(vcon3-rect_size/2.0, fixCrd-rect_size/2.0, vcon3+rect_size/2.0, fixCrd+rect_size/2.0))
+            self.cell.shapes(l_rect).insert(pya.DBox(vcon3-rect_size/2.0, fixCrd-rect_size/2.0, vcon3+rect_size/2.0, fixCrd+rect_size/2.0))
           else:
-            self.cell.shapes(l_rect).insert(pya.Box(fixCrd-rect_size/2.0, vcon3-rect_size/2.0, fixCrd+rect_size/2.0, vcon3+rect_size/2.0))
+            self.cell.shapes(l_rect).insert(pya.DBox(fixCrd-rect_size/2.0, vcon3-rect_size/2.0, fixCrd+rect_size/2.0, vcon3+rect_size/2.0))
         
         # draw contacts
         if R == "R0":
-          self.cell.shapes(l_rect).insert(pya.Box(vcon1-rect_size/2.0, fixCrd-rect_size/2.0, vcon1+rect_size/2.0, fixCrd+rect_size/2.0))
-          self.cell.shapes(l_rect).insert(pya.Box(vcon2-rect_size/2.0, fixCrd-rect_size/2.0, vcon2+rect_size/2.0, fixCrd+rect_size/2.0))
+          self.cell.shapes(l_rect).insert(pya.DBox(vcon1-rect_size/2.0, fixCrd-rect_size/2.0, vcon1+rect_size/2.0, fixCrd+rect_size/2.0))
+          self.cell.shapes(l_rect).insert(pya.DBox(vcon2-rect_size/2.0, fixCrd-rect_size/2.0, vcon2+rect_size/2.0, fixCrd+rect_size/2.0))
         else:
-          self.cell.shapes(l_rect).insert(pya.Box(fixCrd-rect_size/2.0, vcon1-rect_size/2.0, fixCrd+rect_size/2.0, vcon1+rect_size/2.0))
-          self.cell.shapes(l_rect).insert(pya.Box(fixCrd-rect_size/2.0, vcon2-rect_size/2.0, fixCrd+rect_size/2.0, vcon2+rect_size/2.0))
+          self.cell.shapes(l_rect).insert(pya.DBox(fixCrd-rect_size/2.0, vcon1-rect_size/2.0, fixCrd+rect_size/2.0, vcon1+rect_size/2.0))
+          self.cell.shapes(l_rect).insert(pya.DBox(fixCrd-rect_size/2.0, vcon2-rect_size/2.0, fixCrd+rect_size/2.0, vcon2+rect_size/2.0))
     def produce_impl(self):
       
       # call GRing sub fucntion (_GRing)
