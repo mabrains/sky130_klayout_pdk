@@ -147,9 +147,14 @@ class pcMos18FingerGenerator:
       #calculate contact placement distance to gate
       coX  = lenRx/2.0-sab_max+sab_min-lenStack_con/2.0
       ilenRx = self.l+2*sab_min # intrinsic length of diffusion
-     
+      
+      if self.well == "N+S/D":
+        ind_well = -1
+      if self.well == "P+S/D":
+        ind_well = -2
+        
       for i in range(0,finger_num+1):
-        instViaStack._PcViaStack(self.layout, self.cell, widStack, lenStack_con, -1, 1,pya.DPoint(-coX+i*(ilenRx-lenStack_con),0))
+        instViaStack._PcViaStack(self.layout, self.cell, widStack, lenStack_con, ind_well, 1,pya.DPoint(-coX+i*(ilenRx-lenStack_con),0))
      
       #generate stack from Metal1 to Meta2
       #calulate contacts cell width/length
