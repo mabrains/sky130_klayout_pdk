@@ -17,6 +17,6 @@
 
 .SUBCKT sky130_fd_pr__rf_aura_blocking B_P D_N2 D_P D_P2 G G_N2 G_P G_P2 NWELL S S_N2 S_P S_P2 VGND VPWR
 
-X1 B_P D_N2 D_P D_P2 G G_N2 G_P G_P2 NWELL S S_N2 S_P S_P2 VGND VPWR sky130_fd_pr__rf_aura_blocking
+Xx B_P D_N2 D_P D_P2 G G_N2 G_P G_P2 NWELL S S_N2 S_P S_P2 VGND VPWR sky130_fd_pr__rf_aura_blocking
 
 .ENDS 

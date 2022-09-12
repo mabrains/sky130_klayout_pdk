@@ -17,6 +17,6 @@
 
 .SUBCKT sky130_fd_pr__rf_nfet_20v0_nvt_aup D PSUB S
 
-X1 D PSUB S sky130_fd_pr__rf_nfet_20v0_nvt_aup
+Mx D PSUB S sky130_fd_pr__rf_nfet_20v0_nvt_aup
 
 .ENDS 

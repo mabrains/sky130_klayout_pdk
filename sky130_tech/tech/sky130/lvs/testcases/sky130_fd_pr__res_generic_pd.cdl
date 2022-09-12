@@ -17,6 +17,6 @@
 
 .SUBCKT sky130_fd_pr__res_generic_pd R0 R1
 
-X1 R0 R1 sky130_fd_pr__res_generic_pd
+Rx R0 R1 sky130_fd_pr__res_generic_pd
 
 .ENDS 

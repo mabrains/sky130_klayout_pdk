@@ -17,6 +17,6 @@
 
 .SUBCKT sky130_fd_pr__diode_pw2nd_05v5_lvt D0 D1
 
-X1 D0 D1 sky130_fd_pr__diode_pw2nd_05v5_lvt
+Dx D0 D1 sky130_fd_pr__diode_pw2nd_05v5_lvt
 
 .ENDS 

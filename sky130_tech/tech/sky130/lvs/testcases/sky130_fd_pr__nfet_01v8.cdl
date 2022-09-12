@@ -15,8 +15,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-.SUBCKT sample_sky130_fd_pr__nfet_01v8 DRAIN GATE SOURCE SUBSTRATE
+.SUBCKT sky130_fd_pr__nfet_01v8 DRAIN GATE SOURCE SUBSTRATE
 
-m1 DRAIN GATE SOURCE SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42u l=0.15u
+Mx DRAIN GATE SOURCE SUBSTRATE sky130_fd_pr__nfet_01v8
 
 .ENDS 
