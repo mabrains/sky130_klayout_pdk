@@ -15,8 +15,198 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-.SUBCKT sky130_fd_pr__cap_var_hvt C0 C1 SUBSTRATE
+.SUBCKT sky130_fd_pr__cap_var_hvt 
++ C0_0 C1_0
++ C0_1 C1_1
++ C0_2 C1_2
++ C0_3 C1_3
++ C0_4 C1_4
++ C0_5 C1_5
++ C0_6 C1_6
++ C0_7 C1_7
++ C0_8 C1_8
++ C0_9 C1_9
++ C0_10 C1_10
++ C0_11 C1_11
++ C0_12 C1_12
++ C0_13 C1_13
++ C0_14 C1_14
++ C0_15 C1_15
++ C0_16 C1_16
++ C0_17 C1_17
++ C0_18 C1_18
++ C0_19 C1_19
++ C0_20 C1_20
++ C0_21 C1_21
++ C0_22 C1_22
++ C0_23 C1_23
++ C0_24 C1_24
++ C0_25 C1_25
++ C0_26 C1_26
++ C0_27 C1_27
++ C0_28 C1_28
++ C0_29 C1_29
++ C0_30 C1_30
++ C0_31 C1_31
++ C0_32 C1_32
++ C0_33 C1_33
++ C0_34 C1_34
++ C0_35 C1_35
++ C0_36 C1_36
++ C0_37 C1_37
++ C0_38 C1_38
++ C0_39 C1_39
++ C0_40 C1_40
++ C0_41 C1_41
++ C0_42 C1_42
++ C0_43 C1_43
++ C0_44 C1_44
++ C0_45 C1_45
++ C0_46 C1_46
++ C0_47 C1_47
++ C0_48 C1_48
++ C0_49 C1_49
++ C0_50 C1_50
++ C0_51 C1_51
++ C0_52 C1_52
++ C0_53 C1_53
++ C0_54 C1_54
++ C0_55 C1_55
++ C0_56 C1_56
++ C0_57 C1_57
++ C0_58 C1_58
++ C0_59 C1_59
++ C0_60 C1_60
++ C0_61 C1_61
++ C0_62 C1_62
++ C0_63 C1_63
 
-Cx C0 C1 SUBSTRATE sky130_fd_pr__cap_var_hvt
+C0 C0_0 C1_0 sky130_fd_pr__cap_var_hvt w=1 l=0.18 nf=1
 
-.ENDS 
+C1 C0_1 C1_1 sky130_fd_pr__cap_var_hvt w=2 l=0.18 nf=1
+
+C2 C0_2 C1_2 sky130_fd_pr__cap_var_hvt w=3 l=0.18 nf=1
+
+C3 C0_3 C1_3 sky130_fd_pr__cap_var_hvt w=4 l=0.18 nf=1
+
+C4 C0_4 C1_4 sky130_fd_pr__cap_var_hvt w=1 l=0.36 nf=1
+
+C5 C0_5 C1_5 sky130_fd_pr__cap_var_hvt w=2 l=0.36 nf=1
+
+C6 C0_6 C1_6 sky130_fd_pr__cap_var_hvt w=3 l=0.36 nf=1
+
+C7 C0_7 C1_7 sky130_fd_pr__cap_var_hvt w=4 l=0.36 nf=1
+
+C8 C0_8 C1_8 sky130_fd_pr__cap_var_hvt w=1 l=0.54 nf=1
+
+C9 C0_9 C1_9 sky130_fd_pr__cap_var_hvt w=2 l=0.54 nf=1
+
+C10 C0_10 C1_10 sky130_fd_pr__cap_var_hvt w=3 l=0.54 nf=1
+
+C11 C0_11 C1_11 sky130_fd_pr__cap_var_hvt w=4 l=0.54 nf=1
+
+C12 C0_12 C1_12 sky130_fd_pr__cap_var_hvt w=1 l=0.72 nf=1
+
+C13 C0_13 C1_13 sky130_fd_pr__cap_var_hvt w=2 l=0.72 nf=1
+
+C14 C0_14 C1_14 sky130_fd_pr__cap_var_hvt w=3 l=0.72 nf=1
+
+C15 C0_15 C1_15 sky130_fd_pr__cap_var_hvt w=4 l=0.72 nf=1
+
+C16 C0_16 C1_16 sky130_fd_pr__cap_var_hvt w=1 l=0.18 nf=5
+
+C17 C0_17 C1_17 sky130_fd_pr__cap_var_hvt w=2 l=0.18 nf=5
+
+C18 C0_18 C1_18 sky130_fd_pr__cap_var_hvt w=3 l=0.18 nf=5
+
+C19 C0_19 C1_19 sky130_fd_pr__cap_var_hvt w=4 l=0.18 nf=5
+
+C20 C0_20 C1_20 sky130_fd_pr__cap_var_hvt w=1 l=0.36 nf=5
+
+C21 C0_21 C1_21 sky130_fd_pr__cap_var_hvt w=2 l=0.36 nf=5
+
+C22 C0_22 C1_22 sky130_fd_pr__cap_var_hvt w=3 l=0.36 nf=5
+
+C23 C0_23 C1_23 sky130_fd_pr__cap_var_hvt w=4 l=0.36 nf=5
+
+C24 C0_24 C1_24 sky130_fd_pr__cap_var_hvt w=1 l=0.54 nf=5
+
+C25 C0_25 C1_25 sky130_fd_pr__cap_var_hvt w=2 l=0.54 nf=5
+
+C26 C0_26 C1_26 sky130_fd_pr__cap_var_hvt w=3 l=0.54 nf=5
+
+C27 C0_27 C1_27 sky130_fd_pr__cap_var_hvt w=4 l=0.54 nf=5
+
+C28 C0_28 C1_28 sky130_fd_pr__cap_var_hvt w=1 l=0.72 nf=5
+
+C29 C0_29 C1_29 sky130_fd_pr__cap_var_hvt w=2 l=0.72 nf=5
+
+C30 C0_30 C1_30 sky130_fd_pr__cap_var_hvt w=3 l=0.72 nf=5
+
+C31 C0_31 C1_31 sky130_fd_pr__cap_var_hvt w=4 l=0.72 nf=5
+
+C32 C0_32 C1_32 sky130_fd_pr__cap_var_hvt w=1 l=0.18 nf=9
+
+C33 C0_33 C1_33 sky130_fd_pr__cap_var_hvt w=2 l=0.18 nf=9
+
+C34 C0_34 C1_34 sky130_fd_pr__cap_var_hvt w=3 l=0.18 nf=9
+
+C35 C0_35 C1_35 sky130_fd_pr__cap_var_hvt w=4 l=0.18 nf=9
+
+C36 C0_36 C1_36 sky130_fd_pr__cap_var_hvt w=1 l=0.36 nf=9
+
+C37 C0_37 C1_37 sky130_fd_pr__cap_var_hvt w=2 l=0.36 nf=9
+
+C38 C0_38 C1_38 sky130_fd_pr__cap_var_hvt w=3 l=0.36 nf=9
+
+C39 C0_39 C1_39 sky130_fd_pr__cap_var_hvt w=4 l=0.36 nf=9
+
+C40 C0_40 C1_40 sky130_fd_pr__cap_var_hvt w=1 l=0.54 nf=9
+
+C41 C0_41 C1_41 sky130_fd_pr__cap_var_hvt w=2 l=0.54 nf=9
+
+C42 C0_42 C1_42 sky130_fd_pr__cap_var_hvt w=3 l=0.54 nf=9
+
+C43 C0_43 C1_43 sky130_fd_pr__cap_var_hvt w=4 l=0.54 nf=9
+
+C44 C0_44 C1_44 sky130_fd_pr__cap_var_hvt w=1 l=0.72 nf=9
+
+C45 C0_45 C1_45 sky130_fd_pr__cap_var_hvt w=2 l=0.72 nf=9
+
+C46 C0_46 C1_46 sky130_fd_pr__cap_var_hvt w=3 l=0.72 nf=9
+
+C47 C0_47 C1_47 sky130_fd_pr__cap_var_hvt w=4 l=0.72 nf=9
+
+C48 C0_48 C1_48 sky130_fd_pr__cap_var_hvt w=1 l=0.18 nf=13
+
+C49 C0_49 C1_49 sky130_fd_pr__cap_var_hvt w=2 l=0.18 nf=13
+
+C50 C0_50 C1_50 sky130_fd_pr__cap_var_hvt w=3 l=0.18 nf=13
+
+C51 C0_51 C1_51 sky130_fd_pr__cap_var_hvt w=4 l=0.18 nf=13
+
+C52 C0_52 C1_52 sky130_fd_pr__cap_var_hvt w=1 l=0.36 nf=13
+
+C53 C0_53 C1_53 sky130_fd_pr__cap_var_hvt w=2 l=0.36 nf=13
+
+C54 C0_54 C1_54 sky130_fd_pr__cap_var_hvt w=3 l=0.36 nf=13
+
+C55 C0_55 C1_55 sky130_fd_pr__cap_var_hvt w=4 l=0.36 nf=13
+
+C56 C0_56 C1_56 sky130_fd_pr__cap_var_hvt w=1 l=0.54 nf=13
+
+C57 C0_57 C1_57 sky130_fd_pr__cap_var_hvt w=2 l=0.54 nf=13
+
+C58 C0_58 C1_58 sky130_fd_pr__cap_var_hvt w=3 l=0.54 nf=13
+
+C59 C0_59 C1_59 sky130_fd_pr__cap_var_hvt w=4 l=0.54 nf=13
+
+C60 C0_60 C1_60 sky130_fd_pr__cap_var_hvt w=1 l=0.72 nf=13
+
+C61 C0_61 C1_61 sky130_fd_pr__cap_var_hvt w=2 l=0.72 nf=13
+
+C62 C0_62 C1_62 sky130_fd_pr__cap_var_hvt w=3 l=0.72 nf=13
+
+C63 C0_63 C1_63 sky130_fd_pr__cap_var_hvt w=4 l=0.72 nf=13
+
+.ENDS

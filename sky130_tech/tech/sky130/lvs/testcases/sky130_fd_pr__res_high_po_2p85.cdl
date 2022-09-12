@@ -15,8 +15,198 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-.SUBCKT sky130_fd_pr__res_high_po_2p85 R0 R1
+.SUBCKT sky130_fd_pr__res_high_po_2p85
++ R0_0 R1_0
++ R0_1 R1_1
++ R0_2 R1_2
++ R0_3 R1_3
++ R0_4 R1_4
++ R0_5 R1_5
++ R0_6 R1_6
++ R0_7 R1_7
++ R0_8 R1_8
++ R0_9 R1_9
++ R0_10 R1_10
++ R0_11 R1_11
++ R0_12 R1_12
++ R0_13 R1_13
++ R0_14 R1_14
++ R0_15 R1_15
++ R0_16 R1_16
++ R0_17 R1_17
++ R0_18 R1_18
++ R0_19 R1_19
++ R0_20 R1_20
++ R0_21 R1_21
++ R0_22 R1_22
++ R0_23 R1_23
++ R0_24 R1_24
++ R0_25 R1_25
++ R0_26 R1_26
++ R0_27 R1_27
++ R0_28 R1_28
++ R0_29 R1_29
++ R0_30 R1_30
++ R0_31 R1_31
++ R0_32 R1_32
++ R0_33 R1_33
++ R0_34 R1_34
++ R0_35 R1_35
++ R0_36 R1_36
++ R0_37 R1_37
++ R0_38 R1_38
++ R0_39 R1_39
++ R0_40 R1_40
++ R0_41 R1_41
++ R0_42 R1_42
++ R0_43 R1_43
++ R0_44 R1_44
++ R0_45 R1_45
++ R0_46 R1_46
++ R0_47 R1_47
++ R0_48 R1_48
++ R0_49 R1_49
++ R0_50 R1_50
++ R0_51 R1_51
++ R0_52 R1_52
++ R0_53 R1_53
++ R0_54 R1_54
++ R0_55 R1_55
++ R0_56 R1_56
++ R0_57 R1_57
++ R0_58 R1_58
++ R0_59 R1_59
++ R0_60 R1_60
++ R0_61 R1_61
++ R0_62 R1_62
++ R0_63 R1_63
 
-Rx R0 R1 sky130_fd_pr__res_high_po_2p85
+R0 R0_0 R1_0 sky130_fd_pr__res_high_po_2p85 l=3.35 w=2.85
 
-.ENDS 
+R1 R0_1 R1_1 sky130_fd_pr__res_high_po_2p85 l=6.7 w=2.85
+
+R2 R0_2 R1_2 sky130_fd_pr__res_high_po_2p85 l=10.05 w=2.85
+
+R3 R0_3 R1_3 sky130_fd_pr__res_high_po_2p85 l=13.4 w=2.85
+
+R4 R0_4 R1_4 sky130_fd_pr__res_high_po_2p85 l=16.75 w=2.85
+
+R5 R0_5 R1_5 sky130_fd_pr__res_high_po_2p85 l=20.1 w=2.85
+
+R6 R0_6 R1_6 sky130_fd_pr__res_high_po_2p85 l=23.45 w=2.85
+
+R7 R0_7 R1_7 sky130_fd_pr__res_high_po_2p85 l=26.8 w=2.85
+
+R8 R0_8 R1_8 sky130_fd_pr__res_high_po_2p85 l=6.7 w=2.85
+
+R9 R0_9 R1_9 sky130_fd_pr__res_high_po_2p85 l=13.4 w=2.85
+
+R10 R0_10 R1_10 sky130_fd_pr__res_high_po_2p85 l=20.1 w=2.85
+
+R11 R0_11 R1_11 sky130_fd_pr__res_high_po_2p85 l=26.8 w=2.85
+
+R12 R0_12 R1_12 sky130_fd_pr__res_high_po_2p85 l=33.5 w=2.85
+
+R13 R0_13 R1_13 sky130_fd_pr__res_high_po_2p85 l=40.2 w=2.85
+
+R14 R0_14 R1_14 sky130_fd_pr__res_high_po_2p85 l=46.9 w=2.85
+
+R15 R0_15 R1_15 sky130_fd_pr__res_high_po_2p85 l=53.6 w=2.85
+
+R16 R0_16 R1_16 sky130_fd_pr__res_high_po_2p85 l=10.05 w=2.85
+
+R17 R0_17 R1_17 sky130_fd_pr__res_high_po_2p85 l=20.1 w=2.85
+
+R18 R0_18 R1_18 sky130_fd_pr__res_high_po_2p85 l=30.15 w=2.85
+
+R19 R0_19 R1_19 sky130_fd_pr__res_high_po_2p85 l=40.2 w=2.85
+
+R20 R0_20 R1_20 sky130_fd_pr__res_high_po_2p85 l=50.25 w=2.85
+
+R21 R0_21 R1_21 sky130_fd_pr__res_high_po_2p85 l=60.3 w=2.85
+
+R22 R0_22 R1_22 sky130_fd_pr__res_high_po_2p85 l=70.35 w=2.85
+
+R23 R0_23 R1_23 sky130_fd_pr__res_high_po_2p85 l=80.4 w=2.85
+
+R24 R0_24 R1_24 sky130_fd_pr__res_high_po_2p85 l=13.4 w=2.85
+
+R25 R0_25 R1_25 sky130_fd_pr__res_high_po_2p85 l=26.8 w=2.85
+
+R26 R0_26 R1_26 sky130_fd_pr__res_high_po_2p85 l=40.2 w=2.85
+
+R27 R0_27 R1_27 sky130_fd_pr__res_high_po_2p85 l=53.6 w=2.85
+
+R28 R0_28 R1_28 sky130_fd_pr__res_high_po_2p85 l=67.0 w=2.85
+
+R29 R0_29 R1_29 sky130_fd_pr__res_high_po_2p85 l=80.4 w=2.85
+
+R30 R0_30 R1_30 sky130_fd_pr__res_high_po_2p85 l=93.8 w=2.85
+
+R31 R0_31 R1_31 sky130_fd_pr__res_high_po_2p85 l=107.2 w=2.85
+
+R32 R0_32 R1_32 sky130_fd_pr__res_high_po_2p85 l=16.75 w=2.85
+
+R33 R0_33 R1_33 sky130_fd_pr__res_high_po_2p85 l=33.5 w=2.85
+
+R34 R0_34 R1_34 sky130_fd_pr__res_high_po_2p85 l=50.25 w=2.85
+
+R35 R0_35 R1_35 sky130_fd_pr__res_high_po_2p85 l=67.0 w=2.85
+
+R36 R0_36 R1_36 sky130_fd_pr__res_high_po_2p85 l=83.75 w=2.85
+
+R37 R0_37 R1_37 sky130_fd_pr__res_high_po_2p85 l=100.5 w=2.85
+
+R38 R0_38 R1_38 sky130_fd_pr__res_high_po_2p85 l=117.25 w=2.85
+
+R39 R0_39 R1_39 sky130_fd_pr__res_high_po_2p85 l=134.0 w=2.85
+
+R40 R0_40 R1_40 sky130_fd_pr__res_high_po_2p85 l=20.1 w=2.85
+
+R41 R0_41 R1_41 sky130_fd_pr__res_high_po_2p85 l=40.2 w=2.85
+
+R42 R0_42 R1_42 sky130_fd_pr__res_high_po_2p85 l=60.3 w=2.85
+
+R43 R0_43 R1_43 sky130_fd_pr__res_high_po_2p85 l=80.4 w=2.85
+
+R44 R0_44 R1_44 sky130_fd_pr__res_high_po_2p85 l=100.5 w=2.85
+
+R45 R0_45 R1_45 sky130_fd_pr__res_high_po_2p85 l=120.6 w=2.85
+
+R46 R0_46 R1_46 sky130_fd_pr__res_high_po_2p85 l=140.7 w=2.85
+
+R47 R0_47 R1_47 sky130_fd_pr__res_high_po_2p85 l=160.8 w=2.85
+
+R48 R0_48 R1_48 sky130_fd_pr__res_high_po_2p85 l=23.45 w=2.85
+
+R49 R0_49 R1_49 sky130_fd_pr__res_high_po_2p85 l=46.9 w=2.85
+
+R50 R0_50 R1_50 sky130_fd_pr__res_high_po_2p85 l=70.35 w=2.85
+
+R51 R0_51 R1_51 sky130_fd_pr__res_high_po_2p85 l=93.8 w=2.85
+
+R52 R0_52 R1_52 sky130_fd_pr__res_high_po_2p85 l=117.25 w=2.85
+
+R53 R0_53 R1_53 sky130_fd_pr__res_high_po_2p85 l=140.7 w=2.85
+
+R54 R0_54 R1_54 sky130_fd_pr__res_high_po_2p85 l=164.15 w=2.85
+
+R55 R0_55 R1_55 sky130_fd_pr__res_high_po_2p85 l=187.6 w=2.85
+
+R56 R0_56 R1_56 sky130_fd_pr__res_high_po_2p85 l=26.8 w=2.85
+
+R57 R0_57 R1_57 sky130_fd_pr__res_high_po_2p85 l=53.6 w=2.85
+
+R58 R0_58 R1_58 sky130_fd_pr__res_high_po_2p85 l=80.4 w=2.85
+
+R59 R0_59 R1_59 sky130_fd_pr__res_high_po_2p85 l=107.2 w=2.85
+
+R60 R0_60 R1_60 sky130_fd_pr__res_high_po_2p85 l=134.0 w=2.85
+
+R61 R0_61 R1_61 sky130_fd_pr__res_high_po_2p85 l=160.8 w=2.85
+
+R62 R0_62 R1_62 sky130_fd_pr__res_high_po_2p85 l=187.6 w=2.85
+
+R63 R0_63 R1_63 sky130_fd_pr__res_high_po_2p85 l=214.4 w=2.85
+
+.ENDS
