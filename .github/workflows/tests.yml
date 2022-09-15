@@ -1,0 +1,76 @@
+# Copyright 2022 Mabrains
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+# 
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+name: Regression testing
+
+# Prevent keeping resources busy when a branch/PR is updated
+# https://docs.github.com/en/actions/using-jobs/using-concurrency
+concurrency:
+  group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  DOCKER_BUILDKIT: 1
+
+jobs:
+
+  Test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { type: LVS, test: main }
+          - { type: LVS, test: collective }
+          - { type: LVS, test: connectivity }
+
+    name: ${{ matrix.type }} | ${{ matrix.test }}
+
+    env:
+      IMAGE: ghcr.io/mabrains/sky130_klayout_pdk/test
+
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Build container image
+        run: |
+          docker build -t "$IMAGE" -f- sky130_tech/tech/sky130/lvs <<EOF
+          FROM gcr.io/hdl-containers/klayout
+
+          RUN apt-get update -qq \
+           && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+              make \
+              procps \
+              python3-pip \
+           && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+           && rm -rf /var/lib/apt/lists/*
+
+          RUN --mount=type=bind,target=/tmp/ctx pip3 install -r /tmp/ctx/requirements.test.txt
+          EOF
+
+      - name: Testing ${{ matrix.type }} for ${{ matrix.test }}
+        run: >
+          docker run --rm
+          -v $(pwd):/wrk -w /wrk/rules/klayout/${{ matrix.pdk }}/testing
+          -e PDK_ROOT="/wrk/rules/klayout"
+          -e PDK='${{ matrix.pdk }}'
+          "$IMAGE"
+          make test-${{ matrix.type }}-${{ matrix.test }}

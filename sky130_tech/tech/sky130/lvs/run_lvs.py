@@ -1,18 +1,17 @@
-# Copyright 2022 SkyWater PDK Authors
+# Copyright 2022 Mabrains
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-# SPDX-License-Identifier: Apache-2.0
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+# 
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
 """Run Skywater 130nm LVS.
@@ -42,6 +41,7 @@ Options:
 
 from docopt import docopt
 import os
+import subprocess
 import logging
 
 def main():
@@ -81,13 +81,17 @@ def main():
     # Generate databases
     if args["--design"]:
         path = args["--design"]
-        if args["--design"]:
+        if args["--net"]:
             file_name = args["--net"].split('.')
         else:
             print("The script must be given a netlist file or a path to be able to run LVS")
             exit()
 
-        os.system(f"klayout -b -r sky130.lvs -rd input={path} -rd report={file_name[0]}.lyrdb -rd schematic={args['--net']} -rd target_netlist=extracted_netlist_{file_name[0]}.cir -rd thr={workers_count} {switches}")
+        s = subprocess.run(f"klayout -b -r sky130.lvs -rd input={path} -rd report={file_name[0]}.lvsdb -rd schematic={args['--net']} -rd target_netlist=extracted_netlist_{file_name[0]}.cir -rd thr={workers_count} {switches}".split(" "), stderr=subprocess.PIPE)
+        if "ERROR" in s.stderr.decode(encoding='UTF-8',errors='strict'):
+            exit(1)
+        else:
+            exit(0)
 
     else:
         print("The script must be given a layout file or a path to be able to run LVS")
