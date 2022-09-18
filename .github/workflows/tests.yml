@@ -31,15 +31,23 @@ env:
 
 jobs:
 
-  Test:
+  build-matrix:
+    runs-on: ubuntu-latest
+    steps:
+      - id: set-matrix-main
+        run: echo "::set-output name=main_files::$(ls testcases/*.gds testcases/fixed_devices/*.gds)"
+    outputs:
+      main_files: ${{ steps.set-matrix-main.outputs.main_files }}
+
+  Test:    
+    needs: build-matrix
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - { type: LVS, test: main }
-          - { type: LVS, test: collective }
-          - { type: LVS, test: connectivity }
+        type: [lvs]
+        test: [main]
+        list: ${{ fromJson(needs.build-matrix.outputs.main_files) }}
 
     name: ${{ matrix.type }} | ${{ matrix.test }}
 
@@ -49,10 +57,9 @@ jobs:
     steps:
 
       - uses: actions/checkout@v3
-
       - name: Build container image
         run: |
-          docker build -t "$IMAGE" -f- sky130_tech/tech/sky130/lvs <<EOF
+          docker build -t "$IMAGE" -f- sky130_tech/tech/sky130 <<EOF
           FROM gcr.io/hdl-containers/klayout
 
           RUN apt-get update -qq \
@@ -63,14 +70,14 @@ jobs:
            && apt-get autoclean && apt-get clean && apt-get -y autoremove \
            && rm -rf /var/lib/apt/lists/*
 
-          RUN --mount=type=bind,target=/tmp/ctx pip3 install -r /tmp/ctx/requirements.test.txt
+          RUN --mount=type=bind,target=/tmp/ctx pip3 install -r /tmp/ctx/requirements.txt
           EOF
 
-      - name: Testing ${{ matrix.type }} for ${{ matrix.test }}
+      - name: Testing ${{ matrix.test }} ${{ matrix.type }} for ${{ matrix.list }}
         run: >
           docker run --rm
-          -v $(pwd):/wrk -w /wrk/rules/klayout/${{ matrix.pdk }}/testing
-          -e PDK_ROOT="/wrk/rules/klayout"
-          -e PDK='${{ matrix.pdk }}'
+          -v $(pwd):/wrk -w /wrk/sky130_tech/tech/sky130/lvs/testing
+          -e PDK_ROOT="/wrk/tech/sky130"
+          -e PDK=lvs
           "$IMAGE"
-          make test-${{ matrix.type }}-${{ matrix.test }}
+          make test_${{ matrix.type }}_${{ matrix.test }}_gha_${{ matrix.list }}

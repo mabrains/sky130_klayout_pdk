@@ -23,54 +23,54 @@ run_folder    = $(shell date +'run_%Y_%m_%d_%H_%M')
 
 .DEFAULT_GOAL := all
 
-all: test_LVS_main test_LVS_collective test_LVS_connectivity
+all: test_lvs_main test_lvs_collective test_lvs_connectivity
 
 #=================================
 # -------- TEST MAIN LVS ---------
 #=================================
 
 .ONESHELL:
-test_LVS_main_gha_%:
+test_lvs_main_gha_%:
 	@cd $(Testing_DIR)
 	@cdl="$${$*//testcases/}"; cdl="$${cdl//fixed_devices/}";
 	@if python3 ../run_lvs.py --design=$* --net=$${cdl//.gds/.cdl} ; then exit 1; \
 		else python3 regression_result.py --db=$${file//.gds/.lvsdb} ; fi
 
 .ONESHELL:
-test_LVS_main: 
+test_lvs_main: 
 	@cd $(Testing_DIR)
 	@mkdir -p $(run_folder)
 	@search_dir = `ls testcases/*.gds testcases/fixed_devices/*.gds`
 	@for file in $$search_dir ; do cdl="$${file//testcases/}"; cdl="$${cdl//fixed_devices/}"; \
 	if python3 ../run_lvs.py --design=$$file --net=$${cdl//.gds/.cdl}  |& tee -a $(run_folder)/main_results.log ; then exit 1; \
 		else python3 regression_result.py --db=$${file//.gds/.lvsdb} ; fi; done
-	@echo "Congratulations! Testing main LVS is finished successfully"
+	@echo "Congratulations! Testing main lvs is finished successfully"
 
 #=================================
 # ----- TEST COLLECTIVE LVS ------
 #=================================
 
 .ONESHELL:
-test_LVS_collective: 
+test_lvs_collective: 
 	@cd $(Testing_DIR)
 	@mkdir -p $(run_folder)
 	@search_dir = `ls collective_test/*.gds`
 	@for file in $$search_dir ; do cdl="$${file//collective_test/}"; \
 	python3 ../run_lvs.py --design=$$file --net=$${cdl//.gds/.cdl}  |& tee -a $(run_folder)/collective_results.log  ; done
-	@echo "Congratulations! Testing collective LVS is finished successfully"
+	@echo "Congratulations! Testing collective lvs is finished successfully"
 
 #=================================
 # ---- TEST CONNECTIVITY LVS -----
 #=================================
 
 .ONESHELL:
-test_LVS_connectivity: 
+test_lvs_connectivity: 
 	@cd $(Testing_DIR)
 	@mkdir -p $(run_folder)
 	@search_dir = `ls connectivity_test/*.gds`
 	@for file in $$search_dir ; do cdl="$${file//connectivity_test/}"; \
 	python3 ../run_lvs.py --design=$$file --net=$${cdl//.gds/.cdl}  |& tee -a $(run_folder)/connectivity_results.log  ; done
-	@echo "Congratulations! Testing connectivity LVS is finished successfully"
+	@echo "Congratulations! Testing connectivity lvs is finished successfully"
 
 #==========================
 # --------- HELP ----------
@@ -80,6 +80,6 @@ test_LVS_connectivity:
 help:
 	@echo "\n ==== The following are some of the valid targets for this Makefile ====\n"
 	@echo "... all                  	(the default if no target is provided          		)"
-	@echo "... test_LVS_main        	(To run main LVS regression for all devices    		)"
-	@echo "... test_LVS_collective  	(To run collective LVS regression for all devices	)"
-	@echo "... test_LVS_connectivity    (To run connectivity LVS regression for all devices	)"
+	@echo "... test_lvs_main        	(To run main lvs regression for all devices    		)"
+	@echo "... test_lvs_collective  	(To run collective lvs regression for all devices	)"
+	@echo "... test_lvs_connectivity    (To run connectivity lvs regression for all devices	)"
