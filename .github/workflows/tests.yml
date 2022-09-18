@@ -35,7 +35,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: set-matrix-main
-        run: echo "::set-output name=main_files::$(ls testcases/*.gds testcases/fixed_devices/*.gds)"
+        run: |
+          cd sky130_tech/tech/sky130/lvs/testing
+          echo "::set-output name=main_files::$(ls testcases/*.gds testcases/fixed_devices/*.gds)"
     outputs:
       main_files: ${{ steps.set-matrix-main.outputs.main_files }}
 
