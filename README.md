@@ -4,7 +4,7 @@
 
 Mabrains is excited to share with you our Skywater 130nm PDK for Klayout. These files are not qualified. Please use with caution.
 
-## KLayout technology files for Skywater SKY130
+## KLayout technology files for Skywater Sky130
 
 * sky130.lyt   : technology and connections description
 * sky130.lyp   : layers color and shape description
