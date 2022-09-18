@@ -1,0 +1,468 @@
+ 
+# Copyright 2022 SkyWater PDK Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+.SUBCKT sky130_fd_pr__cap_var_hvt SUBSTRATE
++ C0_000 C1_000 C0_000_net_fail C0_000_dim_fail C1_000_net_fail C1_000_dim_fail
++ C0_001 C1_001 C0_001_net_fail C0_001_dim_fail C1_001_net_fail C1_001_dim_fail
++ C0_002 C1_002 C0_002_net_fail C0_002_dim_fail C1_002_net_fail C1_002_dim_fail
++ C0_003 C1_003 C0_003_net_fail C0_003_dim_fail C1_003_net_fail C1_003_dim_fail
++ C0_004 C1_004 C0_004_net_fail C0_004_dim_fail C1_004_net_fail C1_004_dim_fail
++ C0_005 C1_005 C0_005_net_fail C0_005_dim_fail C1_005_net_fail C1_005_dim_fail
++ C0_006 C1_006 C0_006_net_fail C0_006_dim_fail C1_006_net_fail C1_006_dim_fail
++ C0_007 C1_007 C0_007_net_fail C0_007_dim_fail C1_007_net_fail C1_007_dim_fail
++ C0_008 C1_008 C0_008_net_fail C0_008_dim_fail C1_008_net_fail C1_008_dim_fail
++ C0_009 C1_009 C0_009_net_fail C0_009_dim_fail C1_009_net_fail C1_009_dim_fail
++ C0_010 C1_010 C0_010_net_fail C0_010_dim_fail C1_010_net_fail C1_010_dim_fail
++ C0_011 C1_011 C0_011_net_fail C0_011_dim_fail C1_011_net_fail C1_011_dim_fail
++ C0_012 C1_012 C0_012_net_fail C0_012_dim_fail C1_012_net_fail C1_012_dim_fail
++ C0_013 C1_013 C0_013_net_fail C0_013_dim_fail C1_013_net_fail C1_013_dim_fail
++ C0_014 C1_014 C0_014_net_fail C0_014_dim_fail C1_014_net_fail C1_014_dim_fail
++ C0_015 C1_015 C0_015_net_fail C0_015_dim_fail C1_015_net_fail C1_015_dim_fail
++ C0_016 C1_016 C0_016_net_fail C0_016_dim_fail C1_016_net_fail C1_016_dim_fail
++ C0_017 C1_017 C0_017_net_fail C0_017_dim_fail C1_017_net_fail C1_017_dim_fail
++ C0_018 C1_018 C0_018_net_fail C0_018_dim_fail C1_018_net_fail C1_018_dim_fail
++ C0_019 C1_019 C0_019_net_fail C0_019_dim_fail C1_019_net_fail C1_019_dim_fail
++ C0_020 C1_020 C0_020_net_fail C0_020_dim_fail C1_020_net_fail C1_020_dim_fail
++ C0_021 C1_021 C0_021_net_fail C0_021_dim_fail C1_021_net_fail C1_021_dim_fail
++ C0_022 C1_022 C0_022_net_fail C0_022_dim_fail C1_022_net_fail C1_022_dim_fail
++ C0_023 C1_023 C0_023_net_fail C0_023_dim_fail C1_023_net_fail C1_023_dim_fail
++ C0_024 C1_024 C0_024_net_fail C0_024_dim_fail C1_024_net_fail C1_024_dim_fail
++ C0_025 C1_025 C0_025_net_fail C0_025_dim_fail C1_025_net_fail C1_025_dim_fail
++ C0_026 C1_026 C0_026_net_fail C0_026_dim_fail C1_026_net_fail C1_026_dim_fail
++ C0_027 C1_027 C0_027_net_fail C0_027_dim_fail C1_027_net_fail C1_027_dim_fail
++ C0_028 C1_028 C0_028_net_fail C0_028_dim_fail C1_028_net_fail C1_028_dim_fail
++ C0_029 C1_029 C0_029_net_fail C0_029_dim_fail C1_029_net_fail C1_029_dim_fail
++ C0_030 C1_030 C0_030_net_fail C0_030_dim_fail C1_030_net_fail C1_030_dim_fail
++ C0_031 C1_031 C0_031_net_fail C0_031_dim_fail C1_031_net_fail C1_031_dim_fail
++ C0_032 C1_032 C0_032_net_fail C0_032_dim_fail C1_032_net_fail C1_032_dim_fail
++ C0_033 C1_033 C0_033_net_fail C0_033_dim_fail C1_033_net_fail C1_033_dim_fail
++ C0_034 C1_034 C0_034_net_fail C0_034_dim_fail C1_034_net_fail C1_034_dim_fail
++ C0_035 C1_035 C0_035_net_fail C0_035_dim_fail C1_035_net_fail C1_035_dim_fail
++ C0_036 C1_036 C0_036_net_fail C0_036_dim_fail C1_036_net_fail C1_036_dim_fail
++ C0_037 C1_037 C0_037_net_fail C0_037_dim_fail C1_037_net_fail C1_037_dim_fail
++ C0_038 C1_038 C0_038_net_fail C0_038_dim_fail C1_038_net_fail C1_038_dim_fail
++ C0_039 C1_039 C0_039_net_fail C0_039_dim_fail C1_039_net_fail C1_039_dim_fail
++ C0_040 C1_040 C0_040_net_fail C0_040_dim_fail C1_040_net_fail C1_040_dim_fail
++ C0_041 C1_041 C0_041_net_fail C0_041_dim_fail C1_041_net_fail C1_041_dim_fail
++ C0_042 C1_042 C0_042_net_fail C0_042_dim_fail C1_042_net_fail C1_042_dim_fail
++ C0_043 C1_043 C0_043_net_fail C0_043_dim_fail C1_043_net_fail C1_043_dim_fail
++ C0_044 C1_044 C0_044_net_fail C0_044_dim_fail C1_044_net_fail C1_044_dim_fail
++ C0_045 C1_045 C0_045_net_fail C0_045_dim_fail C1_045_net_fail C1_045_dim_fail
++ C0_046 C1_046 C0_046_net_fail C0_046_dim_fail C1_046_net_fail C1_046_dim_fail
++ C0_047 C1_047 C0_047_net_fail C0_047_dim_fail C1_047_net_fail C1_047_dim_fail
++ C0_048 C1_048 C0_048_net_fail C0_048_dim_fail C1_048_net_fail C1_048_dim_fail
++ C0_049 C1_049 C0_049_net_fail C0_049_dim_fail C1_049_net_fail C1_049_dim_fail
++ C0_050 C1_050 C0_050_net_fail C0_050_dim_fail C1_050_net_fail C1_050_dim_fail
++ C0_051 C1_051 C0_051_net_fail C0_051_dim_fail C1_051_net_fail C1_051_dim_fail
++ C0_052 C1_052 C0_052_net_fail C0_052_dim_fail C1_052_net_fail C1_052_dim_fail
++ C0_053 C1_053 C0_053_net_fail C0_053_dim_fail C1_053_net_fail C1_053_dim_fail
++ C0_054 C1_054 C0_054_net_fail C0_054_dim_fail C1_054_net_fail C1_054_dim_fail
++ C0_055 C1_055 C0_055_net_fail C0_055_dim_fail C1_055_net_fail C1_055_dim_fail
++ C0_056 C1_056 C0_056_net_fail C0_056_dim_fail C1_056_net_fail C1_056_dim_fail
++ C0_057 C1_057 C0_057_net_fail C0_057_dim_fail C1_057_net_fail C1_057_dim_fail
++ C0_058 C1_058 C0_058_net_fail C0_058_dim_fail C1_058_net_fail C1_058_dim_fail
++ C0_059 C1_059 C0_059_net_fail C0_059_dim_fail C1_059_net_fail C1_059_dim_fail
++ C0_060 C1_060 C0_060_net_fail C0_060_dim_fail C1_060_net_fail C1_060_dim_fail
++ C0_061 C1_061 C0_061_net_fail C0_061_dim_fail C1_061_net_fail C1_061_dim_fail
++ C0_062 C1_062 C0_062_net_fail C0_062_dim_fail C1_062_net_fail C1_062_dim_fail
++ C0_063 C1_063 C0_063_net_fail C0_063_dim_fail C1_063_net_fail C1_063_dim_fail
+
+C000 C0_000 C1_000 SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.18 nf=1
+
+C001 C0_001 C1_001 SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.18 nf=1
+
+C002 C0_002 C1_002 SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.18 nf=1
+
+C003 C0_003 C1_003 SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.18 nf=1
+
+C004 C0_004 C1_004 SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.36 nf=1
+
+C005 C0_005 C1_005 SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.36 nf=1
+
+C006 C0_006 C1_006 SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.36 nf=1
+
+C007 C0_007 C1_007 SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.36 nf=1
+
+C008 C0_008 C1_008 SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.54 nf=1
+
+C009 C0_009 C1_009 SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.54 nf=1
+
+C010 C0_010 C1_010 SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.54 nf=1
+
+C011 C0_011 C1_011 SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.54 nf=1
+
+C012 C0_012 C1_012 SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.72 nf=1
+
+C013 C0_013 C1_013 SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.72 nf=1
+
+C014 C0_014 C1_014 SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.72 nf=1
+
+C015 C0_015 C1_015 SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.72 nf=1
+
+C016 C0_016 C1_016 SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.18 nf=5
+
+C017 C0_017 C1_017 SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.18 nf=5
+
+C018 C0_018 C1_018 SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.18 nf=5
+
+C019 C0_019 C1_019 SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.18 nf=5
+
+C020 C0_020 C1_020 SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.36 nf=5
+
+C021 C0_021 C1_021 SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.36 nf=5
+
+C022 C0_022 C1_022 SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.36 nf=5
+
+C023 C0_023 C1_023 SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.36 nf=5
+
+C024 C0_024 C1_024 SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.54 nf=5
+
+C025 C0_025 C1_025 SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.54 nf=5
+
+C026 C0_026 C1_026 SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.54 nf=5
+
+C027 C0_027 C1_027 SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.54 nf=5
+
+C028 C0_028 C1_028 SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.72 nf=5
+
+C029 C0_029 C1_029 SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.72 nf=5
+
+C030 C0_030 C1_030 SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.72 nf=5
+
+C031 C0_031 C1_031 SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.72 nf=5
+
+C032 C0_032 C1_032 SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.18 nf=9
+
+C033 C0_033 C1_033 SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.18 nf=9
+
+C034 C0_034 C1_034 SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.18 nf=9
+
+C035 C0_035 C1_035 SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.18 nf=9
+
+C036 C0_036 C1_036 SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.36 nf=9
+
+C037 C0_037 C1_037 SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.36 nf=9
+
+C038 C0_038 C1_038 SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.36 nf=9
+
+C039 C0_039 C1_039 SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.36 nf=9
+
+C040 C0_040 C1_040 SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.54 nf=9
+
+C041 C0_041 C1_041 SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.54 nf=9
+
+C042 C0_042 C1_042 SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.54 nf=9
+
+C043 C0_043 C1_043 SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.54 nf=9
+
+C044 C0_044 C1_044 SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.72 nf=9
+
+C045 C0_045 C1_045 SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.72 nf=9
+
+C046 C0_046 C1_046 SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.72 nf=9
+
+C047 C0_047 C1_047 SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.72 nf=9
+
+C048 C0_048 C1_048 SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.18 nf=13
+
+C049 C0_049 C1_049 SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.18 nf=13
+
+C050 C0_050 C1_050 SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.18 nf=13
+
+C051 C0_051 C1_051 SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.18 nf=13
+
+C052 C0_052 C1_052 SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.36 nf=13
+
+C053 C0_053 C1_053 SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.36 nf=13
+
+C054 C0_054 C1_054 SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.36 nf=13
+
+C055 C0_055 C1_055 SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.36 nf=13
+
+C056 C0_056 C1_056 SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.54 nf=13
+
+C057 C0_057 C1_057 SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.54 nf=13
+
+C058 C0_058 C1_058 SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.54 nf=13
+
+C059 C0_059 C1_059 SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.54 nf=13
+
+C060 C0_060 C1_060 SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.72 nf=13
+
+C061 C0_061 C1_061 SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.72 nf=13
+
+C062 C0_062 C1_062 SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.72 nf=13
+
+C063 C0_063 C1_063 SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.72 nf=13
+
+C000_net_fail C0_000_net_fail C1_000_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1.5 l=0.27 nf=1
+
+C001_net_fail C0_001_net_fail C1_001_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3.0 l=0.27 nf=1
+
+C002_net_fail C0_002_net_fail C1_002_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4.5 l=0.27 nf=1
+
+C003_net_fail C0_003_net_fail C1_003_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=6.0 l=0.27 nf=1
+
+C004_net_fail C0_004_net_fail C1_004_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1.5 l=0.54 nf=1
+
+C005_net_fail C0_005_net_fail C1_005_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3.0 l=0.54 nf=1
+
+C006_net_fail C0_006_net_fail C1_006_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4.5 l=0.54 nf=1
+
+C007_net_fail C0_007_net_fail C1_007_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=6.0 l=0.54 nf=1
+
+C008_net_fail C0_008_net_fail C1_008_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1.5 l=0.81 nf=1
+
+C009_net_fail C0_009_net_fail C1_009_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3.0 l=0.81 nf=1
+
+C010_net_fail C0_010_net_fail C1_010_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4.5 l=0.81 nf=1
+
+C011_net_fail C0_011_net_fail C1_011_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=6.0 l=0.81 nf=1
+
+C012_net_fail C0_012_net_fail C1_012_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1.5 l=1.08 nf=1
+
+C013_net_fail C0_013_net_fail C1_013_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3.0 l=1.08 nf=1
+
+C014_net_fail C0_014_net_fail C1_014_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4.5 l=1.08 nf=1
+
+C015_net_fail C0_015_net_fail C1_015_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=6.0 l=1.08 nf=1
+
+C016_net_fail C0_016_net_fail C1_016_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1.5 l=0.27 nf=5
+
+C017_net_fail C0_017_net_fail C1_017_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3.0 l=0.27 nf=5
+
+C018_net_fail C0_018_net_fail C1_018_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4.5 l=0.27 nf=5
+
+C019_net_fail C0_019_net_fail C1_019_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=6.0 l=0.27 nf=5
+
+C020_net_fail C0_020_net_fail C1_020_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1.5 l=0.54 nf=5
+
+C021_net_fail C0_021_net_fail C1_021_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3.0 l=0.54 nf=5
+
+C022_net_fail C0_022_net_fail C1_022_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4.5 l=0.54 nf=5
+
+C023_net_fail C0_023_net_fail C1_023_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=6.0 l=0.54 nf=5
+
+C024_net_fail C0_024_net_fail C1_024_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1.5 l=0.81 nf=5
+
+C025_net_fail C0_025_net_fail C1_025_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3.0 l=0.81 nf=5
+
+C026_net_fail C0_026_net_fail C1_026_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4.5 l=0.81 nf=5
+
+C027_net_fail C0_027_net_fail C1_027_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=6.0 l=0.81 nf=5
+
+C028_net_fail C0_028_net_fail C1_028_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1.5 l=1.08 nf=5
+
+C029_net_fail C0_029_net_fail C1_029_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3.0 l=1.08 nf=5
+
+C030_net_fail C0_030_net_fail C1_030_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4.5 l=1.08 nf=5
+
+C031_net_fail C0_031_net_fail C1_031_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=6.0 l=1.08 nf=5
+
+C032_net_fail C0_032_net_fail C1_032_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1.5 l=0.27 nf=9
+
+C033_net_fail C0_033_net_fail C1_033_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3.0 l=0.27 nf=9
+
+C034_net_fail C0_034_net_fail C1_034_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4.5 l=0.27 nf=9
+
+C035_net_fail C0_035_net_fail C1_035_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=6.0 l=0.27 nf=9
+
+C036_net_fail C0_036_net_fail C1_036_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1.5 l=0.54 nf=9
+
+C037_net_fail C0_037_net_fail C1_037_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3.0 l=0.54 nf=9
+
+C038_net_fail C0_038_net_fail C1_038_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4.5 l=0.54 nf=9
+
+C039_net_fail C0_039_net_fail C1_039_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=6.0 l=0.54 nf=9
+
+C040_net_fail C0_040_net_fail C1_040_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1.5 l=0.81 nf=9
+
+C041_net_fail C0_041_net_fail C1_041_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3.0 l=0.81 nf=9
+
+C042_net_fail C0_042_net_fail C1_042_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4.5 l=0.81 nf=9
+
+C043_net_fail C0_043_net_fail C1_043_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=6.0 l=0.81 nf=9
+
+C044_net_fail C0_044_net_fail C1_044_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1.5 l=1.08 nf=9
+
+C045_net_fail C0_045_net_fail C1_045_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3.0 l=1.08 nf=9
+
+C046_net_fail C0_046_net_fail C1_046_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4.5 l=1.08 nf=9
+
+C047_net_fail C0_047_net_fail C1_047_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=6.0 l=1.08 nf=9
+
+C048_net_fail C0_048_net_fail C1_048_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1.5 l=0.27 nf=13
+
+C049_net_fail C0_049_net_fail C1_049_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3.0 l=0.27 nf=13
+
+C050_net_fail C0_050_net_fail C1_050_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4.5 l=0.27 nf=13
+
+C051_net_fail C0_051_net_fail C1_051_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=6.0 l=0.27 nf=13
+
+C052_net_fail C0_052_net_fail C1_052_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1.5 l=0.54 nf=13
+
+C053_net_fail C0_053_net_fail C1_053_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3.0 l=0.54 nf=13
+
+C054_net_fail C0_054_net_fail C1_054_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4.5 l=0.54 nf=13
+
+C055_net_fail C0_055_net_fail C1_055_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=6.0 l=0.54 nf=13
+
+C056_net_fail C0_056_net_fail C1_056_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1.5 l=0.81 nf=13
+
+C057_net_fail C0_057_net_fail C1_057_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3.0 l=0.81 nf=13
+
+C058_net_fail C0_058_net_fail C1_058_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4.5 l=0.81 nf=13
+
+C059_net_fail C0_059_net_fail C1_059_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=6.0 l=0.81 nf=13
+
+C060_net_fail C0_060_net_fail C1_060_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1.5 l=1.08 nf=13
+
+C061_net_fail C0_061_net_fail C1_061_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3.0 l=1.08 nf=13
+
+C062_net_fail C0_062_net_fail C1_062_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4.5 l=1.08 nf=13
+
+C063_net_fail C0_063_net_fail C1_063_net_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=6.0 l=1.08 nf=13
+
+C000_dim_fail C0_000_dim_fail C1_000_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.18 nf=1
+
+C001_dim_fail C0_001_dim_fail C1_001_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.18 nf=1
+
+C002_dim_fail C0_002_dim_fail C1_002_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.18 nf=1
+
+C003_dim_fail C0_003_dim_fail C1_003_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.18 nf=1
+
+C004_dim_fail C0_004_dim_fail C1_004_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.36 nf=1
+
+C005_dim_fail C0_005_dim_fail C1_005_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.36 nf=1
+
+C006_dim_fail C0_006_dim_fail C1_006_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.36 nf=1
+
+C007_dim_fail C0_007_dim_fail C1_007_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.36 nf=1
+
+C008_dim_fail C0_008_dim_fail C1_008_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.54 nf=1
+
+C009_dim_fail C0_009_dim_fail C1_009_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.54 nf=1
+
+C010_dim_fail C0_010_dim_fail C1_010_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.54 nf=1
+
+C011_dim_fail C0_011_dim_fail C1_011_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.54 nf=1
+
+C012_dim_fail C0_012_dim_fail C1_012_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.72 nf=1
+
+C013_dim_fail C0_013_dim_fail C1_013_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.72 nf=1
+
+C014_dim_fail C0_014_dim_fail C1_014_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.72 nf=1
+
+C015_dim_fail C0_015_dim_fail C1_015_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.72 nf=1
+
+C016_dim_fail C0_016_dim_fail C1_016_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.18 nf=5
+
+C017_dim_fail C0_017_dim_fail C1_017_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.18 nf=5
+
+C018_dim_fail C0_018_dim_fail C1_018_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.18 nf=5
+
+C019_dim_fail C0_019_dim_fail C1_019_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.18 nf=5
+
+C020_dim_fail C0_020_dim_fail C1_020_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.36 nf=5
+
+C021_dim_fail C0_021_dim_fail C1_021_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.36 nf=5
+
+C022_dim_fail C0_022_dim_fail C1_022_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.36 nf=5
+
+C023_dim_fail C0_023_dim_fail C1_023_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.36 nf=5
+
+C024_dim_fail C0_024_dim_fail C1_024_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.54 nf=5
+
+C025_dim_fail C0_025_dim_fail C1_025_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.54 nf=5
+
+C026_dim_fail C0_026_dim_fail C1_026_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.54 nf=5
+
+C027_dim_fail C0_027_dim_fail C1_027_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.54 nf=5
+
+C028_dim_fail C0_028_dim_fail C1_028_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.72 nf=5
+
+C029_dim_fail C0_029_dim_fail C1_029_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.72 nf=5
+
+C030_dim_fail C0_030_dim_fail C1_030_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.72 nf=5
+
+C031_dim_fail C0_031_dim_fail C1_031_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.72 nf=5
+
+C032_dim_fail C0_032_dim_fail C1_032_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.18 nf=9
+
+C033_dim_fail C0_033_dim_fail C1_033_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.18 nf=9
+
+C034_dim_fail C0_034_dim_fail C1_034_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.18 nf=9
+
+C035_dim_fail C0_035_dim_fail C1_035_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.18 nf=9
+
+C036_dim_fail C0_036_dim_fail C1_036_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.36 nf=9
+
+C037_dim_fail C0_037_dim_fail C1_037_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.36 nf=9
+
+C038_dim_fail C0_038_dim_fail C1_038_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.36 nf=9
+
+C039_dim_fail C0_039_dim_fail C1_039_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.36 nf=9
+
+C040_dim_fail C0_040_dim_fail C1_040_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.54 nf=9
+
+C041_dim_fail C0_041_dim_fail C1_041_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.54 nf=9
+
+C042_dim_fail C0_042_dim_fail C1_042_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.54 nf=9
+
+C043_dim_fail C0_043_dim_fail C1_043_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.54 nf=9
+
+C044_dim_fail C0_044_dim_fail C1_044_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.72 nf=9
+
+C045_dim_fail C0_045_dim_fail C1_045_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.72 nf=9
+
+C046_dim_fail C0_046_dim_fail C1_046_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.72 nf=9
+
+C047_dim_fail C0_047_dim_fail C1_047_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.72 nf=9
+
+C048_dim_fail C0_048_dim_fail C1_048_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.18 nf=13
+
+C049_dim_fail C0_049_dim_fail C1_049_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.18 nf=13
+
+C050_dim_fail C0_050_dim_fail C1_050_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.18 nf=13
+
+C051_dim_fail C0_051_dim_fail C1_051_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.18 nf=13
+
+C052_dim_fail C0_052_dim_fail C1_052_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.36 nf=13
+
+C053_dim_fail C0_053_dim_fail C1_053_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.36 nf=13
+
+C054_dim_fail C0_054_dim_fail C1_054_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.36 nf=13
+
+C055_dim_fail C0_055_dim_fail C1_055_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.36 nf=13
+
+C056_dim_fail C0_056_dim_fail C1_056_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.54 nf=13
+
+C057_dim_fail C0_057_dim_fail C1_057_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.54 nf=13
+
+C058_dim_fail C0_058_dim_fail C1_058_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.54 nf=13
+
+C059_dim_fail C0_059_dim_fail C1_059_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.54 nf=13
+
+C060_dim_fail C0_060_dim_fail C1_060_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=1 l=0.72 nf=13
+
+C061_dim_fail C0_061_dim_fail C1_061_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=2 l=0.72 nf=13
+
+C062_dim_fail C0_062_dim_fail C1_062_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=3 l=0.72 nf=13
+
+C063_dim_fail C0_063_dim_fail C1_063_dim_fail SUBSTRATE sky130_fd_pr__cap_var_hvt w=4 l=0.72 nf=13
+
+.ENDS

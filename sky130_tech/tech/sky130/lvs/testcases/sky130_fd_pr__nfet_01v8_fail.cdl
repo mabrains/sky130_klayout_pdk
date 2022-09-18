@@ -1,0 +1,532 @@
+ 
+# Copyright 2022 SkyWater PDK Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+.SUBCKT sky130_fd_pr__nfet_01v8 SUBSTRATE
++ SOURCE0 GATE0 DRAIN0 SOURCE0_net_fail SOURCE0_dim_fail GATE0_net_fail GATE0_dim_fail DRAIN0_net_fail DRAIN0_dim_fail
++ SOURCE1 GATE1 DRAIN1 SOURCE1_net_fail SOURCE1_dim_fail GATE1_net_fail GATE1_dim_fail DRAIN1_net_fail DRAIN1_dim_fail
++ SOURCE2 GATE2 DRAIN2 SOURCE2_net_fail SOURCE2_dim_fail GATE2_net_fail GATE2_dim_fail DRAIN2_net_fail DRAIN2_dim_fail
++ SOURCE3 GATE3 DRAIN3 SOURCE3_net_fail SOURCE3_dim_fail GATE3_net_fail GATE3_dim_fail DRAIN3_net_fail DRAIN3_dim_fail
++ SOURCE4 GATE4 DRAIN4 SOURCE4_net_fail SOURCE4_dim_fail GATE4_net_fail GATE4_dim_fail DRAIN4_net_fail DRAIN4_dim_fail
++ SOURCE5 GATE5 DRAIN5 SOURCE5_net_fail SOURCE5_dim_fail GATE5_net_fail GATE5_dim_fail DRAIN5_net_fail DRAIN5_dim_fail
++ SOURCE6 GATE6 DRAIN6 SOURCE6_net_fail SOURCE6_dim_fail GATE6_net_fail GATE6_dim_fail DRAIN6_net_fail DRAIN6_dim_fail
++ SOURCE7 GATE7 DRAIN7 SOURCE7_net_fail SOURCE7_dim_fail GATE7_net_fail GATE7_dim_fail DRAIN7_net_fail DRAIN7_dim_fail
++ SOURCE8 GATE8 DRAIN8 SOURCE8_net_fail SOURCE8_dim_fail GATE8_net_fail GATE8_dim_fail DRAIN8_net_fail DRAIN8_dim_fail
++ SOURCE9 GATE9 DRAIN9 SOURCE9_net_fail SOURCE9_dim_fail GATE9_net_fail GATE9_dim_fail DRAIN9_net_fail DRAIN9_dim_fail
++ SOURCE10 GATE10 DRAIN10 SOURCE10_net_fail SOURCE10_dim_fail GATE10_net_fail GATE10_dim_fail DRAIN10_net_fail DRAIN10_dim_fail
++ SOURCE11 GATE11 DRAIN11 SOURCE11_net_fail SOURCE11_dim_fail GATE11_net_fail GATE11_dim_fail DRAIN11_net_fail DRAIN11_dim_fail
++ SOURCE12 GATE12 DRAIN12 SOURCE12_net_fail SOURCE12_dim_fail GATE12_net_fail GATE12_dim_fail DRAIN12_net_fail DRAIN12_dim_fail
++ SOURCE13 GATE13 DRAIN13 SOURCE13_net_fail SOURCE13_dim_fail GATE13_net_fail GATE13_dim_fail DRAIN13_net_fail DRAIN13_dim_fail
++ SOURCE14 GATE14 DRAIN14 SOURCE14_net_fail SOURCE14_dim_fail GATE14_net_fail GATE14_dim_fail DRAIN14_net_fail DRAIN14_dim_fail
++ SOURCE15 GATE15 DRAIN15 SOURCE15_net_fail SOURCE15_dim_fail GATE15_net_fail GATE15_dim_fail DRAIN15_net_fail DRAIN15_dim_fail
++ SOURCE16 GATE16 DRAIN16 SOURCE16_net_fail SOURCE16_dim_fail GATE16_net_fail GATE16_dim_fail DRAIN16_net_fail DRAIN16_dim_fail
++ SOURCE17 GATE17 DRAIN17 SOURCE17_net_fail SOURCE17_dim_fail GATE17_net_fail GATE17_dim_fail DRAIN17_net_fail DRAIN17_dim_fail
++ SOURCE18 GATE18 DRAIN18 SOURCE18_net_fail SOURCE18_dim_fail GATE18_net_fail GATE18_dim_fail DRAIN18_net_fail DRAIN18_dim_fail
++ SOURCE19 GATE19 DRAIN19 SOURCE19_net_fail SOURCE19_dim_fail GATE19_net_fail GATE19_dim_fail DRAIN19_net_fail DRAIN19_dim_fail
++ SOURCE20 GATE20 DRAIN20 SOURCE20_net_fail SOURCE20_dim_fail GATE20_net_fail GATE20_dim_fail DRAIN20_net_fail DRAIN20_dim_fail
++ SOURCE21 GATE21 DRAIN21 SOURCE21_net_fail SOURCE21_dim_fail GATE21_net_fail GATE21_dim_fail DRAIN21_net_fail DRAIN21_dim_fail
++ SOURCE22 GATE22 DRAIN22 SOURCE22_net_fail SOURCE22_dim_fail GATE22_net_fail GATE22_dim_fail DRAIN22_net_fail DRAIN22_dim_fail
++ SOURCE23 GATE23 DRAIN23 SOURCE23_net_fail SOURCE23_dim_fail GATE23_net_fail GATE23_dim_fail DRAIN23_net_fail DRAIN23_dim_fail
++ SOURCE24 GATE24 DRAIN24 SOURCE24_net_fail SOURCE24_dim_fail GATE24_net_fail GATE24_dim_fail DRAIN24_net_fail DRAIN24_dim_fail
++ SOURCE25 GATE25 DRAIN25 SOURCE25_net_fail SOURCE25_dim_fail GATE25_net_fail GATE25_dim_fail DRAIN25_net_fail DRAIN25_dim_fail
++ SOURCE26 GATE26 DRAIN26 SOURCE26_net_fail SOURCE26_dim_fail GATE26_net_fail GATE26_dim_fail DRAIN26_net_fail DRAIN26_dim_fail
++ SOURCE27 GATE27 DRAIN27 SOURCE27_net_fail SOURCE27_dim_fail GATE27_net_fail GATE27_dim_fail DRAIN27_net_fail DRAIN27_dim_fail
++ SOURCE28 GATE28 DRAIN28 SOURCE28_net_fail SOURCE28_dim_fail GATE28_net_fail GATE28_dim_fail DRAIN28_net_fail DRAIN28_dim_fail
++ SOURCE29 GATE29 DRAIN29 SOURCE29_net_fail SOURCE29_dim_fail GATE29_net_fail GATE29_dim_fail DRAIN29_net_fail DRAIN29_dim_fail
++ SOURCE30 GATE30 DRAIN30 SOURCE30_net_fail SOURCE30_dim_fail GATE30_net_fail GATE30_dim_fail DRAIN30_net_fail DRAIN30_dim_fail
++ SOURCE31 GATE31 DRAIN31 SOURCE31_net_fail SOURCE31_dim_fail GATE31_net_fail GATE31_dim_fail DRAIN31_net_fail DRAIN31_dim_fail
++ SOURCE32 GATE32 DRAIN32 SOURCE32_net_fail SOURCE32_dim_fail GATE32_net_fail GATE32_dim_fail DRAIN32_net_fail DRAIN32_dim_fail
++ SOURCE33 GATE33 DRAIN33 SOURCE33_net_fail SOURCE33_dim_fail GATE33_net_fail GATE33_dim_fail DRAIN33_net_fail DRAIN33_dim_fail
++ SOURCE34 GATE34 DRAIN34 SOURCE34_net_fail SOURCE34_dim_fail GATE34_net_fail GATE34_dim_fail DRAIN34_net_fail DRAIN34_dim_fail
++ SOURCE35 GATE35 DRAIN35 SOURCE35_net_fail SOURCE35_dim_fail GATE35_net_fail GATE35_dim_fail DRAIN35_net_fail DRAIN35_dim_fail
++ SOURCE36 GATE36 DRAIN36 SOURCE36_net_fail SOURCE36_dim_fail GATE36_net_fail GATE36_dim_fail DRAIN36_net_fail DRAIN36_dim_fail
++ SOURCE37 GATE37 DRAIN37 SOURCE37_net_fail SOURCE37_dim_fail GATE37_net_fail GATE37_dim_fail DRAIN37_net_fail DRAIN37_dim_fail
++ SOURCE38 GATE38 DRAIN38 SOURCE38_net_fail SOURCE38_dim_fail GATE38_net_fail GATE38_dim_fail DRAIN38_net_fail DRAIN38_dim_fail
++ SOURCE39 GATE39 DRAIN39 SOURCE39_net_fail SOURCE39_dim_fail GATE39_net_fail GATE39_dim_fail DRAIN39_net_fail DRAIN39_dim_fail
++ SOURCE40 GATE40 DRAIN40 SOURCE40_net_fail SOURCE40_dim_fail GATE40_net_fail GATE40_dim_fail DRAIN40_net_fail DRAIN40_dim_fail
++ SOURCE41 GATE41 DRAIN41 SOURCE41_net_fail SOURCE41_dim_fail GATE41_net_fail GATE41_dim_fail DRAIN41_net_fail DRAIN41_dim_fail
++ SOURCE42 GATE42 DRAIN42 SOURCE42_net_fail SOURCE42_dim_fail GATE42_net_fail GATE42_dim_fail DRAIN42_net_fail DRAIN42_dim_fail
++ SOURCE43 GATE43 DRAIN43 SOURCE43_net_fail SOURCE43_dim_fail GATE43_net_fail GATE43_dim_fail DRAIN43_net_fail DRAIN43_dim_fail
++ SOURCE44 GATE44 DRAIN44 SOURCE44_net_fail SOURCE44_dim_fail GATE44_net_fail GATE44_dim_fail DRAIN44_net_fail DRAIN44_dim_fail
++ SOURCE45 GATE45 DRAIN45 SOURCE45_net_fail SOURCE45_dim_fail GATE45_net_fail GATE45_dim_fail DRAIN45_net_fail DRAIN45_dim_fail
++ SOURCE46 GATE46 DRAIN46 SOURCE46_net_fail SOURCE46_dim_fail GATE46_net_fail GATE46_dim_fail DRAIN46_net_fail DRAIN46_dim_fail
++ SOURCE47 GATE47 DRAIN47 SOURCE47_net_fail SOURCE47_dim_fail GATE47_net_fail GATE47_dim_fail DRAIN47_net_fail DRAIN47_dim_fail
++ SOURCE48 GATE48 DRAIN48 SOURCE48_net_fail SOURCE48_dim_fail GATE48_net_fail GATE48_dim_fail DRAIN48_net_fail DRAIN48_dim_fail
++ SOURCE49 GATE49 DRAIN49 SOURCE49_net_fail SOURCE49_dim_fail GATE49_net_fail GATE49_dim_fail DRAIN49_net_fail DRAIN49_dim_fail
++ SOURCE50 GATE50 DRAIN50 SOURCE50_net_fail SOURCE50_dim_fail GATE50_net_fail GATE50_dim_fail DRAIN50_net_fail DRAIN50_dim_fail
++ SOURCE51 GATE51 DRAIN51 SOURCE51_net_fail SOURCE51_dim_fail GATE51_net_fail GATE51_dim_fail DRAIN51_net_fail DRAIN51_dim_fail
++ SOURCE52 GATE52 DRAIN52 SOURCE52_net_fail SOURCE52_dim_fail GATE52_net_fail GATE52_dim_fail DRAIN52_net_fail DRAIN52_dim_fail
++ SOURCE53 GATE53 DRAIN53 SOURCE53_net_fail SOURCE53_dim_fail GATE53_net_fail GATE53_dim_fail DRAIN53_net_fail DRAIN53_dim_fail
++ SOURCE54 GATE54 DRAIN54 SOURCE54_net_fail SOURCE54_dim_fail GATE54_net_fail GATE54_dim_fail DRAIN54_net_fail DRAIN54_dim_fail
++ SOURCE55 GATE55 DRAIN55 SOURCE55_net_fail SOURCE55_dim_fail GATE55_net_fail GATE55_dim_fail DRAIN55_net_fail DRAIN55_dim_fail
++ SOURCE56 GATE56 DRAIN56 SOURCE56_net_fail SOURCE56_dim_fail GATE56_net_fail GATE56_dim_fail DRAIN56_net_fail DRAIN56_dim_fail
++ SOURCE57 GATE57 DRAIN57 SOURCE57_net_fail SOURCE57_dim_fail GATE57_net_fail GATE57_dim_fail DRAIN57_net_fail DRAIN57_dim_fail
++ SOURCE58 GATE58 DRAIN58 SOURCE58_net_fail SOURCE58_dim_fail GATE58_net_fail GATE58_dim_fail DRAIN58_net_fail DRAIN58_dim_fail
++ SOURCE59 GATE59 DRAIN59 SOURCE59_net_fail SOURCE59_dim_fail GATE59_net_fail GATE59_dim_fail DRAIN59_net_fail DRAIN59_dim_fail
++ SOURCE60 GATE60 DRAIN60 SOURCE60_net_fail SOURCE60_dim_fail GATE60_net_fail GATE60_dim_fail DRAIN60_net_fail DRAIN60_dim_fail
++ SOURCE61 GATE61 DRAIN61 SOURCE61_net_fail SOURCE61_dim_fail GATE61_net_fail GATE61_dim_fail DRAIN61_net_fail DRAIN61_dim_fail
++ SOURCE62 GATE62 DRAIN62 SOURCE62_net_fail SOURCE62_dim_fail GATE62_net_fail GATE62_dim_fail DRAIN62_net_fail DRAIN62_dim_fail
++ SOURCE63 GATE63 DRAIN63 SOURCE63_net_fail SOURCE63_dim_fail GATE63_net_fail GATE63_dim_fail DRAIN63_net_fail DRAIN63_dim_fail
+
+M0 SOURCE0 GATE0 DRAIN0 SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=0.15 nf=1 
++ m=1 ad=0.12179999999999999 as=0.12179999999999999 pd=1.42 ps=1.42 nrd=0.6904761904761905 nrs=0.6904761904761905 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.12179999999999999_net_fail ad=0.12179999999999999_dim_fail as=0.12179999999999999_net_fail as=0.12179999999999999_dim_fail pd=1.42_net_fail pd=1.42_dim_fail ps=1.42_net_fail ps=1.42_dim_fail nrd=0.6904761904761905_net_fail nrd=0.6904761904761905_dim_fail nrs=0.6904761904761905_net_fail nrs=0.6904761904761905_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M1 SOURCE1 GATE1 DRAIN1 SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=0.15 nf=1 
++ m=1 ad=0.609 as=0.609 pd=4.78 ps=4.78 nrd=0.13809523809523808 nrs=0.13809523809523808 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.609_net_fail ad=0.609_dim_fail as=0.609_net_fail as=0.609_dim_fail pd=4.78_net_fail pd=4.78_dim_fail ps=4.78_net_fail ps=4.78_dim_fail nrd=0.13809523809523808_net_fail nrd=0.13809523809523808_dim_fail nrs=0.13809523809523808_net_fail nrs=0.13809523809523808_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M2 SOURCE2 GATE2 DRAIN2 SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=0.15 nf=1 
++ m=1 ad=1.0962 as=1.0962 pd=8.14 ps=8.14 nrd=0.07671957671957672 nrs=0.07671957671957672 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=1.0962_net_fail ad=1.0962_dim_fail as=1.0962_net_fail as=1.0962_dim_fail pd=8.14_net_fail pd=8.14_dim_fail ps=8.14_net_fail ps=8.14_dim_fail nrd=0.07671957671957672_net_fail nrd=0.07671957671957672_dim_fail nrs=0.07671957671957672_net_fail nrs=0.07671957671957672_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M3 SOURCE3 GATE3 DRAIN3 SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=0.15 nf=1 
++ m=1 ad=1.5834000000000001 as=1.5834000000000001 pd=11.500000000000002 ps=11.500000000000002 nrd=0.0531135531135531 nrs=0.0531135531135531 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=1.5834000000000001_net_fail ad=1.5834000000000001_dim_fail as=1.5834000000000001_net_fail as=1.5834000000000001_dim_fail pd=11.500000000000002_net_fail pd=11.500000000000002_dim_fail ps=11.500000000000002_net_fail ps=11.500000000000002_dim_fail nrd=0.0531135531135531_net_fail nrd=0.0531135531135531_dim_fail nrs=0.0531135531135531_net_fail nrs=0.0531135531135531_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M4 SOURCE4 GATE4 DRAIN4 SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=2.15 nf=1 
++ m=1 ad=0.12179999999999999 as=0.12179999999999999 pd=1.42 ps=1.42 nrd=0.6904761904761905 nrs=0.6904761904761905 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.12179999999999999_net_fail ad=0.12179999999999999_dim_fail as=0.12179999999999999_net_fail as=0.12179999999999999_dim_fail pd=1.42_net_fail pd=1.42_dim_fail ps=1.42_net_fail ps=1.42_dim_fail nrd=0.6904761904761905_net_fail nrd=0.6904761904761905_dim_fail nrs=0.6904761904761905_net_fail nrs=0.6904761904761905_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M5 SOURCE5 GATE5 DRAIN5 SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=2.15 nf=1 
++ m=1 ad=0.609 as=0.609 pd=4.78 ps=4.78 nrd=0.13809523809523808 nrs=0.13809523809523808 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.609_net_fail ad=0.609_dim_fail as=0.609_net_fail as=0.609_dim_fail pd=4.78_net_fail pd=4.78_dim_fail ps=4.78_net_fail ps=4.78_dim_fail nrd=0.13809523809523808_net_fail nrd=0.13809523809523808_dim_fail nrs=0.13809523809523808_net_fail nrs=0.13809523809523808_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M6 SOURCE6 GATE6 DRAIN6 SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=2.15 nf=1 
++ m=1 ad=1.0962 as=1.0962 pd=8.14 ps=8.14 nrd=0.07671957671957672 nrs=0.07671957671957672 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=1.0962_net_fail ad=1.0962_dim_fail as=1.0962_net_fail as=1.0962_dim_fail pd=8.14_net_fail pd=8.14_dim_fail ps=8.14_net_fail ps=8.14_dim_fail nrd=0.07671957671957672_net_fail nrd=0.07671957671957672_dim_fail nrs=0.07671957671957672_net_fail nrs=0.07671957671957672_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M7 SOURCE7 GATE7 DRAIN7 SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=2.15 nf=1 
++ m=1 ad=1.5834000000000001 as=1.5834000000000001 pd=11.500000000000002 ps=11.500000000000002 nrd=0.0531135531135531 nrs=0.0531135531135531 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=1.5834000000000001_net_fail ad=1.5834000000000001_dim_fail as=1.5834000000000001_net_fail as=1.5834000000000001_dim_fail pd=11.500000000000002_net_fail pd=11.500000000000002_dim_fail ps=11.500000000000002_net_fail ps=11.500000000000002_dim_fail nrd=0.0531135531135531_net_fail nrd=0.0531135531135531_dim_fail nrs=0.0531135531135531_net_fail nrs=0.0531135531135531_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M8 SOURCE8 GATE8 DRAIN8 SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=4.15 nf=1 
++ m=1 ad=0.12179999999999999 as=0.12179999999999999 pd=1.42 ps=1.42 nrd=0.6904761904761905 nrs=0.6904761904761905 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.12179999999999999_net_fail ad=0.12179999999999999_dim_fail as=0.12179999999999999_net_fail as=0.12179999999999999_dim_fail pd=1.42_net_fail pd=1.42_dim_fail ps=1.42_net_fail ps=1.42_dim_fail nrd=0.6904761904761905_net_fail nrd=0.6904761904761905_dim_fail nrs=0.6904761904761905_net_fail nrs=0.6904761904761905_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M9 SOURCE9 GATE9 DRAIN9 SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=4.15 nf=1 
++ m=1 ad=0.609 as=0.609 pd=4.78 ps=4.78 nrd=0.13809523809523808 nrs=0.13809523809523808 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.609_net_fail ad=0.609_dim_fail as=0.609_net_fail as=0.609_dim_fail pd=4.78_net_fail pd=4.78_dim_fail ps=4.78_net_fail ps=4.78_dim_fail nrd=0.13809523809523808_net_fail nrd=0.13809523809523808_dim_fail nrs=0.13809523809523808_net_fail nrs=0.13809523809523808_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M10 SOURCE10 GATE10 DRAIN10 SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=4.15 nf=1 
++ m=1 ad=1.0962 as=1.0962 pd=8.14 ps=8.14 nrd=0.07671957671957672 nrs=0.07671957671957672 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=1.0962_net_fail ad=1.0962_dim_fail as=1.0962_net_fail as=1.0962_dim_fail pd=8.14_net_fail pd=8.14_dim_fail ps=8.14_net_fail ps=8.14_dim_fail nrd=0.07671957671957672_net_fail nrd=0.07671957671957672_dim_fail nrs=0.07671957671957672_net_fail nrs=0.07671957671957672_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M11 SOURCE11 GATE11 DRAIN11 SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=4.15 nf=1 
++ m=1 ad=1.5834000000000001 as=1.5834000000000001 pd=11.500000000000002 ps=11.500000000000002 nrd=0.0531135531135531 nrs=0.0531135531135531 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=1.5834000000000001_net_fail ad=1.5834000000000001_dim_fail as=1.5834000000000001_net_fail as=1.5834000000000001_dim_fail pd=11.500000000000002_net_fail pd=11.500000000000002_dim_fail ps=11.500000000000002_net_fail ps=11.500000000000002_dim_fail nrd=0.0531135531135531_net_fail nrd=0.0531135531135531_dim_fail nrs=0.0531135531135531_net_fail nrs=0.0531135531135531_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M12 SOURCE12 GATE12 DRAIN12 SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=6.15 nf=1 
++ m=1 ad=0.12179999999999999 as=0.12179999999999999 pd=1.42 ps=1.42 nrd=0.6904761904761905 nrs=0.6904761904761905 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.12179999999999999_net_fail ad=0.12179999999999999_dim_fail as=0.12179999999999999_net_fail as=0.12179999999999999_dim_fail pd=1.42_net_fail pd=1.42_dim_fail ps=1.42_net_fail ps=1.42_dim_fail nrd=0.6904761904761905_net_fail nrd=0.6904761904761905_dim_fail nrs=0.6904761904761905_net_fail nrs=0.6904761904761905_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M13 SOURCE13 GATE13 DRAIN13 SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=6.15 nf=1 
++ m=1 ad=0.609 as=0.609 pd=4.78 ps=4.78 nrd=0.13809523809523808 nrs=0.13809523809523808 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.609_net_fail ad=0.609_dim_fail as=0.609_net_fail as=0.609_dim_fail pd=4.78_net_fail pd=4.78_dim_fail ps=4.78_net_fail ps=4.78_dim_fail nrd=0.13809523809523808_net_fail nrd=0.13809523809523808_dim_fail nrs=0.13809523809523808_net_fail nrs=0.13809523809523808_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M14 SOURCE14 GATE14 DRAIN14 SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=6.15 nf=1 
++ m=1 ad=1.0962 as=1.0962 pd=8.14 ps=8.14 nrd=0.07671957671957672 nrs=0.07671957671957672 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=1.0962_net_fail ad=1.0962_dim_fail as=1.0962_net_fail as=1.0962_dim_fail pd=8.14_net_fail pd=8.14_dim_fail ps=8.14_net_fail ps=8.14_dim_fail nrd=0.07671957671957672_net_fail nrd=0.07671957671957672_dim_fail nrs=0.07671957671957672_net_fail nrs=0.07671957671957672_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M15 SOURCE15 GATE15 DRAIN15 SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=6.15 nf=1 
++ m=1 ad=1.5834000000000001 as=1.5834000000000001 pd=11.500000000000002 ps=11.500000000000002 nrd=0.0531135531135531 nrs=0.0531135531135531 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=1.5834000000000001_net_fail ad=1.5834000000000001_dim_fail as=1.5834000000000001_net_fail as=1.5834000000000001_dim_fail pd=11.500000000000002_net_fail pd=11.500000000000002_dim_fail ps=11.500000000000002_net_fail ps=11.500000000000002_dim_fail nrd=0.0531135531135531_net_fail nrd=0.0531135531135531_dim_fail nrs=0.0531135531135531_net_fail nrs=0.0531135531135531_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M16 SOURCE16 GATE16 DRAIN16 SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=0.15 nf=5 
++ m=1 ad=0.07307999999999999 as=0.07307999999999999 pd=2.2439999999999998 ps=2.2439999999999998 nrd=0.6904761904761905 nrs=0.6904761904761905 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.07307999999999999_net_fail ad=0.07307999999999999_dim_fail as=0.07307999999999999_net_fail as=0.07307999999999999_dim_fail pd=2.2439999999999998_net_fail pd=2.2439999999999998_dim_fail ps=2.2439999999999998_net_fail ps=2.2439999999999998_dim_fail nrd=0.6904761904761905_net_fail nrd=0.6904761904761905_dim_fail nrs=0.6904761904761905_net_fail nrs=0.6904761904761905_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M17 SOURCE17 GATE17 DRAIN17 SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=0.15 nf=5 
++ m=1 ad=0.36540000000000006 as=0.36540000000000006 pd=4.26 ps=4.26 nrd=0.13809523809523808 nrs=0.13809523809523808 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.36540000000000006_net_fail ad=0.36540000000000006_dim_fail as=0.36540000000000006_net_fail as=0.36540000000000006_dim_fail pd=4.26_net_fail pd=4.26_dim_fail ps=4.26_net_fail ps=4.26_dim_fail nrd=0.13809523809523808_net_fail nrd=0.13809523809523808_dim_fail nrs=0.13809523809523808_net_fail nrs=0.13809523809523808_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M18 SOURCE18 GATE18 DRAIN18 SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=0.15 nf=5 
++ m=1 ad=0.6577199999999999 as=0.6577199999999999 pd=6.276 ps=6.276 nrd=0.07671957671957672 nrs=0.07671957671957672 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.6577199999999999_net_fail ad=0.6577199999999999_dim_fail as=0.6577199999999999_net_fail as=0.6577199999999999_dim_fail pd=6.276_net_fail pd=6.276_dim_fail ps=6.276_net_fail ps=6.276_dim_fail nrd=0.07671957671957672_net_fail nrd=0.07671957671957672_dim_fail nrs=0.07671957671957672_net_fail nrs=0.07671957671957672_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M19 SOURCE19 GATE19 DRAIN19 SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=0.15 nf=5 
++ m=1 ad=0.9500400000000001 as=0.9500400000000001 pd=8.292000000000002 ps=8.292000000000002 nrd=0.0531135531135531 nrs=0.0531135531135531 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.9500400000000001_net_fail ad=0.9500400000000001_dim_fail as=0.9500400000000001_net_fail as=0.9500400000000001_dim_fail pd=8.292000000000002_net_fail pd=8.292000000000002_dim_fail ps=8.292000000000002_net_fail ps=8.292000000000002_dim_fail nrd=0.0531135531135531_net_fail nrd=0.0531135531135531_dim_fail nrs=0.0531135531135531_net_fail nrs=0.0531135531135531_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M20 SOURCE20 GATE20 DRAIN20 SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=2.15 nf=5 
++ m=1 ad=0.07307999999999999 as=0.07307999999999999 pd=2.2439999999999998 ps=2.2439999999999998 nrd=0.6904761904761905 nrs=0.6904761904761905 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.07307999999999999_net_fail ad=0.07307999999999999_dim_fail as=0.07307999999999999_net_fail as=0.07307999999999999_dim_fail pd=2.2439999999999998_net_fail pd=2.2439999999999998_dim_fail ps=2.2439999999999998_net_fail ps=2.2439999999999998_dim_fail nrd=0.6904761904761905_net_fail nrd=0.6904761904761905_dim_fail nrs=0.6904761904761905_net_fail nrs=0.6904761904761905_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M21 SOURCE21 GATE21 DRAIN21 SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=2.15 nf=5 
++ m=1 ad=0.36540000000000006 as=0.36540000000000006 pd=4.26 ps=4.26 nrd=0.13809523809523808 nrs=0.13809523809523808 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.36540000000000006_net_fail ad=0.36540000000000006_dim_fail as=0.36540000000000006_net_fail as=0.36540000000000006_dim_fail pd=4.26_net_fail pd=4.26_dim_fail ps=4.26_net_fail ps=4.26_dim_fail nrd=0.13809523809523808_net_fail nrd=0.13809523809523808_dim_fail nrs=0.13809523809523808_net_fail nrs=0.13809523809523808_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M22 SOURCE22 GATE22 DRAIN22 SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=2.15 nf=5 
++ m=1 ad=0.6577199999999999 as=0.6577199999999999 pd=6.276 ps=6.276 nrd=0.07671957671957672 nrs=0.07671957671957672 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.6577199999999999_net_fail ad=0.6577199999999999_dim_fail as=0.6577199999999999_net_fail as=0.6577199999999999_dim_fail pd=6.276_net_fail pd=6.276_dim_fail ps=6.276_net_fail ps=6.276_dim_fail nrd=0.07671957671957672_net_fail nrd=0.07671957671957672_dim_fail nrs=0.07671957671957672_net_fail nrs=0.07671957671957672_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M23 SOURCE23 GATE23 DRAIN23 SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=2.15 nf=5 
++ m=1 ad=0.9500400000000001 as=0.9500400000000001 pd=8.292000000000002 ps=8.292000000000002 nrd=0.0531135531135531 nrs=0.0531135531135531 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.9500400000000001_net_fail ad=0.9500400000000001_dim_fail as=0.9500400000000001_net_fail as=0.9500400000000001_dim_fail pd=8.292000000000002_net_fail pd=8.292000000000002_dim_fail ps=8.292000000000002_net_fail ps=8.292000000000002_dim_fail nrd=0.0531135531135531_net_fail nrd=0.0531135531135531_dim_fail nrs=0.0531135531135531_net_fail nrs=0.0531135531135531_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M24 SOURCE24 GATE24 DRAIN24 SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=4.15 nf=5 
++ m=1 ad=0.07307999999999999 as=0.07307999999999999 pd=2.2439999999999998 ps=2.2439999999999998 nrd=0.6904761904761905 nrs=0.6904761904761905 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.07307999999999999_net_fail ad=0.07307999999999999_dim_fail as=0.07307999999999999_net_fail as=0.07307999999999999_dim_fail pd=2.2439999999999998_net_fail pd=2.2439999999999998_dim_fail ps=2.2439999999999998_net_fail ps=2.2439999999999998_dim_fail nrd=0.6904761904761905_net_fail nrd=0.6904761904761905_dim_fail nrs=0.6904761904761905_net_fail nrs=0.6904761904761905_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M25 SOURCE25 GATE25 DRAIN25 SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=4.15 nf=5 
++ m=1 ad=0.36540000000000006 as=0.36540000000000006 pd=4.26 ps=4.26 nrd=0.13809523809523808 nrs=0.13809523809523808 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.36540000000000006_net_fail ad=0.36540000000000006_dim_fail as=0.36540000000000006_net_fail as=0.36540000000000006_dim_fail pd=4.26_net_fail pd=4.26_dim_fail ps=4.26_net_fail ps=4.26_dim_fail nrd=0.13809523809523808_net_fail nrd=0.13809523809523808_dim_fail nrs=0.13809523809523808_net_fail nrs=0.13809523809523808_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M26 SOURCE26 GATE26 DRAIN26 SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=4.15 nf=5 
++ m=1 ad=0.6577199999999999 as=0.6577199999999999 pd=6.276 ps=6.276 nrd=0.07671957671957672 nrs=0.07671957671957672 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.6577199999999999_net_fail ad=0.6577199999999999_dim_fail as=0.6577199999999999_net_fail as=0.6577199999999999_dim_fail pd=6.276_net_fail pd=6.276_dim_fail ps=6.276_net_fail ps=6.276_dim_fail nrd=0.07671957671957672_net_fail nrd=0.07671957671957672_dim_fail nrs=0.07671957671957672_net_fail nrs=0.07671957671957672_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M27 SOURCE27 GATE27 DRAIN27 SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=4.15 nf=5 
++ m=1 ad=0.9500400000000001 as=0.9500400000000001 pd=8.292000000000002 ps=8.292000000000002 nrd=0.0531135531135531 nrs=0.0531135531135531 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.9500400000000001_net_fail ad=0.9500400000000001_dim_fail as=0.9500400000000001_net_fail as=0.9500400000000001_dim_fail pd=8.292000000000002_net_fail pd=8.292000000000002_dim_fail ps=8.292000000000002_net_fail ps=8.292000000000002_dim_fail nrd=0.0531135531135531_net_fail nrd=0.0531135531135531_dim_fail nrs=0.0531135531135531_net_fail nrs=0.0531135531135531_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M28 SOURCE28 GATE28 DRAIN28 SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=6.15 nf=5 
++ m=1 ad=0.07307999999999999 as=0.07307999999999999 pd=2.2439999999999998 ps=2.2439999999999998 nrd=0.6904761904761905 nrs=0.6904761904761905 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.07307999999999999_net_fail ad=0.07307999999999999_dim_fail as=0.07307999999999999_net_fail as=0.07307999999999999_dim_fail pd=2.2439999999999998_net_fail pd=2.2439999999999998_dim_fail ps=2.2439999999999998_net_fail ps=2.2439999999999998_dim_fail nrd=0.6904761904761905_net_fail nrd=0.6904761904761905_dim_fail nrs=0.6904761904761905_net_fail nrs=0.6904761904761905_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M29 SOURCE29 GATE29 DRAIN29 SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=6.15 nf=5 
++ m=1 ad=0.36540000000000006 as=0.36540000000000006 pd=4.26 ps=4.26 nrd=0.13809523809523808 nrs=0.13809523809523808 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.36540000000000006_net_fail ad=0.36540000000000006_dim_fail as=0.36540000000000006_net_fail as=0.36540000000000006_dim_fail pd=4.26_net_fail pd=4.26_dim_fail ps=4.26_net_fail ps=4.26_dim_fail nrd=0.13809523809523808_net_fail nrd=0.13809523809523808_dim_fail nrs=0.13809523809523808_net_fail nrs=0.13809523809523808_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M30 SOURCE30 GATE30 DRAIN30 SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=6.15 nf=5 
++ m=1 ad=0.6577199999999999 as=0.6577199999999999 pd=6.276 ps=6.276 nrd=0.07671957671957672 nrs=0.07671957671957672 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.6577199999999999_net_fail ad=0.6577199999999999_dim_fail as=0.6577199999999999_net_fail as=0.6577199999999999_dim_fail pd=6.276_net_fail pd=6.276_dim_fail ps=6.276_net_fail ps=6.276_dim_fail nrd=0.07671957671957672_net_fail nrd=0.07671957671957672_dim_fail nrs=0.07671957671957672_net_fail nrs=0.07671957671957672_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M31 SOURCE31 GATE31 DRAIN31 SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=6.15 nf=5 
++ m=1 ad=0.9500400000000001 as=0.9500400000000001 pd=8.292000000000002 ps=8.292000000000002 nrd=0.0531135531135531 nrs=0.0531135531135531 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.9500400000000001_net_fail ad=0.9500400000000001_dim_fail as=0.9500400000000001_net_fail as=0.9500400000000001_dim_fail pd=8.292000000000002_net_fail pd=8.292000000000002_dim_fail ps=8.292000000000002_net_fail ps=8.292000000000002_dim_fail nrd=0.0531135531135531_net_fail nrd=0.0531135531135531_dim_fail nrs=0.0531135531135531_net_fail nrs=0.0531135531135531_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M32 SOURCE32 GATE32 DRAIN32 SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=0.15 nf=9 
++ m=1 ad=0.06766666666666667 as=0.06766666666666667 pd=3.3666666666666667 ps=3.3666666666666667 nrd=0.6904761904761905 nrs=0.6904761904761905 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.06766666666666667_net_fail ad=0.06766666666666667_dim_fail as=0.06766666666666667_net_fail as=0.06766666666666667_dim_fail pd=3.3666666666666667_net_fail pd=3.3666666666666667_dim_fail ps=3.3666666666666667_net_fail ps=3.3666666666666667_dim_fail nrd=0.6904761904761905_net_fail nrd=0.6904761904761905_dim_fail nrs=0.6904761904761905_net_fail nrs=0.6904761904761905_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M33 SOURCE33 GATE33 DRAIN33 SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=0.15 nf=9 
++ m=1 ad=0.3383333333333333 as=0.3383333333333333 pd=5.233333333333333 ps=5.233333333333333 nrd=0.13809523809523808 nrs=0.13809523809523808 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.3383333333333333_net_fail ad=0.3383333333333333_dim_fail as=0.3383333333333333_net_fail as=0.3383333333333333_dim_fail pd=5.233333333333333_net_fail pd=5.233333333333333_dim_fail ps=5.233333333333333_net_fail ps=5.233333333333333_dim_fail nrd=0.13809523809523808_net_fail nrd=0.13809523809523808_dim_fail nrs=0.13809523809523808_net_fail nrs=0.13809523809523808_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M34 SOURCE34 GATE34 DRAIN34 SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=0.15 nf=9 
++ m=1 ad=0.609 as=0.609 pd=7.1 ps=7.1 nrd=0.07671957671957672 nrs=0.07671957671957672 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.609_net_fail ad=0.609_dim_fail as=0.609_net_fail as=0.609_dim_fail pd=7.1_net_fail pd=7.1_dim_fail ps=7.1_net_fail ps=7.1_dim_fail nrd=0.07671957671957672_net_fail nrd=0.07671957671957672_dim_fail nrs=0.07671957671957672_net_fail nrs=0.07671957671957672_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M35 SOURCE35 GATE35 DRAIN35 SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=0.15 nf=9 
++ m=1 ad=0.8796666666666667 as=0.8796666666666667 pd=8.966666666666667 ps=8.966666666666667 nrd=0.0531135531135531 nrs=0.0531135531135531 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.8796666666666667_net_fail ad=0.8796666666666667_dim_fail as=0.8796666666666667_net_fail as=0.8796666666666667_dim_fail pd=8.966666666666667_net_fail pd=8.966666666666667_dim_fail ps=8.966666666666667_net_fail ps=8.966666666666667_dim_fail nrd=0.0531135531135531_net_fail nrd=0.0531135531135531_dim_fail nrs=0.0531135531135531_net_fail nrs=0.0531135531135531_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M36 SOURCE36 GATE36 DRAIN36 SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=2.15 nf=9 
++ m=1 ad=0.06766666666666667 as=0.06766666666666667 pd=3.3666666666666667 ps=3.3666666666666667 nrd=0.6904761904761905 nrs=0.6904761904761905 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.06766666666666667_net_fail ad=0.06766666666666667_dim_fail as=0.06766666666666667_net_fail as=0.06766666666666667_dim_fail pd=3.3666666666666667_net_fail pd=3.3666666666666667_dim_fail ps=3.3666666666666667_net_fail ps=3.3666666666666667_dim_fail nrd=0.6904761904761905_net_fail nrd=0.6904761904761905_dim_fail nrs=0.6904761904761905_net_fail nrs=0.6904761904761905_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M37 SOURCE37 GATE37 DRAIN37 SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=2.15 nf=9 
++ m=1 ad=0.3383333333333333 as=0.3383333333333333 pd=5.233333333333333 ps=5.233333333333333 nrd=0.13809523809523808 nrs=0.13809523809523808 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.3383333333333333_net_fail ad=0.3383333333333333_dim_fail as=0.3383333333333333_net_fail as=0.3383333333333333_dim_fail pd=5.233333333333333_net_fail pd=5.233333333333333_dim_fail ps=5.233333333333333_net_fail ps=5.233333333333333_dim_fail nrd=0.13809523809523808_net_fail nrd=0.13809523809523808_dim_fail nrs=0.13809523809523808_net_fail nrs=0.13809523809523808_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M38 SOURCE38 GATE38 DRAIN38 SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=2.15 nf=9 
++ m=1 ad=0.609 as=0.609 pd=7.1 ps=7.1 nrd=0.07671957671957672 nrs=0.07671957671957672 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.609_net_fail ad=0.609_dim_fail as=0.609_net_fail as=0.609_dim_fail pd=7.1_net_fail pd=7.1_dim_fail ps=7.1_net_fail ps=7.1_dim_fail nrd=0.07671957671957672_net_fail nrd=0.07671957671957672_dim_fail nrs=0.07671957671957672_net_fail nrs=0.07671957671957672_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M39 SOURCE39 GATE39 DRAIN39 SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=2.15 nf=9 
++ m=1 ad=0.8796666666666667 as=0.8796666666666667 pd=8.966666666666667 ps=8.966666666666667 nrd=0.0531135531135531 nrs=0.0531135531135531 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.8796666666666667_net_fail ad=0.8796666666666667_dim_fail as=0.8796666666666667_net_fail as=0.8796666666666667_dim_fail pd=8.966666666666667_net_fail pd=8.966666666666667_dim_fail ps=8.966666666666667_net_fail ps=8.966666666666667_dim_fail nrd=0.0531135531135531_net_fail nrd=0.0531135531135531_dim_fail nrs=0.0531135531135531_net_fail nrs=0.0531135531135531_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M40 SOURCE40 GATE40 DRAIN40 SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=4.15 nf=9 
++ m=1 ad=0.06766666666666667 as=0.06766666666666667 pd=3.3666666666666667 ps=3.3666666666666667 nrd=0.6904761904761905 nrs=0.6904761904761905 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.06766666666666667_net_fail ad=0.06766666666666667_dim_fail as=0.06766666666666667_net_fail as=0.06766666666666667_dim_fail pd=3.3666666666666667_net_fail pd=3.3666666666666667_dim_fail ps=3.3666666666666667_net_fail ps=3.3666666666666667_dim_fail nrd=0.6904761904761905_net_fail nrd=0.6904761904761905_dim_fail nrs=0.6904761904761905_net_fail nrs=0.6904761904761905_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M41 SOURCE41 GATE41 DRAIN41 SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=4.15 nf=9 
++ m=1 ad=0.3383333333333333 as=0.3383333333333333 pd=5.233333333333333 ps=5.233333333333333 nrd=0.13809523809523808 nrs=0.13809523809523808 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.3383333333333333_net_fail ad=0.3383333333333333_dim_fail as=0.3383333333333333_net_fail as=0.3383333333333333_dim_fail pd=5.233333333333333_net_fail pd=5.233333333333333_dim_fail ps=5.233333333333333_net_fail ps=5.233333333333333_dim_fail nrd=0.13809523809523808_net_fail nrd=0.13809523809523808_dim_fail nrs=0.13809523809523808_net_fail nrs=0.13809523809523808_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M42 SOURCE42 GATE42 DRAIN42 SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=4.15 nf=9 
++ m=1 ad=0.609 as=0.609 pd=7.1 ps=7.1 nrd=0.07671957671957672 nrs=0.07671957671957672 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.609_net_fail ad=0.609_dim_fail as=0.609_net_fail as=0.609_dim_fail pd=7.1_net_fail pd=7.1_dim_fail ps=7.1_net_fail ps=7.1_dim_fail nrd=0.07671957671957672_net_fail nrd=0.07671957671957672_dim_fail nrs=0.07671957671957672_net_fail nrs=0.07671957671957672_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M43 SOURCE43 GATE43 DRAIN43 SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=4.15 nf=9 
++ m=1 ad=0.8796666666666667 as=0.8796666666666667 pd=8.966666666666667 ps=8.966666666666667 nrd=0.0531135531135531 nrs=0.0531135531135531 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.8796666666666667_net_fail ad=0.8796666666666667_dim_fail as=0.8796666666666667_net_fail as=0.8796666666666667_dim_fail pd=8.966666666666667_net_fail pd=8.966666666666667_dim_fail ps=8.966666666666667_net_fail ps=8.966666666666667_dim_fail nrd=0.0531135531135531_net_fail nrd=0.0531135531135531_dim_fail nrs=0.0531135531135531_net_fail nrs=0.0531135531135531_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M44 SOURCE44 GATE44 DRAIN44 SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=6.15 nf=9 
++ m=1 ad=0.06766666666666667 as=0.06766666666666667 pd=3.3666666666666667 ps=3.3666666666666667 nrd=0.6904761904761905 nrs=0.6904761904761905 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.06766666666666667_net_fail ad=0.06766666666666667_dim_fail as=0.06766666666666667_net_fail as=0.06766666666666667_dim_fail pd=3.3666666666666667_net_fail pd=3.3666666666666667_dim_fail ps=3.3666666666666667_net_fail ps=3.3666666666666667_dim_fail nrd=0.6904761904761905_net_fail nrd=0.6904761904761905_dim_fail nrs=0.6904761904761905_net_fail nrs=0.6904761904761905_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M45 SOURCE45 GATE45 DRAIN45 SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=6.15 nf=9 
++ m=1 ad=0.3383333333333333 as=0.3383333333333333 pd=5.233333333333333 ps=5.233333333333333 nrd=0.13809523809523808 nrs=0.13809523809523808 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.3383333333333333_net_fail ad=0.3383333333333333_dim_fail as=0.3383333333333333_net_fail as=0.3383333333333333_dim_fail pd=5.233333333333333_net_fail pd=5.233333333333333_dim_fail ps=5.233333333333333_net_fail ps=5.233333333333333_dim_fail nrd=0.13809523809523808_net_fail nrd=0.13809523809523808_dim_fail nrs=0.13809523809523808_net_fail nrs=0.13809523809523808_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M46 SOURCE46 GATE46 DRAIN46 SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=6.15 nf=9 
++ m=1 ad=0.609 as=0.609 pd=7.1 ps=7.1 nrd=0.07671957671957672 nrs=0.07671957671957672 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.609_net_fail ad=0.609_dim_fail as=0.609_net_fail as=0.609_dim_fail pd=7.1_net_fail pd=7.1_dim_fail ps=7.1_net_fail ps=7.1_dim_fail nrd=0.07671957671957672_net_fail nrd=0.07671957671957672_dim_fail nrs=0.07671957671957672_net_fail nrs=0.07671957671957672_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M47 SOURCE47 GATE47 DRAIN47 SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=6.15 nf=9 
++ m=1 ad=0.8796666666666667 as=0.8796666666666667 pd=8.966666666666667 ps=8.966666666666667 nrd=0.0531135531135531 nrs=0.0531135531135531 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.8796666666666667_net_fail ad=0.8796666666666667_dim_fail as=0.8796666666666667_net_fail as=0.8796666666666667_dim_fail pd=8.966666666666667_net_fail pd=8.966666666666667_dim_fail ps=8.966666666666667_net_fail ps=8.966666666666667_dim_fail nrd=0.0531135531135531_net_fail nrd=0.0531135531135531_dim_fail nrs=0.0531135531135531_net_fail nrs=0.0531135531135531_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M48 SOURCE48 GATE48 DRAIN48 SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=0.15 nf=13 
++ m=1 ad=0.06558461538461538 as=0.06558461538461538 pd=4.512307692307692 ps=4.512307692307692 nrd=0.6904761904761905 nrs=0.6904761904761905 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.06558461538461538_net_fail ad=0.06558461538461538_dim_fail as=0.06558461538461538_net_fail as=0.06558461538461538_dim_fail pd=4.512307692307692_net_fail pd=4.512307692307692_dim_fail ps=4.512307692307692_net_fail ps=4.512307692307692_dim_fail nrd=0.6904761904761905_net_fail nrd=0.6904761904761905_dim_fail nrs=0.6904761904761905_net_fail nrs=0.6904761904761905_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M49 SOURCE49 GATE49 DRAIN49 SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=0.15 nf=13 
++ m=1 ad=0.3279230769230769 as=0.3279230769230769 pd=6.321538461538462 ps=6.321538461538462 nrd=0.13809523809523808 nrs=0.13809523809523808 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.3279230769230769_net_fail ad=0.3279230769230769_dim_fail as=0.3279230769230769_net_fail as=0.3279230769230769_dim_fail pd=6.321538461538462_net_fail pd=6.321538461538462_dim_fail ps=6.321538461538462_net_fail ps=6.321538461538462_dim_fail nrd=0.13809523809523808_net_fail nrd=0.13809523809523808_dim_fail nrs=0.13809523809523808_net_fail nrs=0.13809523809523808_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M50 SOURCE50 GATE50 DRAIN50 SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=0.15 nf=13 
++ m=1 ad=0.5902615384615384 as=0.5902615384615384 pd=8.13076923076923 ps=8.13076923076923 nrd=0.07671957671957672 nrs=0.07671957671957672 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.5902615384615384_net_fail ad=0.5902615384615384_dim_fail as=0.5902615384615384_net_fail as=0.5902615384615384_dim_fail pd=8.13076923076923_net_fail pd=8.13076923076923_dim_fail ps=8.13076923076923_net_fail ps=8.13076923076923_dim_fail nrd=0.07671957671957672_net_fail nrd=0.07671957671957672_dim_fail nrs=0.07671957671957672_net_fail nrs=0.07671957671957672_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M51 SOURCE51 GATE51 DRAIN51 SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=0.15 nf=13 
++ m=1 ad=0.8526 as=0.8526 pd=9.94 ps=9.94 nrd=0.0531135531135531 nrs=0.0531135531135531 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.8526_net_fail ad=0.8526_dim_fail as=0.8526_net_fail as=0.8526_dim_fail pd=9.94_net_fail pd=9.94_dim_fail ps=9.94_net_fail ps=9.94_dim_fail nrd=0.0531135531135531_net_fail nrd=0.0531135531135531_dim_fail nrs=0.0531135531135531_net_fail nrs=0.0531135531135531_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M52 SOURCE52 GATE52 DRAIN52 SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=2.15 nf=13 
++ m=1 ad=0.06558461538461538 as=0.06558461538461538 pd=4.512307692307692 ps=4.512307692307692 nrd=0.6904761904761905 nrs=0.6904761904761905 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.06558461538461538_net_fail ad=0.06558461538461538_dim_fail as=0.06558461538461538_net_fail as=0.06558461538461538_dim_fail pd=4.512307692307692_net_fail pd=4.512307692307692_dim_fail ps=4.512307692307692_net_fail ps=4.512307692307692_dim_fail nrd=0.6904761904761905_net_fail nrd=0.6904761904761905_dim_fail nrs=0.6904761904761905_net_fail nrs=0.6904761904761905_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M53 SOURCE53 GATE53 DRAIN53 SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=2.15 nf=13 
++ m=1 ad=0.3279230769230769 as=0.3279230769230769 pd=6.321538461538462 ps=6.321538461538462 nrd=0.13809523809523808 nrs=0.13809523809523808 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.3279230769230769_net_fail ad=0.3279230769230769_dim_fail as=0.3279230769230769_net_fail as=0.3279230769230769_dim_fail pd=6.321538461538462_net_fail pd=6.321538461538462_dim_fail ps=6.321538461538462_net_fail ps=6.321538461538462_dim_fail nrd=0.13809523809523808_net_fail nrd=0.13809523809523808_dim_fail nrs=0.13809523809523808_net_fail nrs=0.13809523809523808_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M54 SOURCE54 GATE54 DRAIN54 SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=2.15 nf=13 
++ m=1 ad=0.5902615384615384 as=0.5902615384615384 pd=8.13076923076923 ps=8.13076923076923 nrd=0.07671957671957672 nrs=0.07671957671957672 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.5902615384615384_net_fail ad=0.5902615384615384_dim_fail as=0.5902615384615384_net_fail as=0.5902615384615384_dim_fail pd=8.13076923076923_net_fail pd=8.13076923076923_dim_fail ps=8.13076923076923_net_fail ps=8.13076923076923_dim_fail nrd=0.07671957671957672_net_fail nrd=0.07671957671957672_dim_fail nrs=0.07671957671957672_net_fail nrs=0.07671957671957672_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M55 SOURCE55 GATE55 DRAIN55 SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=2.15 nf=13 
++ m=1 ad=0.8526 as=0.8526 pd=9.94 ps=9.94 nrd=0.0531135531135531 nrs=0.0531135531135531 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.8526_net_fail ad=0.8526_dim_fail as=0.8526_net_fail as=0.8526_dim_fail pd=9.94_net_fail pd=9.94_dim_fail ps=9.94_net_fail ps=9.94_dim_fail nrd=0.0531135531135531_net_fail nrd=0.0531135531135531_dim_fail nrs=0.0531135531135531_net_fail nrs=0.0531135531135531_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M56 SOURCE56 GATE56 DRAIN56 SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=4.15 nf=13 
++ m=1 ad=0.06558461538461538 as=0.06558461538461538 pd=4.512307692307692 ps=4.512307692307692 nrd=0.6904761904761905 nrs=0.6904761904761905 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.06558461538461538_net_fail ad=0.06558461538461538_dim_fail as=0.06558461538461538_net_fail as=0.06558461538461538_dim_fail pd=4.512307692307692_net_fail pd=4.512307692307692_dim_fail ps=4.512307692307692_net_fail ps=4.512307692307692_dim_fail nrd=0.6904761904761905_net_fail nrd=0.6904761904761905_dim_fail nrs=0.6904761904761905_net_fail nrs=0.6904761904761905_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M57 SOURCE57 GATE57 DRAIN57 SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=4.15 nf=13 
++ m=1 ad=0.3279230769230769 as=0.3279230769230769 pd=6.321538461538462 ps=6.321538461538462 nrd=0.13809523809523808 nrs=0.13809523809523808 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.3279230769230769_net_fail ad=0.3279230769230769_dim_fail as=0.3279230769230769_net_fail as=0.3279230769230769_dim_fail pd=6.321538461538462_net_fail pd=6.321538461538462_dim_fail ps=6.321538461538462_net_fail ps=6.321538461538462_dim_fail nrd=0.13809523809523808_net_fail nrd=0.13809523809523808_dim_fail nrs=0.13809523809523808_net_fail nrs=0.13809523809523808_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M58 SOURCE58 GATE58 DRAIN58 SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=4.15 nf=13 
++ m=1 ad=0.5902615384615384 as=0.5902615384615384 pd=8.13076923076923 ps=8.13076923076923 nrd=0.07671957671957672 nrs=0.07671957671957672 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.5902615384615384_net_fail ad=0.5902615384615384_dim_fail as=0.5902615384615384_net_fail as=0.5902615384615384_dim_fail pd=8.13076923076923_net_fail pd=8.13076923076923_dim_fail ps=8.13076923076923_net_fail ps=8.13076923076923_dim_fail nrd=0.07671957671957672_net_fail nrd=0.07671957671957672_dim_fail nrs=0.07671957671957672_net_fail nrs=0.07671957671957672_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M59 SOURCE59 GATE59 DRAIN59 SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=4.15 nf=13 
++ m=1 ad=0.8526 as=0.8526 pd=9.94 ps=9.94 nrd=0.0531135531135531 nrs=0.0531135531135531 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.8526_net_fail ad=0.8526_dim_fail as=0.8526_net_fail as=0.8526_dim_fail pd=9.94_net_fail pd=9.94_dim_fail ps=9.94_net_fail ps=9.94_dim_fail nrd=0.0531135531135531_net_fail nrd=0.0531135531135531_dim_fail nrs=0.0531135531135531_net_fail nrs=0.0531135531135531_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M60 SOURCE60 GATE60 DRAIN60 SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=6.15 nf=13 
++ m=1 ad=0.06558461538461538 as=0.06558461538461538 pd=4.512307692307692 ps=4.512307692307692 nrd=0.6904761904761905 nrs=0.6904761904761905 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.06558461538461538_net_fail ad=0.06558461538461538_dim_fail as=0.06558461538461538_net_fail as=0.06558461538461538_dim_fail pd=4.512307692307692_net_fail pd=4.512307692307692_dim_fail ps=4.512307692307692_net_fail ps=4.512307692307692_dim_fail nrd=0.6904761904761905_net_fail nrd=0.6904761904761905_dim_fail nrs=0.6904761904761905_net_fail nrs=0.6904761904761905_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M61 SOURCE61 GATE61 DRAIN61 SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=6.15 nf=13 
++ m=1 ad=0.3279230769230769 as=0.3279230769230769 pd=6.321538461538462 ps=6.321538461538462 nrd=0.13809523809523808 nrs=0.13809523809523808 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.3279230769230769_net_fail ad=0.3279230769230769_dim_fail as=0.3279230769230769_net_fail as=0.3279230769230769_dim_fail pd=6.321538461538462_net_fail pd=6.321538461538462_dim_fail ps=6.321538461538462_net_fail ps=6.321538461538462_dim_fail nrd=0.13809523809523808_net_fail nrd=0.13809523809523808_dim_fail nrs=0.13809523809523808_net_fail nrs=0.13809523809523808_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M62 SOURCE62 GATE62 DRAIN62 SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=6.15 nf=13 
++ m=1 ad=0.5902615384615384 as=0.5902615384615384 pd=8.13076923076923 ps=8.13076923076923 nrd=0.07671957671957672 nrs=0.07671957671957672 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.5902615384615384_net_fail ad=0.5902615384615384_dim_fail as=0.5902615384615384_net_fail as=0.5902615384615384_dim_fail pd=8.13076923076923_net_fail pd=8.13076923076923_dim_fail ps=8.13076923076923_net_fail ps=8.13076923076923_dim_fail nrd=0.07671957671957672_net_fail nrd=0.07671957671957672_dim_fail nrs=0.07671957671957672_net_fail nrs=0.07671957671957672_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M63 SOURCE63 GATE63 DRAIN63 SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=6.15 nf=13 
++ m=1 ad=0.8526 as=0.8526 pd=9.94 ps=9.94 nrd=0.0531135531135531 nrs=0.0531135531135531 sa=0 sb=0 sd=0 m=1_net_fail m=1_dim_fail ad=0.8526_net_fail ad=0.8526_dim_fail as=0.8526_net_fail as=0.8526_dim_fail pd=9.94_net_fail pd=9.94_dim_fail ps=9.94_net_fail ps=9.94_dim_fail nrd=0.0531135531135531_net_fail nrd=0.0531135531135531_dim_fail nrs=0.0531135531135531_net_fail nrs=0.0531135531135531_dim_fail sa=0_net_fail sa=0_dim_fail sb=0_net_fail sb=0_dim_fail sd=0_net_fail sd=0_dim_fail
+
+M0_net_fail SOURCE0_net_fail GATE0_net_fail DRAIN0_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.63 l=0.22499999999999998 nf=1 
+
+M1_net_fail SOURCE1_net_fail GATE1_net_fail DRAIN1_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.1500000000000004 l=0.22499999999999998 nf=1 
+
+M2_net_fail SOURCE2_net_fail GATE2_net_fail DRAIN2_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.67 l=0.22499999999999998 nf=1 
+
+M3_net_fail SOURCE3_net_fail GATE3_net_fail DRAIN3_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=8.190000000000001 l=0.22499999999999998 nf=1 
+
+M4_net_fail SOURCE4_net_fail GATE4_net_fail DRAIN4_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.63 l=3.2249999999999996 nf=1 
+
+M5_net_fail SOURCE5_net_fail GATE5_net_fail DRAIN5_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.1500000000000004 l=3.2249999999999996 nf=1 
+
+M6_net_fail SOURCE6_net_fail GATE6_net_fail DRAIN6_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.67 l=3.2249999999999996 nf=1 
+
+M7_net_fail SOURCE7_net_fail GATE7_net_fail DRAIN7_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=8.190000000000001 l=3.2249999999999996 nf=1 
+
+M8_net_fail SOURCE8_net_fail GATE8_net_fail DRAIN8_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.63 l=6.2250000000000005 nf=1 
+
+M9_net_fail SOURCE9_net_fail GATE9_net_fail DRAIN9_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.1500000000000004 l=6.2250000000000005 nf=1 
+
+M10_net_fail SOURCE10_net_fail GATE10_net_fail DRAIN10_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.67 l=6.2250000000000005 nf=1 
+
+M11_net_fail SOURCE11_net_fail GATE11_net_fail DRAIN11_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=8.190000000000001 l=6.2250000000000005 nf=1 
+
+M12_net_fail SOURCE12_net_fail GATE12_net_fail DRAIN12_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.63 l=9.225000000000001 nf=1 
+
+M13_net_fail SOURCE13_net_fail GATE13_net_fail DRAIN13_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.1500000000000004 l=9.225000000000001 nf=1 
+
+M14_net_fail SOURCE14_net_fail GATE14_net_fail DRAIN14_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.67 l=9.225000000000001 nf=1 
+
+M15_net_fail SOURCE15_net_fail GATE15_net_fail DRAIN15_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=8.190000000000001 l=9.225000000000001 nf=1 
+
+M16_net_fail SOURCE16_net_fail GATE16_net_fail DRAIN16_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.63 l=0.22499999999999998 nf=5 
+
+M17_net_fail SOURCE17_net_fail GATE17_net_fail DRAIN17_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.1500000000000004 l=0.22499999999999998 nf=5 
+
+M18_net_fail SOURCE18_net_fail GATE18_net_fail DRAIN18_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.67 l=0.22499999999999998 nf=5 
+
+M19_net_fail SOURCE19_net_fail GATE19_net_fail DRAIN19_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=8.190000000000001 l=0.22499999999999998 nf=5 
+
+M20_net_fail SOURCE20_net_fail GATE20_net_fail DRAIN20_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.63 l=3.2249999999999996 nf=5 
+
+M21_net_fail SOURCE21_net_fail GATE21_net_fail DRAIN21_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.1500000000000004 l=3.2249999999999996 nf=5 
+
+M22_net_fail SOURCE22_net_fail GATE22_net_fail DRAIN22_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.67 l=3.2249999999999996 nf=5 
+
+M23_net_fail SOURCE23_net_fail GATE23_net_fail DRAIN23_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=8.190000000000001 l=3.2249999999999996 nf=5 
+
+M24_net_fail SOURCE24_net_fail GATE24_net_fail DRAIN24_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.63 l=6.2250000000000005 nf=5 
+
+M25_net_fail SOURCE25_net_fail GATE25_net_fail DRAIN25_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.1500000000000004 l=6.2250000000000005 nf=5 
+
+M26_net_fail SOURCE26_net_fail GATE26_net_fail DRAIN26_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.67 l=6.2250000000000005 nf=5 
+
+M27_net_fail SOURCE27_net_fail GATE27_net_fail DRAIN27_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=8.190000000000001 l=6.2250000000000005 nf=5 
+
+M28_net_fail SOURCE28_net_fail GATE28_net_fail DRAIN28_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.63 l=9.225000000000001 nf=5 
+
+M29_net_fail SOURCE29_net_fail GATE29_net_fail DRAIN29_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.1500000000000004 l=9.225000000000001 nf=5 
+
+M30_net_fail SOURCE30_net_fail GATE30_net_fail DRAIN30_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.67 l=9.225000000000001 nf=5 
+
+M31_net_fail SOURCE31_net_fail GATE31_net_fail DRAIN31_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=8.190000000000001 l=9.225000000000001 nf=5 
+
+M32_net_fail SOURCE32_net_fail GATE32_net_fail DRAIN32_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.63 l=0.22499999999999998 nf=9 
+
+M33_net_fail SOURCE33_net_fail GATE33_net_fail DRAIN33_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.1500000000000004 l=0.22499999999999998 nf=9 
+
+M34_net_fail SOURCE34_net_fail GATE34_net_fail DRAIN34_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.67 l=0.22499999999999998 nf=9 
+
+M35_net_fail SOURCE35_net_fail GATE35_net_fail DRAIN35_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=8.190000000000001 l=0.22499999999999998 nf=9 
+
+M36_net_fail SOURCE36_net_fail GATE36_net_fail DRAIN36_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.63 l=3.2249999999999996 nf=9 
+
+M37_net_fail SOURCE37_net_fail GATE37_net_fail DRAIN37_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.1500000000000004 l=3.2249999999999996 nf=9 
+
+M38_net_fail SOURCE38_net_fail GATE38_net_fail DRAIN38_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.67 l=3.2249999999999996 nf=9 
+
+M39_net_fail SOURCE39_net_fail GATE39_net_fail DRAIN39_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=8.190000000000001 l=3.2249999999999996 nf=9 
+
+M40_net_fail SOURCE40_net_fail GATE40_net_fail DRAIN40_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.63 l=6.2250000000000005 nf=9 
+
+M41_net_fail SOURCE41_net_fail GATE41_net_fail DRAIN41_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.1500000000000004 l=6.2250000000000005 nf=9 
+
+M42_net_fail SOURCE42_net_fail GATE42_net_fail DRAIN42_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.67 l=6.2250000000000005 nf=9 
+
+M43_net_fail SOURCE43_net_fail GATE43_net_fail DRAIN43_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=8.190000000000001 l=6.2250000000000005 nf=9 
+
+M44_net_fail SOURCE44_net_fail GATE44_net_fail DRAIN44_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.63 l=9.225000000000001 nf=9 
+
+M45_net_fail SOURCE45_net_fail GATE45_net_fail DRAIN45_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.1500000000000004 l=9.225000000000001 nf=9 
+
+M46_net_fail SOURCE46_net_fail GATE46_net_fail DRAIN46_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.67 l=9.225000000000001 nf=9 
+
+M47_net_fail SOURCE47_net_fail GATE47_net_fail DRAIN47_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=8.190000000000001 l=9.225000000000001 nf=9 
+
+M48_net_fail SOURCE48_net_fail GATE48_net_fail DRAIN48_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.63 l=0.22499999999999998 nf=13 
+
+M49_net_fail SOURCE49_net_fail GATE49_net_fail DRAIN49_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.1500000000000004 l=0.22499999999999998 nf=13 
+
+M50_net_fail SOURCE50_net_fail GATE50_net_fail DRAIN50_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.67 l=0.22499999999999998 nf=13 
+
+M51_net_fail SOURCE51_net_fail GATE51_net_fail DRAIN51_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=8.190000000000001 l=0.22499999999999998 nf=13 
+
+M52_net_fail SOURCE52_net_fail GATE52_net_fail DRAIN52_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.63 l=3.2249999999999996 nf=13 
+
+M53_net_fail SOURCE53_net_fail GATE53_net_fail DRAIN53_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.1500000000000004 l=3.2249999999999996 nf=13 
+
+M54_net_fail SOURCE54_net_fail GATE54_net_fail DRAIN54_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.67 l=3.2249999999999996 nf=13 
+
+M55_net_fail SOURCE55_net_fail GATE55_net_fail DRAIN55_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=8.190000000000001 l=3.2249999999999996 nf=13 
+
+M56_net_fail SOURCE56_net_fail GATE56_net_fail DRAIN56_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.63 l=6.2250000000000005 nf=13 
+
+M57_net_fail SOURCE57_net_fail GATE57_net_fail DRAIN57_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.1500000000000004 l=6.2250000000000005 nf=13 
+
+M58_net_fail SOURCE58_net_fail GATE58_net_fail DRAIN58_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.67 l=6.2250000000000005 nf=13 
+
+M59_net_fail SOURCE59_net_fail GATE59_net_fail DRAIN59_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=8.190000000000001 l=6.2250000000000005 nf=13 
+
+M60_net_fail SOURCE60_net_fail GATE60_net_fail DRAIN60_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.63 l=9.225000000000001 nf=13 
+
+M61_net_fail SOURCE61_net_fail GATE61_net_fail DRAIN61_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.1500000000000004 l=9.225000000000001 nf=13 
+
+M62_net_fail SOURCE62_net_fail GATE62_net_fail DRAIN62_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.67 l=9.225000000000001 nf=13 
+
+M63_net_fail SOURCE63_net_fail GATE63_net_fail DRAIN63_net_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=8.190000000000001 l=9.225000000000001 nf=13 
+
+M0_dim_fail SOURCE0_dim_fail GATE0_dim_fail DRAIN0_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=0.15 nf=1 
+
+M1_dim_fail SOURCE1_dim_fail GATE1_dim_fail DRAIN1_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=0.15 nf=1 
+
+M2_dim_fail SOURCE2_dim_fail GATE2_dim_fail DRAIN2_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=0.15 nf=1 
+
+M3_dim_fail SOURCE3_dim_fail GATE3_dim_fail DRAIN3_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=0.15 nf=1 
+
+M4_dim_fail SOURCE4_dim_fail GATE4_dim_fail DRAIN4_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=2.15 nf=1 
+
+M5_dim_fail SOURCE5_dim_fail GATE5_dim_fail DRAIN5_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=2.15 nf=1 
+
+M6_dim_fail SOURCE6_dim_fail GATE6_dim_fail DRAIN6_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=2.15 nf=1 
+
+M7_dim_fail SOURCE7_dim_fail GATE7_dim_fail DRAIN7_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=2.15 nf=1 
+
+M8_dim_fail SOURCE8_dim_fail GATE8_dim_fail DRAIN8_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=4.15 nf=1 
+
+M9_dim_fail SOURCE9_dim_fail GATE9_dim_fail DRAIN9_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=4.15 nf=1 
+
+M10_dim_fail SOURCE10_dim_fail GATE10_dim_fail DRAIN10_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=4.15 nf=1 
+
+M11_dim_fail SOURCE11_dim_fail GATE11_dim_fail DRAIN11_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=4.15 nf=1 
+
+M12_dim_fail SOURCE12_dim_fail GATE12_dim_fail DRAIN12_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=6.15 nf=1 
+
+M13_dim_fail SOURCE13_dim_fail GATE13_dim_fail DRAIN13_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=6.15 nf=1 
+
+M14_dim_fail SOURCE14_dim_fail GATE14_dim_fail DRAIN14_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=6.15 nf=1 
+
+M15_dim_fail SOURCE15_dim_fail GATE15_dim_fail DRAIN15_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=6.15 nf=1 
+
+M16_dim_fail SOURCE16_dim_fail GATE16_dim_fail DRAIN16_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=0.15 nf=5 
+
+M17_dim_fail SOURCE17_dim_fail GATE17_dim_fail DRAIN17_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=0.15 nf=5 
+
+M18_dim_fail SOURCE18_dim_fail GATE18_dim_fail DRAIN18_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=0.15 nf=5 
+
+M19_dim_fail SOURCE19_dim_fail GATE19_dim_fail DRAIN19_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=0.15 nf=5 
+
+M20_dim_fail SOURCE20_dim_fail GATE20_dim_fail DRAIN20_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=2.15 nf=5 
+
+M21_dim_fail SOURCE21_dim_fail GATE21_dim_fail DRAIN21_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=2.15 nf=5 
+
+M22_dim_fail SOURCE22_dim_fail GATE22_dim_fail DRAIN22_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=2.15 nf=5 
+
+M23_dim_fail SOURCE23_dim_fail GATE23_dim_fail DRAIN23_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=2.15 nf=5 
+
+M24_dim_fail SOURCE24_dim_fail GATE24_dim_fail DRAIN24_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=4.15 nf=5 
+
+M25_dim_fail SOURCE25_dim_fail GATE25_dim_fail DRAIN25_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=4.15 nf=5 
+
+M26_dim_fail SOURCE26_dim_fail GATE26_dim_fail DRAIN26_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=4.15 nf=5 
+
+M27_dim_fail SOURCE27_dim_fail GATE27_dim_fail DRAIN27_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=4.15 nf=5 
+
+M28_dim_fail SOURCE28_dim_fail GATE28_dim_fail DRAIN28_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=6.15 nf=5 
+
+M29_dim_fail SOURCE29_dim_fail GATE29_dim_fail DRAIN29_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=6.15 nf=5 
+
+M30_dim_fail SOURCE30_dim_fail GATE30_dim_fail DRAIN30_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=6.15 nf=5 
+
+M31_dim_fail SOURCE31_dim_fail GATE31_dim_fail DRAIN31_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=6.15 nf=5 
+
+M32_dim_fail SOURCE32_dim_fail GATE32_dim_fail DRAIN32_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=0.15 nf=9 
+
+M33_dim_fail SOURCE33_dim_fail GATE33_dim_fail DRAIN33_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=0.15 nf=9 
+
+M34_dim_fail SOURCE34_dim_fail GATE34_dim_fail DRAIN34_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=0.15 nf=9 
+
+M35_dim_fail SOURCE35_dim_fail GATE35_dim_fail DRAIN35_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=0.15 nf=9 
+
+M36_dim_fail SOURCE36_dim_fail GATE36_dim_fail DRAIN36_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=2.15 nf=9 
+
+M37_dim_fail SOURCE37_dim_fail GATE37_dim_fail DRAIN37_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=2.15 nf=9 
+
+M38_dim_fail SOURCE38_dim_fail GATE38_dim_fail DRAIN38_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=2.15 nf=9 
+
+M39_dim_fail SOURCE39_dim_fail GATE39_dim_fail DRAIN39_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=2.15 nf=9 
+
+M40_dim_fail SOURCE40_dim_fail GATE40_dim_fail DRAIN40_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=4.15 nf=9 
+
+M41_dim_fail SOURCE41_dim_fail GATE41_dim_fail DRAIN41_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=4.15 nf=9 
+
+M42_dim_fail SOURCE42_dim_fail GATE42_dim_fail DRAIN42_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=4.15 nf=9 
+
+M43_dim_fail SOURCE43_dim_fail GATE43_dim_fail DRAIN43_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=4.15 nf=9 
+
+M44_dim_fail SOURCE44_dim_fail GATE44_dim_fail DRAIN44_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=6.15 nf=9 
+
+M45_dim_fail SOURCE45_dim_fail GATE45_dim_fail DRAIN45_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=6.15 nf=9 
+
+M46_dim_fail SOURCE46_dim_fail GATE46_dim_fail DRAIN46_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=6.15 nf=9 
+
+M47_dim_fail SOURCE47_dim_fail GATE47_dim_fail DRAIN47_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=6.15 nf=9 
+
+M48_dim_fail SOURCE48_dim_fail GATE48_dim_fail DRAIN48_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=0.15 nf=13 
+
+M49_dim_fail SOURCE49_dim_fail GATE49_dim_fail DRAIN49_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=0.15 nf=13 
+
+M50_dim_fail SOURCE50_dim_fail GATE50_dim_fail DRAIN50_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=0.15 nf=13 
+
+M51_dim_fail SOURCE51_dim_fail GATE51_dim_fail DRAIN51_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=0.15 nf=13 
+
+M52_dim_fail SOURCE52_dim_fail GATE52_dim_fail DRAIN52_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=2.15 nf=13 
+
+M53_dim_fail SOURCE53_dim_fail GATE53_dim_fail DRAIN53_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=2.15 nf=13 
+
+M54_dim_fail SOURCE54_dim_fail GATE54_dim_fail DRAIN54_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=2.15 nf=13 
+
+M55_dim_fail SOURCE55_dim_fail GATE55_dim_fail DRAIN55_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=2.15 nf=13 
+
+M56_dim_fail SOURCE56_dim_fail GATE56_dim_fail DRAIN56_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=4.15 nf=13 
+
+M57_dim_fail SOURCE57_dim_fail GATE57_dim_fail DRAIN57_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=4.15 nf=13 
+
+M58_dim_fail SOURCE58_dim_fail GATE58_dim_fail DRAIN58_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=4.15 nf=13 
+
+M59_dim_fail SOURCE59_dim_fail GATE59_dim_fail DRAIN59_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=4.15 nf=13 
+
+M60_dim_fail SOURCE60_dim_fail GATE60_dim_fail DRAIN60_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=0.42 l=6.15 nf=13 
+
+M61_dim_fail SOURCE61_dim_fail GATE61_dim_fail DRAIN61_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=2.1 l=6.15 nf=13 
+
+M62_dim_fail SOURCE62_dim_fail GATE62_dim_fail DRAIN62_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=3.7800000000000002 l=6.15 nf=13 
+
+M63_dim_fail SOURCE63_dim_fail GATE63_dim_fail DRAIN63_dim_fail SUBSTRATE sky130_fd_pr__nfet_01v8 w=5.460000000000001 l=6.15 nf=13 
+
+.ENDS
