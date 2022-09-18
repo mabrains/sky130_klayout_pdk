@@ -32,15 +32,17 @@ all: test_lvs_main test_lvs_collective test_lvs_connectivity
 .ONESHELL:
 test_lvs_main_gha_%:
 	@cd $(Testing_DIR)
-	@cdl="$${$*//testcases/}"; cdl="$${cdl//fixed_devices/}";
-	@if python3 ../run_lvs.py --design=$* --net=$${cdl//.gds/.cdl} ; then exit 1; \
-		else python3 regression_result.py --db=$${file//.gds/.lvsdb} ; fi
+	@file=`find . -iname $**.gds`
+	@design="$${file//testcases/}"; design="$${design//fixed_devices/}";
+	@loc="$${file//$$design/}";
+	@if python3 ../run_lvs.py --design=$$loc/$$design --net=$${design//.gds/.cdl} ; then exit 1; \
+		else python3 regression_result.py --db=$${design//.gds/.lvsdb} ; fi
 
 .ONESHELL:
 test_lvs_main: 
 	@cd $(Testing_DIR)
 	@mkdir -p $(run_folder)
-	@search_dir = `ls testcases/*.gds testcases/fixed_devices/*.gds`
+	@search_dir=`ls testcases/*.gds testcases/fixed_devices/*.gds`
 	@for file in $$search_dir ; do cdl="$${file//testcases/}"; cdl="$${cdl//fixed_devices/}"; \
 	if python3 ../run_lvs.py --design=$$file --net=$${cdl//.gds/.cdl}  |& tee -a $(run_folder)/main_results.log ; then exit 1; \
 		else python3 regression_result.py --db=$${file//.gds/.lvsdb} ; fi; done
@@ -54,7 +56,7 @@ test_lvs_main:
 test_lvs_collective: 
 	@cd $(Testing_DIR)
 	@mkdir -p $(run_folder)
-	@search_dir = `ls collective_test/*.gds`
+	@search_dir=`ls collective_test/*.gds`
 	@for file in $$search_dir ; do cdl="$${file//collective_test/}"; \
 	python3 ../run_lvs.py --design=$$file --net=$${cdl//.gds/.cdl}  |& tee -a $(run_folder)/collective_results.log  ; done
 	@echo "Congratulations! Testing collective lvs is finished successfully"
@@ -67,7 +69,7 @@ test_lvs_collective:
 test_lvs_connectivity: 
 	@cd $(Testing_DIR)
 	@mkdir -p $(run_folder)
-	@search_dir = `ls connectivity_test/*.gds`
+	@search_dir=`ls connectivity_test/*.gds`
 	@for file in $$search_dir ; do cdl="$${file//connectivity_test/}"; \
 	python3 ../run_lvs.py --design=$$file --net=$${cdl//.gds/.cdl}  |& tee -a $(run_folder)/connectivity_results.log  ; done
 	@echo "Congratulations! Testing connectivity lvs is finished successfully"

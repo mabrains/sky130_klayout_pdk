@@ -24,7 +24,7 @@ def main():
     netlist         = False
     compare         = False
 
-    with open("INV_X1.lvsdb", 'r') as f:
+    with open(args["--db"], 'r') as f:
         for line in f:
             if "lyr_fail" in line:
                 raise ValueError('Error: Found false negative case')

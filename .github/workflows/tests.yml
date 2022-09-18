@@ -14,34 +14,43 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 name: Regression testing
-
-# Prevent keeping resources busy when a branch/PR is updated
-# https://docs.github.com/en/actions/using-jobs/using-concurrency
 concurrency:
   group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
 on:
   push:
   pull_request:
   workflow_dispatch:
-
 env:
   DOCKER_BUILDKIT: 1
 
 jobs:
-
   build-matrix:
     runs-on: ubuntu-latest
+    outputs:
+      main_files: ${{ steps.set-matrix.outputs.main_files }}
     steps:
-      - id: set-matrix-main
+      - uses: actions/checkout@v3
+      - id: set-matrix
         run: |
           cd sky130_tech/tech/sky130/lvs/testing
-          echo "::set-output name=main_files::$(ls testcases/*.gds testcases/fixed_devices/*.gds)"
-    outputs:
-      main_files: ${{ steps.set-matrix-main.outputs.main_files }}
+          main_files=`echo '[' ; ls testcases/*.gds --format=commas|sed -e 's/^/\"/'|sed -e 's/,$/\",/'|sed -e 's/\([^,]\)$/\1\"\]/'|sed -e 's/, /\", \"/g'`
+          main_files=`echo $main_files | jq -c .`
+          echo $main_files
+          echo "::set-output name=main_files::$main_files"
+  check-matrix:
+    runs-on: ubuntu-latest
+    needs: build-matrix
+    steps:
+      - name: Install json2yaml
+        run: |
+          sudo npm install -g json2yaml
 
-  Test:    
+      - name: Check matrix definition
+        run: |
+          matrix=${{ needs.build-matrix.outputs.main_files }}
+          echo $matrix | json2yaml
+  Test:
     needs: build-matrix
     runs-on: ubuntu-latest
     strategy:
@@ -50,14 +59,10 @@ jobs:
         type: [lvs]
         test: [main]
         list: ${{ fromJson(needs.build-matrix.outputs.main_files) }}
-
     name: ${{ matrix.type }} | ${{ matrix.test }}
-
     env:
       IMAGE: ghcr.io/mabrains/sky130_klayout_pdk/test
-
     steps:
-
       - uses: actions/checkout@v3
       - name: Build container image
         run: |
@@ -74,7 +79,6 @@ jobs:
 
           RUN --mount=type=bind,target=/tmp/ctx pip3 install -r /tmp/ctx/requirements.txt
           EOF
-
       - name: Testing ${{ matrix.test }} ${{ matrix.type }} for ${{ matrix.list }}
         run: >
           docker run --rm

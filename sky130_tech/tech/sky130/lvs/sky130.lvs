@@ -1485,7 +1485,7 @@ vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_test_mk = vpp.not_covering(vpp_dim_55p8x23
 # ----- INDUCTOR DERIVATIONS ------
 #==================================
 
-logger.info("Startng INDUCTOR DERIVATIONS")
+logger.info("Starting INDUCTOR DERIVATIONS")
 
 # RF Inductor with 3 turns and internal diameter of 90um
 coil_1 = inductor.interacting(met3.or(met2).and(inductor.covering(met2.and(inductor), 3, 3)).holes.width(100.um, projection).with_distance(89.um, 91.um).polygons)
@@ -1501,7 +1501,7 @@ coil_3 = inductor.interacting(met3.or(met2).and(inductor.covering(met2.and(induc
 # ------- SONOS DERIVATIONS -------
 #==================================
 
-logger.info("Startng SONOS DERIVATIONS")
+logger.info("Starting SONOS DERIVATIONS")
 
 # Build space flash special SONOSFET original/star
 sonos = ngate.not(hvtp).not(ncm).not(hvi).and(lvtn).not(nwell).and(dnwell).and(tunm).and(ldntm).interacting(areaid_ce)
@@ -1512,6 +1512,17 @@ sonos = ngate.not(hvtp).not(ncm).not(hvi).and(lvtn).not(nwell).and(dnwell).and(t
 #================================
 
 logger.info("Starting RF MOSFET DERIVATIONS")
+
+#===== FLAVORS ======
+
+# 1.8V NMOS transistor standard
+gate_01v8 = tgate.not(hvtp).not(ncm).not(hvi).not(lvtn).not(dnwell).not_interacting(areaid_ed).not_interacting(areaid_ce)
+
+# 1.8V NMOS transistor low threshold voltage
+gate_01v8_lvt = tgate.not(hvtp).not(ncm).not(hvi).and(lvtn).not(dnwell).not_interacting(areaid_ce)
+
+# 5V gate 10.5V drain NMOS transistor
+gate_g5v0d10v5 = tgate.not(hvtp).not(ncm).and(hvi).not(lvtn).not(dnwell).not(ldntm).not_interacting(areaid_ce).not_interacting(areaid_ed).not_interacting(areaid_en)
 
 #===== DIMENSIONS ======
 
@@ -2137,196 +2148,196 @@ ngate_g5v0d10v5_bM10W5p00L0p50 = ngate.interacting(gate_g5v0d10v5).interacting(d
 ngate_g5v0d10v5_bM10W7p00L0p50 = ngate.interacting(gate_g5v0d10v5).interacting(diff_bM.and(nsdm).outside(nwell).interacting(ngate).not(diff_res)).interacting(diff_10W7p00L0p50_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 0.84um and length of 0.15um type aF
-ngate_01v8_aF02W0p84L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W0p84L0p15).interacting(poly_model)
+pgate_01v8_aF02W0p84L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W0p84L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 1.68um and length of 0.15um type aF
-ngate_01v8_aF02W1p68L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W1p68L0p15).interacting(poly_model)
+pgate_01v8_aF02W1p68L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W1p68L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 2.0um and length of 0.15um type aF
-ngate_01v8_aF02W2p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W2p00L0p15).interacting(poly_model)
+pgate_01v8_aF02W2p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W2p00L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 3.0um and length of 0.15um type aF
-ngate_01v8_aF02W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W3p00L0p15).interacting(poly_model)
+pgate_01v8_aF02W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W3p00L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 5.0um and length of 0.15um type aF
-ngate_01v8_aF02W5p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W5p00L0p15).interacting(poly_model)
+pgate_01v8_aF02W5p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W5p00L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 0.84um and length of 0.15um type aF
-ngate_01v8_aF04W0p84L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W0p84L0p15).interacting(poly_model)
+pgate_01v8_aF04W0p84L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W0p84L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 1.68um and length of 0.15um type aF
-ngate_01v8_aF04W1p68L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W1p68L0p15).interacting(poly_model)
+pgate_01v8_aF04W1p68L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W1p68L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 2.0um and length of 0.15um type aF
-ngate_01v8_aF04W2p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W2p00L0p15).interacting(poly_model)
+pgate_01v8_aF04W2p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W2p00L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 3.0um and length of 0.15um type aF
-ngate_01v8_aF04W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p15).interacting(poly_model)
+pgate_01v8_aF04W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 5.0um and length of 0.15um type aF
-ngate_01v8_aF04W5p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p15).interacting(poly_model)
+pgate_01v8_aF04W5p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 6 width of 0.84um and length of 0.15um type aF
-ngate_01v8_aF06W0p84L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_06W0p84L0p15).interacting(poly_model)
+pgate_01v8_aF06W0p84L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_06W0p84L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 6 width of 1.68um and length of 0.15um type aF
-ngate_01v8_aF06W1p68L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_06W1p68L0p15).interacting(poly_model)
+pgate_01v8_aF06W1p68L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_06W1p68L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 6 width of 2.0um and length of 0.15um type aF
-ngate_01v8_aF06W2p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_06W2p00L0p15).interacting(poly_model)
+pgate_01v8_aF06W2p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_06W2p00L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 6 width of 3.0um and length of 0.15um type aF
-ngate_01v8_aF06W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_06W3p00L0p15).interacting(poly_model)
+pgate_01v8_aF06W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_06W3p00L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 8 width of 0.84um and length of 0.15um type aF
-ngate_01v8_aF08W0p84L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_08W0p84L0p15).interacting(poly_model)
+pgate_01v8_aF08W0p84L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_08W0p84L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 8 width of 1.68um and length of 0.15um type aF
-ngate_01v8_aF08W1p68L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_08W1p68L0p15).interacting(poly_model)
+pgate_01v8_aF08W1p68L0p15 = pgate.interacting(gate_01v8).interacting(diff_aF.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_08W1p68L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 1.65um and length of 0.15um type aM
-ngate_01v8_aM02W1p65L0p15 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W1p65L0p15).interacting(poly_model)
+pgate_01v8_aM02W1p65L0p15 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W1p65L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 1.65um and length of 0.18um type aM
-ngate_01v8_aM02W1p65L0p18 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W1p65L0p18).interacting(poly_model)
+pgate_01v8_aM02W1p65L0p18 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W1p65L0p18).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 1.65um and length of 0.25um type aM
-ngate_01v8_aM02W1p65L0p25 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W1p65L0p25).interacting(poly_model)
+pgate_01v8_aM02W1p65L0p25 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W1p65L0p25).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 3.0um and length of 0.15um type aM
-ngate_01v8_aM02W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W3p00L0p15).interacting(poly_model)
+pgate_01v8_aM02W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W3p00L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 3.0um and length of 0.18um type aM
-ngate_01v8_aM02W3p00L0p18 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W3p00L0p18).interacting(poly_model)
+pgate_01v8_aM02W3p00L0p18 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W3p00L0p18).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 3.0um and length of 0.25um type aM
-ngate_01v8_aM02W3p00L0p25 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W3p00L0p25).interacting(poly_model)
+pgate_01v8_aM02W3p00L0p25 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W3p00L0p25).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 5.0um and length of 0.15um type aM
-ngate_01v8_aM02W5p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W5p00L0p15).interacting(poly_model)
+pgate_01v8_aM02W5p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W5p00L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 5.0um and length of 0.18um type aM
-ngate_01v8_aM02W5p00L0p18 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W5p00L0p18).interacting(poly_model)
+pgate_01v8_aM02W5p00L0p18 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W5p00L0p18).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 5.0um and length of 0.25um type aM
-ngate_01v8_aM02W5p00L0p25 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W5p00L0p25).interacting(poly_model)
+pgate_01v8_aM02W5p00L0p25 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W5p00L0p25).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 1.65um and length of 0.15um type aM
-ngate_01v8_aM04W1p65L0p15 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W1p65L0p15).interacting(poly_model)
+pgate_01v8_aM04W1p65L0p15 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W1p65L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 1.65um and length of 0.18um type aM
-ngate_01v8_aM04W1p65L0p18 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W1p65L0p18).interacting(poly_model)
+pgate_01v8_aM04W1p65L0p18 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W1p65L0p18).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 1.65um and length of 0.25um type aM
-ngate_01v8_aM04W1p65L0p25 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W1p65L0p25).interacting(poly_model)
+pgate_01v8_aM04W1p65L0p25 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W1p65L0p25).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 3.0um and length of 0.15um type aM
-ngate_01v8_aM04W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p15).interacting(poly_model)
+pgate_01v8_aM04W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 3.0um and length of 0.18um type aM
-ngate_01v8_aM04W3p00L0p18 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p18).interacting(poly_model)
+pgate_01v8_aM04W3p00L0p18 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p18).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 3.0um and length of 0.25um type aM
-ngate_01v8_aM04W3p00L0p25 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p25).interacting(poly_model)
+pgate_01v8_aM04W3p00L0p25 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p25).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 5.0um and length of 0.15um type aM
-ngate_01v8_aM04W5p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p15).interacting(poly_model)
+pgate_01v8_aM04W5p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 5.0um and length of 0.18um type aM
-ngate_01v8_aM04W5p00L0p18 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p18).interacting(poly_model)
+pgate_01v8_aM04W5p00L0p18 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p18).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 5.0um and length of 0.25um type aM
-ngate_01v8_aM04W5p00L0p25 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p25).interacting(poly_model)
+pgate_01v8_aM04W5p00L0p25 = pgate.interacting(gate_01v8).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p25).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 1.65um and length of 0.15um type bM
-ngate_01v8_bM02W1p65L0p15 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W1p65L0p15_bM).interacting(poly_model)
+pgate_01v8_bM02W1p65L0p15 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W1p65L0p15_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 1.65um and length of 0.18um type bM
-ngate_01v8_bM02W1p65L0p18 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W1p65L0p18_bM).interacting(poly_model)
+pgate_01v8_bM02W1p65L0p18 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W1p65L0p18_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 1.65um and length of 0.25um type bM
-ngate_01v8_bM02W1p65L0p25 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W1p65L0p25_bM).interacting(poly_model)
+pgate_01v8_bM02W1p65L0p25 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W1p65L0p25_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 3.0um and length of 0.15um type bM
-ngate_01v8_bM02W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W3p00L0p15_bM).interacting(poly_model)
+pgate_01v8_bM02W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W3p00L0p15_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 3.0um and length of 0.18um type bM
-ngate_01v8_bM02W3p00L0p18 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W3p00L0p18_bM).interacting(poly_model)
+pgate_01v8_bM02W3p00L0p18 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W3p00L0p18_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 3.0um and length of 0.25um type bM
-ngate_01v8_bM02W3p00L0p25 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W3p00L0p25_bM).interacting(poly_model)
+pgate_01v8_bM02W3p00L0p25 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W3p00L0p25_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 5.0um and length of 0.15um type bM
-ngate_01v8_bM02W5p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W5p00L0p15_bM).interacting(poly_model)
+pgate_01v8_bM02W5p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W5p00L0p15_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 5.0um and length of 0.18um type bM
-ngate_01v8_bM02W5p00L0p18 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W5p00L0p18_bM).interacting(poly_model)
+pgate_01v8_bM02W5p00L0p18 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W5p00L0p18_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 2 width of 5.0um and length of 0.25um type bM
-ngate_01v8_bM02W5p00L0p25 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W5p00L0p25_bM).interacting(poly_model)
+pgate_01v8_bM02W5p00L0p25 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W5p00L0p25_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 1.65um and length of 0.15um type bM
-ngate_01v8_bM04W1p65L0p15 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W1p65L0p15_bM).interacting(poly_model)
+pgate_01v8_bM04W1p65L0p15 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W1p65L0p15_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 1.65um and length of 0.18um type bM
-ngate_01v8_bM04W1p65L0p18 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W1p65L0p18_bM).interacting(poly_model)
+pgate_01v8_bM04W1p65L0p18 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W1p65L0p18_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 1.65um and length of 0.25um type bM
-ngate_01v8_bM04W1p65L0p25 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W1p65L0p25_bM).interacting(poly_model)
+pgate_01v8_bM04W1p65L0p25 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W1p65L0p25_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 3.0um and length of 0.15um type bM
-ngate_01v8_bM04W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p15_bM).interacting(poly_model)
+pgate_01v8_bM04W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p15_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 3.0um and length of 0.18um type bM
-ngate_01v8_bM04W3p00L0p18 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p18_bM).interacting(poly_model)
+pgate_01v8_bM04W3p00L0p18 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p18_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 3.0um and length of 0.25um type bM
-ngate_01v8_bM04W3p00L0p25 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p25_bM).interacting(poly_model)
+pgate_01v8_bM04W3p00L0p25 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p25_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 5.0um and length of 0.15um type bM
-ngate_01v8_bM04W5p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p15_bM).interacting(poly_model)
+pgate_01v8_bM04W5p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p15_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 5.0um and length of 0.18um type bM
-ngate_01v8_bM04W5p00L0p18 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p18_bM).interacting(poly_model)
+pgate_01v8_bM04W5p00L0p18 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p18_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 5.0um and length of 0.25um type bM
-ngate_01v8_bM04W5p00L0p25 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p25_bM).interacting(poly_model)
+pgate_01v8_bM04W5p00L0p25 = pgate.interacting(gate_01v8).interacting(diff_bM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p25_bM).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 3.0um and length of 0.15um type hcM
-ngate_01v8_hcM04W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_hcM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p15).interacting(poly_model)
+pgate_01v8_hcM04W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_hcM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 5.0um and length of 0.15um type hcM
-ngate_01v8_hcM04W5p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_hcM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p15).interacting(poly_model)
+pgate_01v8_hcM04W5p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_hcM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor low threshold voltage with multiplier of 2 width of 3.0um and length of 0.35um type aM
-ngate_01v8_lvt_aM02W3p00L0p35 = pgate.interacting(gate_01v8_lvt).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W3p00L0p35).interacting(poly_model)
+pgate_01v8_lvt_aM02W3p00L0p35 = pgate.interacting(gate_01v8_lvt).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W3p00L0p35).interacting(poly_model)
 
 # 1.8V RF PMOS transistor low threshold voltage with multiplier of 2 width of 3.0um and length of 0.5um type aM
-ngate_01v8_lvt_aM02W3p00L0p50 = pgate.interacting(gate_01v8_lvt).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W3p00L0p50).interacting(poly_model)
+pgate_01v8_lvt_aM02W3p00L0p50 = pgate.interacting(gate_01v8_lvt).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W3p00L0p50).interacting(poly_model)
 
 # 1.8V RF PMOS transistor low threshold voltage with multiplier of 2 width of 5.0um and length of 0.35um type aM
-ngate_01v8_lvt_aM02W5p00L0p35 = pgate.interacting(gate_01v8_lvt).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W5p00L0p35).interacting(poly_model)
+pgate_01v8_lvt_aM02W5p00L0p35 = pgate.interacting(gate_01v8_lvt).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W5p00L0p35).interacting(poly_model)
 
 # 1.8V RF PMOS transistor low threshold voltage with multiplier of 2 width of 5.0um and length of 0.5um type aM
-ngate_01v8_lvt_aM02W5p00L0p50 = pgate.interacting(gate_01v8_lvt).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W5p00L0p50).interacting(poly_model)
+pgate_01v8_lvt_aM02W5p00L0p50 = pgate.interacting(gate_01v8_lvt).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_02W5p00L0p50).interacting(poly_model)
 
 # 1.8V RF PMOS transistor low threshold voltage with multiplier of 4 width of 3.0um and length of 0.35um type aM
-ngate_01v8_lvt_aM04W3p00L0p35 = pgate.interacting(gate_01v8_lvt).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p35).interacting(poly_model)
+pgate_01v8_lvt_aM04W3p00L0p35 = pgate.interacting(gate_01v8_lvt).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p35).interacting(poly_model)
 
 # 1.8V RF PMOS transistor low threshold voltage with multiplier of 4 width of 3.0um and length of 0.5um type aM
-ngate_01v8_lvt_aM04W3p00L0p50 = pgate.interacting(gate_01v8_lvt).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p50).interacting(poly_model)
+pgate_01v8_lvt_aM04W3p00L0p50 = pgate.interacting(gate_01v8_lvt).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p50).interacting(poly_model)
 
 # 1.8V RF PMOS transistor low threshold voltage with multiplier of 4 width of 5.0um and length of 0.35um type aM
-ngate_01v8_lvt_aM04W5p00L0p35 = pgate.interacting(gate_01v8_lvt).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p35).interacting(poly_model)
+pgate_01v8_lvt_aM04W5p00L0p35 = pgate.interacting(gate_01v8_lvt).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p35).interacting(poly_model)
 
 # 1.8V RF PMOS transistor low threshold voltage with multiplier of 4 width of 5.0um and length of 0.5um type aM
-ngate_01v8_lvt_aM04W5p00L0p50 = pgate.interacting(gate_01v8_lvt).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p50).interacting(poly_model)
+pgate_01v8_lvt_aM04W5p00L0p50 = pgate.interacting(gate_01v8_lvt).interacting(diff_aM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p50).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 3.0um and length of 0.15um type mcM
-ngate_01v8_mcM04W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_mcM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p15).interacting(poly_model)
+pgate_01v8_mcM04W3p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_mcM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W3p00L0p15).interacting(poly_model)
 
 # 1.8V RF PMOS transistor with multiplier of 4 width of 5.0um and length of 0.15um type mcM
-ngate_01v8_mcM04W5p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_mcM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p15).interacting(poly_model)
+pgate_01v8_mcM04W5p00L0p15 = pgate.interacting(gate_01v8).interacting(diff_mcM.and(psdm).inside(nwell).interacting(pgate).not(diff_res)).interacting(diff_04W5p00L0p15).interacting(poly_model)
 
 # 5V gate 20V drain RF PMOS transistor with ptap
 pgate_5p0v_uhv_withptap = pgate_5p0v_uhv.inside(ptap.holes).with_area(11.96.um, 18.06.um).interacting(pgate_5p0v_uhv.edges.with_length(0.4.um, 0.6.um))
@@ -2680,24 +2691,24 @@ connect(pwell_cont    , licon)
 #================================
 
 logger.info("Starting LVS FUSE CONNECTIONS")
-
+'''
 if FUSE == "m2"
 
   # Metal2 fuse
-  connect(met2_fuse_con_layer    , via2)
+  connect(met2_con    , via2)
 
 elsif FUSE == "m3"
 
   # Metal3 fuse
-  connect(met3_fuse_con_layer    , via3)
+  connect(met3_ncap    , via3)
 
 else
 
   # Metal4 fuse
-  connect(met4_fuse_con_layer    , via4)
+  connect(met4_ncap    , via4)
 
 end
-
+'''
 
 #==================================
 # ------ MIMCAP CONNECTIONS -------
@@ -3253,13 +3264,13 @@ elsif FUSE == "m3"
 
   # sky130_fd_pr__fuse_m3
   logger.info("Extracting sky130_fd_pr__fuse_m3 device")
-  extract_devices(resistor("sky130_fd_pr__fuse_m3", 47, NResistor), { "R" => met3_fuse_res_layer, "C" => met3_con })
+  extract_devices(resistor("sky130_fd_pr__fuse_m3", 47, NResistor), { "R" => met3_fuse_res_layer, "C" => met3_ncap })
 
 else
 
   # sky130_fd_pr__fuse_m4
   logger.info("Extracting sky130_fd_pr__fuse_m4 device")
-  extract_devices(resistor("sky130_fd_pr__fuse_m4", 47, NResistor), { "R" => met4_fuse_res_layer, "C" => met4_con })
+  extract_devices(resistor("sky130_fd_pr__fuse_m4", 47, NResistor), { "R" => met4_fuse_res_layer, "C" => met4_ncap })
 
 end
 
@@ -3596,15 +3607,15 @@ logger.info("Starting INDUCTOR EXTRACTION")
 
 # RF Inductor with 3 turns and internal diameter of 90um
 logger.info("Extracting RF Inductor with 3 turns and internal diameter of 90um")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__rf_ind_03_90"), {"C1" => met3_con, "C2" => met2_con, "M" => coil_1, "B" => pwell_pin })
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__rf_ind_03_90"), {"C1" => met3_ncap, "C2" => met2_con, "M" => coil_1, "B" => pwell_pin })
 
 # RF Inductor with 5 turns and internal diameter of 125um
 logger.info("Extracting RF Inductor with 5 turns and internal diameter of 125um")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__rf_ind_05_125"), {"C1" => met3_con, "C2" => met2_con, "M" => coil_2, "B" => pwell_pin })
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__rf_ind_05_125"), {"C1" => met3_ncap, "C2" => met2_con, "M" => coil_2, "B" => pwell_pin })
 
 # RF Inductor with 5 turns and internal diameter of 220um
 logger.info("Extracting RF Inductor with 5 turns and internal diameter of 220um")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__rf_ind_05_220"), {"C1" => met3_con, "C1" => met2_con, "M" => coil_3, "B" => pwell_pin })
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__rf_ind_05_220"), {"C1" => met3_ncap, "C1" => met2_con, "M" => coil_3, "B" => pwell_pin })
 
 
 #==================================
