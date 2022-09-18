@@ -1,6 +1,6 @@
-# Skywater 130nm Technology PDK for KLayout [![License](https://img.shields.io/github/license/mabrains/OpenDesignEnvironment)](LICENSE)
+# Skywater 130nm Technology PDK for KLayout [![License](https://img.shields.io/github/license/mabrains/sky130_klayout_pdk)](LICENSE)
 
-<p align="center"><img src="https://mabrains.com/assets/images/mabrains_logo.jpg" width="200" /></p>
+<p align="center"><img src="https://mabrains.com/assets/images/mabrains_logo.jpg" width="300" /></p>
 
 Mabrains is excited to share with you our Skywater 130nm PDK for Klayout. These files are not qualified. Please use with caution.
 
