@@ -75,18 +75,26 @@ class SubcircuitModels < RBA::NetlistSpiceWriterDelegate
 
   def write_device(device)
     device_class = device.device_class
-    if device_class.name.include?('ind')
+    if device_class.name.include?('fet')
+      str = "M" + device.expanded_name
+    elsif device_class.name.include?('diode')
+      str = "D" + device.expanded_name
+    elsif device_class.name.include?('npn') or device_class.name.include?('pnp')
+      str = "Q" + device.expanded_name
+    elsif device_class.name.include?('res')
+      str = "R" + device.expanded_name
+    elsif device_class.name.include?('ind') or device_class.name.include?('coil')
       str = "L" + device.expanded_name
-    elsif device_class.name.include?('vpp')
+    elsif device_class.name.include?('cap')
       str = "C" + device.expanded_name
     else
-      str = device.id + device.expanded_name
+      str = "#{device.id}" + device.expanded_name
     end
     device_class.terminal_definitions.each do |td|
       str += " " + net_to_string(device.net_for_terminal(td.id))
     end
     str += " " + device_class.name
-    if device_class.name.include?('nfet') || device_class.name.include?('pfet')
+    unless device_class.name.include?('vpp') || device_class.name.include?('ind')
       device_class.parameter_definitions.each do |pd|
         str += " " + pd.name + ("=%.12g" % device.parameter(pd.id))
       end
@@ -226,7 +234,7 @@ class SubcircuitModelsReader < RBA::NetlistSpiceReaderDelegate
         end
       end
 
-    elsif el == "L" && model.include?('SKY130') && model.include?('IND')
+    elsif el == "L" && model.include?('SKY130') && (model.include?('IND') || model.include?('COIL'))
 
       cls = RBA::DeviceClassMOS4Transistor::new
       cls.name = model
@@ -289,7 +297,7 @@ end
 class MIMCap < RBA::DeviceClassCapacitor
   def initialize
     super
-    enable_parameter("C", true)
+    enable_parameter("C", false)
     enable_parameter("A", true)
     enable_parameter("P", true)
   end
@@ -3615,7 +3623,7 @@ extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__rf_ind_05_125"), {"
 
 # RF Inductor with 5 turns and internal diameter of 220um
 logger.info("Extracting RF Inductor with 5 turns and internal diameter of 220um")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__rf_ind_05_220"), {"C1" => met3_ncap, "C1" => met2_con, "M" => coil_3, "B" => pwell_pin })
+extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__rf_ind_05_220"), {"C1" => met3_ncap, "C2" => met2_con, "M" => coil_3, "B" => pwell_pin })
 
 
 #==================================

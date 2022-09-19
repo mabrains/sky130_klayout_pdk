@@ -36,7 +36,7 @@ test_lvs_main_gha_%:
 	@design="$${file//testcases/}"; design="$${design//fixed_devices/}";
 	@loc="$${file//$$design/}";
 	@if python3 ../run_lvs.py --design=$$loc/$$design --net=$${design//.gds/.cdl} ; then exit 1; \
-		else python3 regression_result.py --db=$${design//.gds/.lvsdb} ; fi
+		else python3 regression_result.py --db=$${file//.gds/.lvsdb} ; fi
 
 .ONESHELL:
 test_lvs_main: 
