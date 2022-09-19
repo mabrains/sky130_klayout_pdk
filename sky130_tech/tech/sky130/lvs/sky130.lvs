@@ -303,6 +303,15 @@ class MIMCap < RBA::DeviceClassCapacitor
   end
 end
 
+class VarCap < RBA::DeviceClassCapacitorWithBulk
+  def initialize
+    super
+    enable_parameter("C", false)
+    enable_parameter("A", true)
+    enable_parameter("P", true)
+  end
+end
+
 #====================== CUSTOM FOUR TERMINAL EXTRACTOR =========================
 class Custom4TerminalExtractor < RBA::GenericDeviceExtractor
 
@@ -951,15 +960,19 @@ logger.info("Starting DIODE DERIVATIONS")
 
 # 5V N+ diffusion diode
 ndiff_5v0_terminal_n = ncomp.not(hvtp).not(hvi).not(lvtn).outside(dnwell).interacting(areaid_de)
+ndiff_5v0_terminal_p = ptap.holes.interacting(ndiff_5v0_terminal_n)
 
 # 5V N+ diffusion diode low threshold voltage
 ndiff_5v0_lvt_terminal_n = ncomp.not(hvtp).not(hvi).and(lvtn).outside(dnwell).interacting(areaid_de)
+ndiff_5v0_lvt_terminal_p = ptap.holes.interacting(ndiff_5v0_lvt_terminal_n)
 
 # 5V N+ diffusion diode native threshold voltage
 ndiff_5v0_nvt_terminal_n = ncomp.not(hvtp).and(hvi).and(lvtn).outside(dnwell).interacting(areaid_de)
+ndiff_5v0_nvt_terminal_p = ptap.holes.interacting(ndiff_5v0_nvt_terminal_n)
 
 # 11V N+ diffusion diode
 ndiff_11v0_terminal_n = ncomp.not(hvtp).and(hvi).not(lvtn).outside(dnwell).interacting(areaid_de).not_interacting(areaid_ed)
+ndiff_11v0_terminal_p = ptap.holes.interacting(ndiff_11v0_terminal_n)
 
 # 5V P+ diffusion diode
 pdiff_5v0_terminal_n = pcomp.not(hvtp).not(hvi).not(lvtn).outside(dnwell).interacting(areaid_de)
@@ -997,7 +1010,8 @@ pdiff_11v0_esd_terminal_n = pcomp.not(hvtp).and(hvi).not(lvtn).outside(dnwell).i
 logger.info("Starting PHOTODIODE DERIVATIONS")
 
 # Photodiode
-photodiode = tap.and(nsdm).and(nwell).and(dnwell).interacting(areaid_po)
+photodiode_n = tap.and(nsdm).and(nwell).and(dnwell).interacting(areaid_po)
+photodiode_p = ptap.holes.interacting(photodiode_n)
 
 
 #================================
@@ -1122,16 +1136,19 @@ met4_ncap = met4_con.not(capm2)
 logger.info("Starting VARACTOR DERIVATIONS")
 
 # Low threshold voltage varactor
-varactor_gate_lvt = poly.and(tap).and(nsdm).not(hvtp).not(ncm).not(hvi).and(nwell).not(dnwell)
-varactor_nsd_lvt  = tap.and(nsdm).not(hvtp).not(ncm).not(hvi).and(nwell).not(dnwell).interacting(varactor_gate_lvt).not(varactor_gate_lvt).not(diff_res)
+varactor_gate_lvt = poly.interacting(poly.and(tap).and(nsdm).not(hvtp).not(ncm).not(hvi).and(nwell).not(dnwell))
+varactor_nsd_lvt  = tap.and(nsdm).not(hvtp).not(ncm).not(hvi).and(nwell).not(dnwell).interacting(varactor_gate_lvt).not(diff_res)
+varactor_bulk_lvt = ptap.holes.interacting(varactor_gate_lvt)
 
 # High threshold voltage varactor
-varactor_gate_hvt = poly.and(tap).and(nsdm).and(hvtp).not(ncm).not(hvi).and(nwell).not(dnwell)
-varactor_nsd_hvt  = tap.and(nsdm).and(hvtp).not(ncm).not(hvi).and(nwell).not(dnwell).interacting(varactor_gate_hvt).not(varactor_gate_hvt).not(diff_res)
+varactor_gate_hvt = poly.interacting(poly.and(tap).and(nsdm).and(hvtp).not(ncm).not(hvi).and(nwell).not(dnwell))
+varactor_nsd_hvt  = tap.and(nsdm).and(hvtp).not(ncm).not(hvi).and(nwell).not(dnwell).interacting(varactor_gate_hvt).not(diff_res)
+varactor_bulk_hvt = ptap.holes.interacting(varactor_gate_hvt)
 
 # High voltage varactor
-varactor_gate_hv  = poly.and(tap).and(nsdm).not(hvtp).not(ncm).and(hvi).and(lvtn).and(nwell).not(dnwell)
-varactor_nsd_hv   = tap.and(nsdm).not(hvtp).not(ncm).and(hvi).and(lvtn).and(nwell).not(dnwell).interacting(varactor_gate_hvt).not(varactor_gate_hvt).not(diff_res)
+varactor_gate_hv  = poly.interacting(poly.and(tap).and(nsdm).not(hvtp).not(ncm).and(hvi).and(lvtn).and(nwell).not(dnwell))
+varactor_nsd_hv   = tap.and(nsdm).not(hvtp).not(ncm).and(hvi).and(lvtn).and(nwell).not(dnwell).interacting(varactor_gate_hvt).not(diff_res)
+varactor_bulk_hv  = ptap.holes.interacting(varactor_gate_hv)
 
 
 #==================================
@@ -2631,15 +2648,19 @@ logger.info("Starting LVS DIODE CONNECTIONS")
 
 # 5V N+ diffusion diode
 connect(ndiff_5v0_terminal_n, licon)
+connect(ndiff_5v0_terminal_p, ptap)
 
 # 5V N+ diffusion diode low threshold voltage
 connect(ndiff_5v0_lvt_terminal_n, licon)
+connect(ndiff_5v0_lvt_terminal_p, ptap)
 
 # 5V N+ diffusion diode native threshold voltage
 connect(ndiff_5v0_nvt_terminal_n, licon)
+connect(ndiff_5v0_nvt_terminal_p, ptap)
 
 # 11V N+ diffusion diode
 connect(ndiff_11v0_terminal_n, licon)
+connect(ndiff_11v0_terminal_p, ptap)
 
 # 5V P+ diffusion diode
 connect(pdiff_5v0_terminal_n, licon)
@@ -2677,7 +2698,8 @@ connect(pdiff_11v0_esd_terminal_n, licon)
 logger.info("Starting LVS PHOTODIODE CONNECTIONS")
 
 # Photodiode
-connect(photodiode, licon)
+connect(photodiode_n, licon)
+connect(photodiode_p, ptap)
 
 
 #================================
@@ -2738,16 +2760,13 @@ connect(capm2, via4)
 logger.info("Starting LVS VARACTOR CONNECTIONS")
 
 # Low threshold voltage varactor
-connect(varactor_gate_lvt,  licon)
-connect(varactor_nsd_lvt ,  licon)
+connect(varactor_bulk_lvt, ptap)
 
 # High threshold voltage varactor
-connect(varactor_gate_hvt,  licon)
-connect(varactor_nsd_hvt ,  licon)
+connect(varactor_bulk_hvt, ptap)
 
 # High voltage varactor
-connect(varactor_gate_hv ,  licon)
-connect(varactor_nsd_hv  ,  licon)
+connect(varactor_bulk_hv, ptap)
 
 
 #================================
@@ -3088,19 +3107,19 @@ logger.info("Starting DIODE EXTRACTION")
 
 # 5V N+ diffusion diode
 logger.info("Extracting 5V N+ diffusion diode")
-extract_devices(diode("sky130_fd_pr__diode_pw2nd_05v5"), { "N" => ndiff_5v0_terminal_n , "P" => sub})
+extract_devices(diode("sky130_fd_pr__diode_pw2nd_05v5"), { "N" => ndiff_5v0_terminal_n , "P" => ndiff_5v0_terminal_p})
 
 # 5V N+ diffusion diode low threshold voltage
 logger.info("Extracting 5V N+ diffusion diode low threshold voltage")
-extract_devices(diode("sky130_fd_pr__diode_pw2nd_05v5_lvt"), { "N" => ndiff_5v0_lvt_terminal_n , "P" => sub})
+extract_devices(diode("sky130_fd_pr__diode_pw2nd_05v5_lvt"), { "N" => ndiff_5v0_lvt_terminal_n , "P" => ndiff_5v0_lvt_terminal_p})
 
 # 5V N+ diffusion diode native threshold voltage
 logger.info("Extracting 5V N+ diffusion diode native threshold voltage")
-extract_devices(diode("sky130_fd_pr__diode_pw2nd_05v5_nvt"), { "N" => ndiff_5v0_nvt_terminal_n , "P" => sub})
+extract_devices(diode("sky130_fd_pr__diode_pw2nd_05v5_nvt"), { "N" => ndiff_5v0_nvt_terminal_n , "P" => ndiff_5v0_nvt_terminal_p})
 
 # 11V N+ diffusion diode
 logger.info("Extracting 11V N+ diffusion diode")
-extract_devices(diode("sky130_fd_pr__diode_pw2nd_11v0"), { "N" => ndiff_11v0_terminal_n , "P" => sub})
+extract_devices(diode("sky130_fd_pr__diode_pw2nd_11v0"), { "N" => ndiff_11v0_terminal_n , "P" => ndiff_11v0_terminal_p})
 
 # 5V P+ diffusion diode
 logger.info("Extracting 5V P+ diffusion diode")
@@ -3146,7 +3165,7 @@ logger.info("Starting PHOTODIODE EXTRACTION")
 
 # Photodiode
 logger.info("Extracting Photodiode")
-extract_devices(diode("sky130_fd_pr__photodiode"), { "N" => photodiode , "P" => dnwell})
+extract_devices(diode("sky130_fd_pr__photodiode"), { "N" => photodiode_n , "P" => photodiode_p})
 
 
 #================================
@@ -3309,15 +3328,15 @@ logger.info("Starting VARACTOR EXTRACTION")
 
 # Low threshold voltage varactor
 logger.info("Extracting low threshold voltage varactor")
-extract_devices(mos3("sky130_fd_pr__cap_var_lvt"), { "SD" => varactor_nsd_lvt, "G" => varactor_gate_lvt, "tS" => varactor_nsd_lvt, "tD" => varactor_nsd_lvt, "tG" => poly_con })
+extract_devices(capacitor_with_bulk("sky130_fd_pr__cap_var_lvt", 4.4e-15, VarCap), { "P1" => varactor_gate_lvt, "P2" => varactor_nsd_lvt, "W" => varactor_bulk_lvt, "tA" => poly_con, "tB" => ntap})
 
 # High threshold voltage varactor
 logger.info("Extracting high threshold voltage varactor")
-extract_devices(mos3("sky130_fd_pr__cap_var_hvt"), { "SD" => varactor_nsd_hvt, "G" => varactor_gate_hvt, "tS" => varactor_nsd_hvt, "tD" => varactor_nsd_hvt, "tG" => poly_con })
+extract_devices(capacitor_with_bulk("sky130_fd_pr__cap_var_hvt", 4.4e-15, VarCap), { "P1" => varactor_gate_hvt, "P2" => varactor_nsd_hvt, "W" => varactor_bulk_hvt, "tA" => poly_con, "tB" => ntap})
 
 # High voltage varactor
 logger.info("Extracting high voltage varactor")
-extract_devices(mos3("sky130_fd_pr__cap_var_hv"), { "SD" => varactor_nsd_hv, "G" => varactor_gate_hv, "tS" => varactor_nsd_hv, "tD" => varactor_nsd_hv, "tG" => poly_con })
+extract_devices(capacitor_with_bulk("sky130_fd_pr__cap_var_hv", 4.4e-15, VarCap), { "P1" => varactor_gate_hv, "P2" => varactor_nsd_hv, "W" => varactor_bulk_hv, "tA" => poly_con, "tB" => ntap})
 
 
 #==================================
