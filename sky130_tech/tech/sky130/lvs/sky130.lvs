@@ -729,7 +729,7 @@ tgate         = poly.and(diff).not(poly_res)
 
 ngate         = nsdm.and(tgate)
 nsd           = ncomp.outside(nwell).interacting(ngate).not(ngate).not(diff_res)
-ptap          = tap.and(psdm).outside(nwell).not(diff_res)
+ptap          = tap.and(psdm).outside(nwell).outside(dnwell).not(diff_res)
 
 pgate         = psdm.and(tgate)
 psd           = pcomp.inside(nwell).interacting(pgate).not(pgate).not(diff_res)
@@ -769,15 +769,15 @@ pgate_5p0v_hv = pgate.not(hvtp).not(ncm).and(hvi).not(lvtn).and(nwell).not(dnwel
 
 # 5V gate 16V drain PMOS transistor
 pgate_5p0v_vhv = pgate.not(hvtp).not(ncm).and(hvi).not_interacting(lvtn).and(nwell).and(dnwell).and(areaid_en)
-pd_5p0v_vhv    = ptap.not(hvtp).not(ncm).and(hvi).not(lvtn).not(nwell).and(dnwell).and(areaid_en)
+pd_5p0v_vhv    = tap.and(psdm).not(hvtp).not(ncm).and(hvi).not(lvtn).not(nwell).and(dnwell).and(areaid_en)
 ps_5p0v_vhv    = pcomp.not(hvtp).not(ncm).and(hvi).not(lvtn).and(nwell).and(dnwell).and(areaid_en).not(poly)
 psd_5p0v_vhv   = pd_5p0v_vhv.or(pcomp.interacting(ps_5p0v_vhv)).sized(0.6.um).sized(-0.6.um).extents.not(pgate_5p0v_vhv).and(areaid_en)
 
 # 5V gate 20V drain PMOS transistor
 pgate_5p0v_uhv = pgate.not(hvtp).not(ncm).and(hvi).not(lvtn).and(nwell).and(dnwell).interacting(lvtn).and(areaid_en20)
-pd_5p0v_uhv    = ptap.not(hvtp).not(ncm).and(hvi).and(lvtn).not(nwell).and(dnwell).and(areaid_en20)
+pd_5p0v_uhv    = tap.and(psdm).not(hvtp).not(ncm).and(hvi).and(lvtn).not(nwell).and(dnwell).and(areaid_en20)
 ps_5p0v_uhv    = pcomp.not(hvtp).not(ncm).and(hvi).not(lvtn).and(nwell).and(dnwell).and(areaid_en20).not(poly)
-psd_5p0v_uhv   = ptap.sized(0.75.um).sized(-0.75.um).extents.interacting(pd_5p0v_uhv).or(ps_5p0v_uhv).not(pgate_5p0v_uhv).and(areaid_en20)
+psd_5p0v_uhv   = tap.and(psdm).sized(0.75.um).sized(-0.75.um).extents.interacting(pd_5p0v_uhv).or(ps_5p0v_uhv).not(pgate_5p0v_uhv).and(areaid_en20)
 
 # Pass PMOS transistor
 pgate_pass = pgate.and(hvtp).and(ncm).not(hvi).not(lvtn).and(nwell).not(dnwell).and(areaid_ce)
@@ -834,7 +834,7 @@ nsd_5p0v_uhv_nvt_iso   = nd_5p0v_uhv_nvt.or(ncomp.interacting(ns_5p0v_uhv_nvt)).
 ngate_5p0v_uhv_zvt = ngate.not(hvtp).not(ncm).and(hvi).interacting(lvtn).not(nwell).and(dnwell).and(areaid_en20)
 nd_5p0v_uhv_zvt    = ntap.not(hvtp).not(ncm).and(hvi).and(lvtn).and(nwell).and(dnwell).and(areaid_en20)
 ns_5p0v_uhv_zvt    = ncomp.not(hvtp).not(ncm).and(hvi).not(lvtn).not(nwell).and(dnwell).and(areaid_en20).not(poly)
-nsd_5p0v_uhv_zvt   = nd_5p0v_uhv_zvt.or(ncomp.interacting(ns_5p0v_uhv_zvt)).sized(1.um).sized(-1.um).extents.not(ngate_5p0v_uhv_zvt).interacting(met1.extents.covering(ngate_5p0v_uhv_zvt).covering(nd_5p0v_uhv_zvt).covering(ns_5p0v_uhv_zvt).not_covering(ptap)).and(areaid_en20)
+nsd_5p0v_uhv_zvt   = nd_5p0v_uhv_zvt.or(ncomp.interacting(ns_5p0v_uhv_zvt)).sized(1.um).sized(-1.um).extents.not(ngate_5p0v_uhv_zvt).interacting(met1.extents.covering(ngate_5p0v_uhv_zvt).covering(nd_5p0v_uhv_zvt).covering(ns_5p0v_uhv_zvt).not_covering(tap.and(psdm))).and(areaid_en20)
 
 # Pass NMOS transistor
 ngate_pass = ngate.not(hvtp).not(ncm).not(hvi).not(lvtn).not(nwell).not(dnwell).not(ldntm).and(areaid_ce).interacting(poly_model.texts("sky130_fd_pr__special_nfet_pass"))
@@ -912,7 +912,7 @@ logger.info("Starting NPN layers DERIVATIONS")
 
 # NPN general nodes DERIVATIONS
 npn_e = ncomp.inside(dnwell).interacting(npnid)
-npn_b = ptap.inside(dnwell).interacting(npnid)
+npn_b = tap.inside(psdm).inside(dnwell).interacting(npnid)
 npn_c = ntap.inside(dnwell).interacting(npnid)
 
 # 5V NPN with emitter size of 1umx1um nodes DERIVATIONS
@@ -939,7 +939,7 @@ logger.info("Starting PNP layers DERIVATIONS")
 # PNP general nodes DERIVATIONS
 pnp_e = pcomp.inside(nwell).interacting(pnpid)
 pnp_b = ntap.interacting(pnpid)
-pnp_c = ptap.interacting(pnpid)
+pnp_c = tap.inside(psdm).interacting(pnpid)
 
 # 5V PNP with emitter size of 0.68umx0.68um DERIVATIONS
 pnp_5v0_0p68x0p68_e = pnp_e.with_area(0.3364.um, 0.6084.um).interacting(pnp_e.edges.with_length(0.58.um, 0.78.um))
@@ -960,19 +960,19 @@ logger.info("Starting DIODE DERIVATIONS")
 
 # 5V N+ diffusion diode
 ndiff_5v0_terminal_n = ncomp.not(hvtp).not(hvi).not(lvtn).outside(dnwell).interacting(areaid_de)
-ndiff_5v0_terminal_p = ptap.holes.interacting(ndiff_5v0_terminal_n)
+ndiff_5v0_terminal_p = tap.and(psdm).holes.interacting(ndiff_5v0_terminal_n)
 
 # 5V N+ diffusion diode low threshold voltage
 ndiff_5v0_lvt_terminal_n = ncomp.not(hvtp).not(hvi).and(lvtn).outside(dnwell).interacting(areaid_de)
-ndiff_5v0_lvt_terminal_p = ptap.holes.interacting(ndiff_5v0_lvt_terminal_n)
+ndiff_5v0_lvt_terminal_p = tap.and(psdm).holes.interacting(ndiff_5v0_lvt_terminal_n)
 
 # 5V N+ diffusion diode native threshold voltage
 ndiff_5v0_nvt_terminal_n = ncomp.not(hvtp).and(hvi).and(lvtn).outside(dnwell).interacting(areaid_de)
-ndiff_5v0_nvt_terminal_p = ptap.holes.interacting(ndiff_5v0_nvt_terminal_n)
+ndiff_5v0_nvt_terminal_p = tap.and(psdm).holes.interacting(ndiff_5v0_nvt_terminal_n)
 
 # 11V N+ diffusion diode
 ndiff_11v0_terminal_n = ncomp.not(hvtp).and(hvi).not(lvtn).outside(dnwell).interacting(areaid_de).not_interacting(areaid_ed)
-ndiff_11v0_terminal_p = ptap.holes.interacting(ndiff_11v0_terminal_n)
+ndiff_11v0_terminal_p = tap.and(psdm).holes.interacting(ndiff_11v0_terminal_n)
 
 # 5V P+ diffusion diode
 pdiff_5v0_terminal_n = pcomp.not(hvtp).not(hvi).not(lvtn).outside(dnwell).interacting(areaid_de)
@@ -1011,7 +1011,7 @@ logger.info("Starting PHOTODIODE DERIVATIONS")
 
 # Photodiode
 photodiode_n = tap.and(nsdm).and(nwell).and(dnwell).interacting(areaid_po)
-photodiode_p = ptap.holes.interacting(photodiode_n)
+photodiode_p = tap.and(psdm).holes.interacting(photodiode_n)
 
 
 #================================
@@ -1138,17 +1138,17 @@ logger.info("Starting VARACTOR DERIVATIONS")
 # Low threshold voltage varactor
 varactor_gate_lvt = poly.interacting(poly.and(tap).and(nsdm).not(hvtp).not(ncm).not(hvi).and(nwell).not(dnwell))
 varactor_nsd_lvt  = tap.and(nsdm).not(hvtp).not(ncm).not(hvi).and(nwell).not(dnwell).interacting(varactor_gate_lvt).not(diff_res)
-varactor_bulk_lvt = ptap.holes.interacting(varactor_gate_lvt)
+varactor_bulk_lvt = tap.and(psdm).holes.interacting(varactor_gate_lvt)
 
 # High threshold voltage varactor
 varactor_gate_hvt = poly.interacting(poly.and(tap).and(nsdm).and(hvtp).not(ncm).not(hvi).and(nwell).not(dnwell))
 varactor_nsd_hvt  = tap.and(nsdm).and(hvtp).not(ncm).not(hvi).and(nwell).not(dnwell).interacting(varactor_gate_hvt).not(diff_res)
-varactor_bulk_hvt = ptap.holes.interacting(varactor_gate_hvt)
+varactor_bulk_hvt = tap.and(psdm).holes.interacting(varactor_gate_hvt)
 
 # High voltage varactor
 varactor_gate_hv  = poly.interacting(poly.and(tap).and(nsdm).not(hvtp).not(ncm).and(hvi).and(lvtn).and(nwell).not(dnwell))
 varactor_nsd_hv   = tap.and(nsdm).not(hvtp).not(ncm).and(hvi).and(lvtn).and(nwell).not(dnwell).interacting(varactor_gate_hvt).not(diff_res)
-varactor_bulk_hv  = ptap.holes.interacting(varactor_gate_hv)
+varactor_bulk_hv  = tap.and(psdm).holes.interacting(varactor_gate_hv)
 
 
 #==================================
