@@ -87,11 +87,7 @@ def main():
             print("The script must be given a netlist file or a path to be able to run LVS")
             exit()
 
-        s = subprocess.run(f"klayout -b -r sky130.lvs -rd input={path} -rd report={file_name[0]}.lvsdb -rd schematic={args['--net']} -rd target_netlist=extracted_netlist_{file_name[0]}.cir -rd thr={workers_count} {switches}".split(" "), stderr=subprocess.PIPE)
-        if "ERROR" in s.stderr.decode(encoding='UTF-8',errors='strict'):
-            exit(1)
-        else:
-            exit(0)
+        subprocess.check_call(f"klayout -b -r {pdk_root}/{pdk}/sky130.lvs -rd input={path} -rd report={file_name[0]}.lvsdb -rd schematic={args['--net']} -rd target_netlist=extracted_netlist_{file_name[0]}.cir -rd thr={workers_count} {switches}", shell=True)
 
     else:
         print("The script must be given a layout file or a path to be able to run LVS")

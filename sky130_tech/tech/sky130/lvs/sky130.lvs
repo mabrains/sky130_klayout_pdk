@@ -4570,7 +4570,7 @@ if ! compare
   logger.info("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
   logger.error("ERROR : Netlists don't match")
   logger.info("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-  STDERR.puts "ERROR : Netlists don't match"
+  raise "ERROR : Netlists don't match"
 else
   logger.info("==========================================")
   logger.info("INFO : Congratulations! Netlists match.")

@@ -31,17 +31,17 @@ all: test_lvs_main test_lvs_collective test_lvs_connectivity
 
 .ONESHELL:
 test_lvs_main_gha_%:
-	@cd $(Testing_DIR)/..
+	@cd $(Testing_DIR)
 	@file=`find . -iname $*.gds`
-	@net="$${file//'./testing/testcases/'/}"; net="$${net//fixed_devices/}";
-	@if python3 run_lvs.py --design=$$file --net=$${net//.gds/.cdl} ; then exit 0; \
+	@net="$${file//'./testcases/'/}"; net="$${net//fixed_devices/}";
+	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$$file --net=$${net//.gds/.cdl} ; then exit 0; \
 		else python3 regression_result.py --db=$${file//.gds/.lvsdb} ; fi
-	@if python3 run_lvs.py --design=$${file//.gds/_dim_fail.gds} --net=$${net//.gds/_dim_fail.cdl} ; then exit 1; \
-		else python3 regression_result.py --db=$${file//.gds/_dim_fail.lvsdb} ; fi
-	@if python3 run_lvs.py --design=$${file//.gds/_lyr_fail.gds} --net=$${net//.gds/_lyr_fail.cdl} ; then exit 1; \
-		else python3 regression_result.py --db=$${file//.gds/_lyr_fail.lvsdb} ; fi
-	@if python3 run_lvs.py --design=$${file//.gds/_net_fail.gds} --net=$${net//.gds/_net_fail.cdl} ; then exit 1; \
-		else python3 regression_result.py --db=$${file//.gds/_net_fail.lvsdb} ; fi
+#	@if python3 run_lvs.py --design=$${file//.gds/_dim_fail.gds} --net=$${net//.gds/_dim_fail.cdl} ; then exit 1; \
+#		else python3 regression_result.py --db=$${file//.gds/_dim_fail.lvsdb} ; fi
+#	@if python3 run_lvs.py --design=$${file//.gds/_lyr_fail.gds} --net=$${net//.gds/_lyr_fail.cdl} ; then exit 1; \
+#		else python3 regression_result.py --db=$${file//.gds/_lyr_fail.lvsdb} ; fi
+#	@if python3 run_lvs.py --design=$${file//.gds/_net_fail.gds} --net=$${net//.gds/_net_fail.cdl} ; then exit 1; \
+#		else python3 regression_result.py --db=$${file//.gds/_net_fail.lvsdb} ; fi
 
 .ONESHELL:
 test_lvs_main: 

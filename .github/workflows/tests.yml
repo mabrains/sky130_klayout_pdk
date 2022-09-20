@@ -35,6 +35,7 @@ jobs:
         run: |
           cd sky130_tech/tech/sky130/lvs/testing
           main_files=`echo '[' ; ls testcases/*.gds --format=commas|sed -e 's/^/\"/'|sed -e 's/,$/\",/'|sed -e 's/\([^,]\)$/\1\"\]/'|sed -e 's/, /\", \"/g'`
+          main_files="${main_files//'testcases/'/}"; main_files="${main_files//'fixed_devices/'/}"; main_files="${main_files//'.gds'/}";
           main_files=`echo $main_files | jq -c .`
           echo $main_files
           echo "::set-output name=main_files::$main_files"
@@ -50,6 +51,8 @@ jobs:
     name: ${{ matrix.type }} | ${{ matrix.test }} ${{ matrix.list }}
     env:
       IMAGE: ghcr.io/mabrains/sky130_klayout_pdk/test
+      PDK_ROOT: /wrk/sky130_tech/tech/sky130
+      PDK: lvs
     steps:
       - uses: actions/checkout@v3
       - name: Build container image
@@ -71,7 +74,7 @@ jobs:
         run: >
           docker run --rm
           -v $(pwd):/wrk -w /wrk/sky130_tech/tech/sky130/lvs/testing
-          -e PDK_ROOT="/wrk/tech/sky130"
+          -e PDK_ROOT=/wrk/sky130_tech/tech/sky130
           -e PDK=lvs
           "$IMAGE"
           make test_${{ matrix.type }}_${{ matrix.test }}_gha_${{ matrix.list }}
