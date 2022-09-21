@@ -42,8 +42,6 @@ def main():
 
     with open(args["--db"], 'r') as f:
         for line in f:
-            if "lyr_fail" in line:
-                raise ValueError('Error: Found false negative case')
             if "H(" in line:
                 netlist = True
             if "Z(" in line:
@@ -53,7 +51,7 @@ def main():
                 if "D(" in line:
                     device_num = line.replace("  D(", "").strip("\n").split(" ")[0]
                 if "   I(" in line:
-                    if "fail" not in line:
+                    if "FAIL" not in line:
                         circuits_table.append([device_num,"1"])
                     else:
                         circuits_table.append([device_num,"0"])
@@ -61,10 +59,15 @@ def main():
                 if "D(" in line:
                     results_table.append(line.replace("   D(", "").strip(")\n").split(" ")[1:])
 
-    results_table = Sort([subl for subl in results_table if subl[0] != '()'])
+    results_table = [[int(x) for x in lst if x != '()'] for lst in results_table]
+    circuits_table = [[int(x) for x in lst if x != '()'] for lst in circuits_table]
+
+    results_table = Sort([subl for subl in results_table if subl[0] != 0])
 
     if results_table == circuits_table:
+        logging.info("===================================================")
         logging.info("Congratualtions! All cases have passed successfully")
+        logging.info("===================================================")
     else:
         for i, check in enumerate(results_table):
             if int(circuits_table[i][1]) > int(check[1]):

@@ -356,7 +356,7 @@ class Custom4TerminalExtractor < RBA::GenericDeviceExtractor
       terminals  = interface_edges.extended_out(1).merged
       terminals2 = marker_edges2.extended_out(1).merged
       
-      if terminals.size > 1
+      if (terminals.size > 1) and (terminals2.size > 0)
 
         device = create_device
         define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_S, 0,   terminals[0]);
@@ -609,7 +609,7 @@ pwell_label     = labels(64 ,59)
 tap_label       = labels(65 , 5)
 diff_label      = labels(65 , 6)
 poly_label      = labels(66 , 5)
-poly_model      = labels(66 ,15)
+poly_model      = labels(66 ,83)
 li_label        = labels(67 , 5)
 met1_label      = labels(68 , 5)
 met2_label      = labels(69 , 5)
@@ -1552,229 +1552,229 @@ gate_g5v0d10v5 = tgate.not(hvtp).not(ncm).and(hvi).not(lvtn).not(dnwell).not(ldn
 #===== DIMENSIONS ======
 
 # RF MOS gate with multiplier of 2 width of 1.65um and length of 0.15um
-diff_02W1p65L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.16.um, 0.34.um).interacting(tgate.edges.with_length(1.6.um, 1.7.um))), 2, 2)
+diff_02W1p65L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.2296.um, 0.2656.um).interacting(tgate.edges.with_length(1.64.um, 1.66.um))), 2, 2)
 
 # RF MOS gate with multiplier of 2 width of 1.65um and length of 0.18um
-diff_02W1p65L0p18 = diff.covering(tgate.interacting(tgate.with_area(0.208.um, 0.391.um).interacting(tgate.edges.with_length(1.6.um, 1.7.um))), 2, 2)
+diff_02W1p65L0p18 = diff.covering(tgate.interacting(tgate.with_area(0.2788.um, 0.3154.um).interacting(tgate.edges.with_length(1.64.um, 1.66.um))), 2, 2)
 
 # RF MOS gate with multiplier of 2 width of 1.65um and length of 0.25um
-diff_02W1p65L0p25 = diff.covering(tgate.interacting(tgate.with_area(0.32.um, 0.51.um).interacting(tgate.edges.with_length(1.6.um, 1.7.um))), 2, 2)
+diff_02W1p65L0p25 = diff.covering(tgate.interacting(tgate.with_area(0.3936.um, 0.4316.um).interacting(tgate.edges.with_length(1.64.um, 1.66.um))), 2, 2)
 
 # RF MOS gate with multiplier of 2 width of 3.0um and length of 0.15um
-diff_02W3p00L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.295.um, 0.61.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 2, 2)
+diff_02W3p00L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.4186.um, 0.4816.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 2, 2)
 
 # RF MOS gate with multiplier of 2 width of 3.0um and length of 0.18um
-diff_02W3p00L0p18 = diff.covering(tgate.interacting(tgate.with_area(0.3835.um, 0.7015.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 2, 2)
+diff_02W3p00L0p18 = diff.covering(tgate.interacting(tgate.with_area(0.5083.um, 0.5719.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 2, 2)
 
 # RF MOS gate with multiplier of 2 width of 3.0um and length of 0.25um
-diff_02W3p00L0p25 = diff.covering(tgate.interacting(tgate.with_area(0.59.um, 0.915.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 2, 2)
+diff_02W3p00L0p25 = diff.covering(tgate.interacting(tgate.with_area(0.7176.um, 0.7826.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 2, 2)
 
 # RF MOS gate with multiplier of 2 width of 5.0um and length of 0.15um
-diff_02W5p00L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.495.um, 1.01.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 2, 2)
+diff_02W5p00L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.6986.um, 0.8016.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 2, 2)
 
 # RF MOS gate with multiplier of 2 width of 5.0um and length of 0.18um
-diff_02W5p00L0p18 = diff.covering(tgate.interacting(tgate.with_area(0.6435.um, 1.1615.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 2, 2)
+diff_02W5p00L0p18 = diff.covering(tgate.interacting(tgate.with_area(0.8483.um, 0.9519.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 2, 2)
 
 # RF MOS gate with multiplier of 2 width of 5.0um and length of 0.25um
-diff_02W5p00L0p25 = diff.covering(tgate.interacting(tgate.with_area(0.99.um, 1.515.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 2, 2)
+diff_02W5p00L0p25 = diff.covering(tgate.interacting(tgate.with_area(1.1976.um, 1.3026.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 2, 2)
 
 # RF MOS gate with multiplier of 4 width of 1.65um and length of 0.15um
-diff_04W1p65L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.16.um, 0.34.um).interacting(tgate.edges.with_length(1.6.um, 1.7.um))), 4, 4)
+diff_04W1p65L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.2296.um, 0.2656.um).interacting(tgate.edges.with_length(1.64.um, 1.66.um))), 4, 4)
 
 # RF MOS gate with multiplier of 4 width of 1.65um and length of 0.18um
-diff_04W1p65L0p18 = diff.covering(tgate.interacting(tgate.with_area(0.208.um, 0.391.um).interacting(tgate.edges.with_length(1.6.um, 1.7.um))), 4, 4)
+diff_04W1p65L0p18 = diff.covering(tgate.interacting(tgate.with_area(0.2788.um, 0.3154.um).interacting(tgate.edges.with_length(1.64.um, 1.66.um))), 4, 4)
 
 # RF MOS gate with multiplier of 4 width of 1.65um and length of 0.25um
-diff_04W1p65L0p25 = diff.covering(tgate.interacting(tgate.with_area(0.32.um, 0.51.um).interacting(tgate.edges.with_length(1.6.um, 1.7.um))), 4, 4)
+diff_04W1p65L0p25 = diff.covering(tgate.interacting(tgate.with_area(0.3936.um, 0.4316.um).interacting(tgate.edges.with_length(1.64.um, 1.66.um))), 4, 4)
 
 # RF MOS gate with multiplier of 4 width of 3.0um and length of 0.15um
-diff_04W3p00L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.295.um, 0.61.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 4, 4)
+diff_04W3p00L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.4186.um, 0.4816.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 4, 4)
 
 # RF MOS gate with multiplier of 4 width of 3.0um and length of 0.18um
-diff_04W3p00L0p18 = diff.covering(tgate.interacting(tgate.with_area(0.3835.um, 0.7015.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 4, 4)
+diff_04W3p00L0p18 = diff.covering(tgate.interacting(tgate.with_area(0.5083.um, 0.5719.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 4, 4)
 
 # RF MOS gate with multiplier of 4 width of 3.0um and length of 0.25um
-diff_04W3p00L0p25 = diff.covering(tgate.interacting(tgate.with_area(0.59.um, 0.915.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 4, 4)
+diff_04W3p00L0p25 = diff.covering(tgate.interacting(tgate.with_area(0.7176.um, 0.7826.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 4, 4)
 
 # RF MOS gate with multiplier of 4 width of 5.0um and length of 0.15um
-diff_04W5p00L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.495.um, 1.01.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 4, 4)
+diff_04W5p00L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.6986.um, 0.8016.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 4, 4)
 
 # RF MOS gate with multiplier of 4 width of 5.0um and length of 0.18um
-diff_04W5p00L0p18 = diff.covering(tgate.interacting(tgate.with_area(0.6435.um, 1.1615.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 4, 4)
+diff_04W5p00L0p18 = diff.covering(tgate.interacting(tgate.with_area(0.8483.um, 0.9519.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 4, 4)
 
 # RF MOS gate with multiplier of 4 width of 5.0um and length of 0.25um
-diff_04W5p00L0p25 = diff.covering(tgate.interacting(tgate.with_area(0.99.um, 1.515.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 4, 4)
+diff_04W5p00L0p25 = diff.covering(tgate.interacting(tgate.with_area(1.1976.um, 1.3026.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 4, 4)
 
 # RF MOS_bM gate with multiplier of 2 width of 1.65um and length of 0.15um
-diff_02W1p65L0p15_bM = diff.covering(tgate.interacting(tgate.with_area(0.16.um, 0.34.um).interacting(tgate.edges.with_length(1.6.um, 1.7.um))), 2+2, 2+2)
+diff_02W1p65L0p15_bM = diff.covering(tgate.interacting(tgate.with_area(0.2296.um, 0.2656.um).interacting(tgate.edges.with_length(1.64.um, 1.66.um))), 2+2, 2+2)
 
 # RF MOS_bM gate with multiplier of 2 width of 1.65um and length of 0.18um
-diff_02W1p65L0p18_bM = diff.covering(tgate.interacting(tgate.with_area(0.208.um, 0.391.um).interacting(tgate.edges.with_length(1.6.um, 1.7.um))), 2+2, 2+2)
+diff_02W1p65L0p18_bM = diff.covering(tgate.interacting(tgate.with_area(0.2788.um, 0.3154.um).interacting(tgate.edges.with_length(1.64.um, 1.66.um))), 2+2, 2+2)
 
 # RF MOS_bM gate with multiplier of 2 width of 1.65um and length of 0.25um
-diff_02W1p65L0p25_bM = diff.covering(tgate.interacting(tgate.with_area(0.32.um, 0.51.um).interacting(tgate.edges.with_length(1.6.um, 1.7.um))), 2+2, 2+2)
+diff_02W1p65L0p25_bM = diff.covering(tgate.interacting(tgate.with_area(0.3936.um, 0.4316.um).interacting(tgate.edges.with_length(1.64.um, 1.66.um))), 2+2, 2+2)
 
 # RF MOS_bM gate with multiplier of 2 width of 3.0um and length of 0.15um
-diff_02W3p00L0p15_bM = diff.covering(tgate.interacting(tgate.with_area(0.295.um, 0.61.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 2+2, 2+2)
+diff_02W3p00L0p15_bM = diff.covering(tgate.interacting(tgate.with_area(0.4186.um, 0.4816.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 2+2, 2+2)
 
 # RF MOS_bM gate with multiplier of 2 width of 3.0um and length of 0.18um
-diff_02W3p00L0p18_bM = diff.covering(tgate.interacting(tgate.with_area(0.3835.um, 0.7015.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 2+2, 2+2)
+diff_02W3p00L0p18_bM = diff.covering(tgate.interacting(tgate.with_area(0.5083.um, 0.5719.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 2+2, 2+2)
 
 # RF MOS_bM gate with multiplier of 2 width of 3.0um and length of 0.25um
-diff_02W3p00L0p25_bM = diff.covering(tgate.interacting(tgate.with_area(0.59.um, 0.915.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 2+2, 2+2)
+diff_02W3p00L0p25_bM = diff.covering(tgate.interacting(tgate.with_area(0.7176.um, 0.7826.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 2+2, 2+2)
 
 # RF MOS_bM gate with multiplier of 2 width of 5.0um and length of 0.15um
-diff_02W5p00L0p15_bM = diff.covering(tgate.interacting(tgate.with_area(0.495.um, 1.01.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 2+2, 2+2)
+diff_02W5p00L0p15_bM = diff.covering(tgate.interacting(tgate.with_area(0.6986.um, 0.8016.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 2+2, 2+2)
 
 # RF MOS_bM gate with multiplier of 2 width of 5.0um and length of 0.18um
-diff_02W5p00L0p18_bM = diff.covering(tgate.interacting(tgate.with_area(0.6435.um, 1.1615.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 2+2, 2+2)
+diff_02W5p00L0p18_bM = diff.covering(tgate.interacting(tgate.with_area(0.8483.um, 0.9519.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 2+2, 2+2)
 
 # RF MOS_bM gate with multiplier of 2 width of 5.0um and length of 0.25um
-diff_02W5p00L0p25_bM = diff.covering(tgate.interacting(tgate.with_area(0.99.um, 1.515.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 2+2, 2+2)
+diff_02W5p00L0p25_bM = diff.covering(tgate.interacting(tgate.with_area(1.1976.um, 1.3026.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 2+2, 2+2)
 
 # RF MOS_bM gate with multiplier of 4 width of 1.65um and length of 0.15um
-diff_04W1p65L0p15_bM = diff.covering(tgate.interacting(tgate.with_area(0.16.um, 0.34.um).interacting(tgate.edges.with_length(1.6.um, 1.7.um))), 4+2, 4+2)
+diff_04W1p65L0p15_bM = diff.covering(tgate.interacting(tgate.with_area(0.2296.um, 0.2656.um).interacting(tgate.edges.with_length(1.64.um, 1.66.um))), 4+2, 4+2)
 
 # RF MOS_bM gate with multiplier of 4 width of 1.65um and length of 0.18um
-diff_04W1p65L0p18_bM = diff.covering(tgate.interacting(tgate.with_area(0.208.um, 0.391.um).interacting(tgate.edges.with_length(1.6.um, 1.7.um))), 4+2, 4+2)
+diff_04W1p65L0p18_bM = diff.covering(tgate.interacting(tgate.with_area(0.2788.um, 0.3154.um).interacting(tgate.edges.with_length(1.64.um, 1.66.um))), 4+2, 4+2)
 
 # RF MOS_bM gate with multiplier of 4 width of 1.65um and length of 0.25um
-diff_04W1p65L0p25_bM = diff.covering(tgate.interacting(tgate.with_area(0.32.um, 0.51.um).interacting(tgate.edges.with_length(1.6.um, 1.7.um))), 4+2, 4+2)
+diff_04W1p65L0p25_bM = diff.covering(tgate.interacting(tgate.with_area(0.3936.um, 0.4316.um).interacting(tgate.edges.with_length(1.64.um, 1.66.um))), 4+2, 4+2)
 
 # RF MOS_bM gate with multiplier of 4 width of 3.0um and length of 0.15um
-diff_04W3p00L0p15_bM = diff.covering(tgate.interacting(tgate.with_area(0.295.um, 0.61.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 4+2, 4+2)
+diff_04W3p00L0p15_bM = diff.covering(tgate.interacting(tgate.with_area(0.4186.um, 0.4816.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 4+2, 4+2)
 
 # RF MOS_bM gate with multiplier of 4 width of 3.0um and length of 0.18um
-diff_04W3p00L0p18_bM = diff.covering(tgate.interacting(tgate.with_area(0.3835.um, 0.7015.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 4+2, 4+2)
+diff_04W3p00L0p18_bM = diff.covering(tgate.interacting(tgate.with_area(0.5083.um, 0.5719.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 4+2, 4+2)
 
 # RF MOS_bM gate with multiplier of 4 width of 3.0um and length of 0.25um
-diff_04W3p00L0p25_bM = diff.covering(tgate.interacting(tgate.with_area(0.59.um, 0.915.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 4+2, 4+2)
+diff_04W3p00L0p25_bM = diff.covering(tgate.interacting(tgate.with_area(0.7176.um, 0.7826.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 4+2, 4+2)
 
 # RF MOS_bM gate with multiplier of 4 width of 5.0um and length of 0.15um
-diff_04W5p00L0p15_bM = diff.covering(tgate.interacting(tgate.with_area(0.495.um, 1.01.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 4+2, 4+2)
+diff_04W5p00L0p15_bM = diff.covering(tgate.interacting(tgate.with_area(0.6986.um, 0.8016.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 4+2, 4+2)
 
 # RF MOS_bM gate with multiplier of 4 width of 5.0um and length of 0.18um
-diff_04W5p00L0p18_bM = diff.covering(tgate.interacting(tgate.with_area(0.6435.um, 1.1615.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 4+2, 4+2)
+diff_04W5p00L0p18_bM = diff.covering(tgate.interacting(tgate.with_area(0.8483.um, 0.9519.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 4+2, 4+2)
 
 # RF MOS_bM gate with multiplier of 4 width of 5.0um and length of 0.25um
-diff_04W5p00L0p25_bM = diff.covering(tgate.interacting(tgate.with_area(0.99.um, 1.515.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 4+2, 4+2)
+diff_04W5p00L0p25_bM = diff.covering(tgate.interacting(tgate.with_area(1.1976.um, 1.3026.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 4+2, 4+2)
 
 # RF MOS gate with multiplier of 2 width of 0.42um and length of 0.15um
-diff_02W0p42L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.037.um, 0.094.um).interacting(tgate.edges.with_length(0.37.um, 0.47.um))), 2, 2)
+diff_02W0p42L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.0574.um, 0.0688.um).interacting(tgate.edges.with_length(0.41.um, 0.43.um))), 2, 2)
 
 # RF MOS gate with multiplier of 2 width of 0.84um and length of 0.15um
-diff_02W0p84L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.079.um, 0.178.um).interacting(tgate.edges.with_length(0.79.um, 0.89.um))), 2, 2)
+diff_02W0p84L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.1162.um, 0.136.um).interacting(tgate.edges.with_length(0.83.um, 0.85.um))), 2, 2)
 
 # RF MOS gate with multiplier of 4 width of 0.42um and length of 0.15um
-diff_04W0p42L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.037.um, 0.094.um).interacting(tgate.edges.with_length(0.37.um, 0.47.um))), 4, 4)
+diff_04W0p42L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.0574.um, 0.0688.um).interacting(tgate.edges.with_length(0.41.um, 0.43.um))), 4, 4)
 
 # RF MOS gate with multiplier of 4 width of 0.84um and length of 0.15um
-diff_04W0p84L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.079.um, 0.178.um).interacting(tgate.edges.with_length(0.79.um, 0.89.um))), 4, 4)
+diff_04W0p84L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.1162.um, 0.136.um).interacting(tgate.edges.with_length(0.83.um, 0.85.um))), 4, 4)
 
 # RF MOS gate with multiplier of 6 width of 0.42um and length of 0.15um
-diff_06W0p42L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.037.um, 0.094.um).interacting(tgate.edges.with_length(0.37.um, 0.47.um))), 6, 6)
+diff_06W0p42L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.0574.um, 0.0688.um).interacting(tgate.edges.with_length(0.41.um, 0.43.um))), 6, 6)
 
 # RF MOS gate with multiplier of 6 width of 0.84um and length of 0.15um
-diff_06W0p84L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.079.um, 0.178.um).interacting(tgate.edges.with_length(0.79.um, 0.89.um))), 6, 6)
+diff_06W0p84L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.1162.um, 0.136.um).interacting(tgate.edges.with_length(0.83.um, 0.85.um))), 6, 6)
 
 # RF MOS gate with multiplier of 6 width of 1.65um and length of 0.15um
-diff_06W1p65L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.16.um, 0.34.um).interacting(tgate.edges.with_length(1.6.um, 1.7.um))), 6, 6)
+diff_06W1p65L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.2296.um, 0.2656.um).interacting(tgate.edges.with_length(1.64.um, 1.66.um))), 6, 6)
 
 # RF MOS gate with multiplier of 6 width of 3.0um and length of 0.15um
-diff_06W3p00L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.295.um, 0.61.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 6, 6)
+diff_06W3p00L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.4186.um, 0.4816.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 6, 6)
 
 # RF MOS gate with multiplier of 8 width of 0.42um and length of 0.15um
-diff_08W0p42L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.037.um, 0.094.um).interacting(tgate.edges.with_length(0.37.um, 0.47.um))), 8, 8)
+diff_08W0p42L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.0574.um, 0.0688.um).interacting(tgate.edges.with_length(0.41.um, 0.43.um))), 8, 8)
 
 # RF MOS gate with multiplier of 8 width of 0.84um and length of 0.15um
-diff_08W0p84L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.079.um, 0.178.um).interacting(tgate.edges.with_length(0.79.um, 0.89.um))), 8, 8)
+diff_08W0p84L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.1162.um, 0.136.um).interacting(tgate.edges.with_length(0.83.um, 0.85.um))), 8, 8)
 
 # RF MOS gate with multiplier of 8 width of 1.65um and length of 0.15um
-diff_08W1p65L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.16.um, 0.34.um).interacting(tgate.edges.with_length(1.6.um, 1.7.um))), 8, 8)
+diff_08W1p65L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.2296.um, 0.2656.um).interacting(tgate.edges.with_length(1.64.um, 1.66.um))), 8, 8)
 
 # RF MOS gate with multiplier of 8 width of 3.0um and length of 0.15um
-diff_08W3p00L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.295.um, 0.61.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 8, 8)
+diff_08W3p00L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.4186.um, 0.4816.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 8, 8)
 
 # RF MOS gate with multiplier of 4 width of 3.0um and length of 0.5um
-diff_04W3p00L0p50 = diff.covering(tgate.interacting(tgate.with_area(1.3275.um, 1.6775.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 4, 4)
+diff_04W3p00L0p50 = diff.covering(tgate.interacting(tgate.with_area(1.4651.um, 1.5351.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 4, 4)
 
 # RF MOS gate with multiplier of 4 width of 5.0um and length of 0.5um
-diff_04W5p00L0p50 = diff.covering(tgate.interacting(tgate.with_area(2.2275.um, 2.7775.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 4, 4)
+diff_04W5p00L0p50 = diff.covering(tgate.interacting(tgate.with_area(2.4451.um, 2.5551.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 4, 4)
 
 # RF MOS gate with multiplier of 4 width of 7.0um and length of 0.5um
-diff_04W7p00L0p50 = diff.covering(tgate.interacting(tgate.with_area(3.1275.um, 3.8775.um).interacting(tgate.edges.with_length(6.95.um, 7.05.um))), 4, 4)
+diff_04W7p00L0p50 = diff.covering(tgate.interacting(tgate.with_area(3.4251.um, 3.5751.um).interacting(tgate.edges.with_length(6.99.um, 7.01.um))), 4, 4)
 
 # RF MOS gate with multiplier of 10 width of 3.0um and length of 0.5um
-diff_10W3p00L0p50 = diff.covering(tgate.interacting(tgate.with_area(1.3275.um, 1.6775.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 10, 10)
+diff_10W3p00L0p50 = diff.covering(tgate.interacting(tgate.with_area(1.4651.um, 1.5351.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 10, 10)
 
 # RF MOS gate with multiplier of 10 width of 5.0um and length of 0.5um
-diff_10W5p00L0p50 = diff.covering(tgate.interacting(tgate.with_area(2.2275.um, 2.7775.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 10, 10)
+diff_10W5p00L0p50 = diff.covering(tgate.interacting(tgate.with_area(2.4451.um, 2.5551.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 10, 10)
 
 # RF MOS gate with multiplier of 10 width of 7.0um and length of 0.5um
-diff_10W7p00L0p50 = diff.covering(tgate.interacting(tgate.with_area(3.1275.um, 3.8775.um).interacting(tgate.edges.with_length(6.95.um, 7.05.um))), 10, 10)
+diff_10W7p00L0p50 = diff.covering(tgate.interacting(tgate.with_area(3.4251.um, 3.5751.um).interacting(tgate.edges.with_length(6.99.um, 7.01.um))), 10, 10)
 
 # RF MOS_bM gate with multiplier of 2 width of 3.0um and length of 0.5um
-diff_02W3p00L0p50_bM = diff.covering(tgate.interacting(tgate.with_area(1.3275.um, 1.6775.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 2+2, 2+2)
+diff_02W3p00L0p50_bM = diff.covering(tgate.interacting(tgate.with_area(1.4651.um, 1.5351.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 2+2, 2+2)
 
 # RF MOS_bM gate with multiplier of 2 width of 5.0um and length of 0.5um
-diff_02W5p00L0p50_bM = diff.covering(tgate.interacting(tgate.with_area(2.2275.um, 2.7775.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 2+2, 2+2)
+diff_02W5p00L0p50_bM = diff.covering(tgate.interacting(tgate.with_area(2.4451.um, 2.5551.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 2+2, 2+2)
 
 # RF MOS_bM gate with multiplier of 4 width of 3.0um and length of 0.5um
-diff_04W3p00L0p50_bM = diff.covering(tgate.interacting(tgate.with_area(1.3275.um, 1.6775.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 4+2, 4+2)
+diff_04W3p00L0p50_bM = diff.covering(tgate.interacting(tgate.with_area(1.4651.um, 1.5351.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 4+2, 4+2)
 
 # RF MOS_bM gate with multiplier of 4 width of 5.0um and length of 0.5um
-diff_04W5p00L0p50_bM = diff.covering(tgate.interacting(tgate.with_area(2.2275.um, 2.7775.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 4+2, 4+2)
+diff_04W5p00L0p50_bM = diff.covering(tgate.interacting(tgate.with_area(2.4451.um, 2.5551.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 4+2, 4+2)
 
 # RF MOS_bM gate with multiplier of 4 width of 7.0um and length of 0.5um
-diff_04W7p00L0p50_bM = diff.covering(tgate.interacting(tgate.with_area(3.1275.um, 3.8775.um).interacting(tgate.edges.with_length(6.95.um, 7.05.um))), 4+2, 4+2)
+diff_04W7p00L0p50_bM = diff.covering(tgate.interacting(tgate.with_area(3.4251.um, 3.5751.um).interacting(tgate.edges.with_length(6.99.um, 7.01.um))), 4+2, 4+2)
 
 # RF MOS_bM gate with multiplier of 10 width of 3.0um and length of 0.5um
-diff_10W3p00L0p50_bM = diff.covering(tgate.interacting(tgate.with_area(1.3275.um, 1.6775.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 10+2, 10+2)
+diff_10W3p00L0p50_bM = diff.covering(tgate.interacting(tgate.with_area(1.4651.um, 1.5351.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 10+2, 10+2)
 
 # RF MOS_bM gate with multiplier of 10 width of 5.0um and length of 0.5um
-diff_10W5p00L0p50_bM = diff.covering(tgate.interacting(tgate.with_area(2.2275.um, 2.7775.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 10+2, 10+2)
+diff_10W5p00L0p50_bM = diff.covering(tgate.interacting(tgate.with_area(2.4451.um, 2.5551.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 10+2, 10+2)
 
 # RF MOS_bM gate with multiplier of 10 width of 7.0um and length of 0.5um
-diff_10W7p00L0p50_bM = diff.covering(tgate.interacting(tgate.with_area(3.1275.um, 3.8775.um).interacting(tgate.edges.with_length(6.95.um, 7.05.um))), 10+2, 10+2)
+diff_10W7p00L0p50_bM = diff.covering(tgate.interacting(tgate.with_area(3.4251.um, 3.5751.um).interacting(tgate.edges.with_length(6.99.um, 7.01.um))), 10+2, 10+2)
 
 # RF MOS gate with multiplier of 2 width of 1.68um and length of 0.15um
-diff_02W1p68L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.163.um, 0.346.um).interacting(tgate.edges.with_length(1.63.um, 1.73.um))), 2, 2)
+diff_02W1p68L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.2338.um, 0.2704.um).interacting(tgate.edges.with_length(1.67.um, 1.69.um))), 2, 2)
 
 # RF MOS gate with multiplier of 2 width of 2.0um and length of 0.15um
-diff_02W2p00L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.195.um, 0.41.um).interacting(tgate.edges.with_length(1.95.um, 2.05.um))), 2, 2)
+diff_02W2p00L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.2786.um, 0.3216.um).interacting(tgate.edges.with_length(1.99.um, 2.01.um))), 2, 2)
 
 # RF MOS gate with multiplier of 4 width of 1.68um and length of 0.15um
-diff_04W1p68L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.163.um, 0.346.um).interacting(tgate.edges.with_length(1.63.um, 1.73.um))), 4, 4)
+diff_04W1p68L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.2338.um, 0.2704.um).interacting(tgate.edges.with_length(1.67.um, 1.69.um))), 4, 4)
 
 # RF MOS gate with multiplier of 4 width of 2.0um and length of 0.15um
-diff_04W2p00L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.195.um, 0.41.um).interacting(tgate.edges.with_length(1.95.um, 2.05.um))), 4, 4)
+diff_04W2p00L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.2786.um, 0.3216.um).interacting(tgate.edges.with_length(1.99.um, 2.01.um))), 4, 4)
 
 # RF MOS gate with multiplier of 6 width of 1.68um and length of 0.15um
-diff_06W1p68L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.163.um, 0.346.um).interacting(tgate.edges.with_length(1.63.um, 1.73.um))), 6, 6)
+diff_06W1p68L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.2338.um, 0.2704.um).interacting(tgate.edges.with_length(1.67.um, 1.69.um))), 6, 6)
 
 # RF MOS gate with multiplier of 6 width of 2.0um and length of 0.15um
-diff_06W2p00L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.195.um, 0.41.um).interacting(tgate.edges.with_length(1.95.um, 2.05.um))), 6, 6)
+diff_06W2p00L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.2786.um, 0.3216.um).interacting(tgate.edges.with_length(1.99.um, 2.01.um))), 6, 6)
 
 # RF MOS gate with multiplier of 8 width of 1.68um and length of 0.15um
-diff_08W1p68L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.163.um, 0.346.um).interacting(tgate.edges.with_length(1.63.um, 1.73.um))), 8, 8)
+diff_08W1p68L0p15 = diff.covering(tgate.interacting(tgate.with_area(0.2338.um, 0.2704.um).interacting(tgate.edges.with_length(1.67.um, 1.69.um))), 8, 8)
 
 # RF MOS gate with multiplier of 2 width of 3.0um and length of 0.35um
-diff_02W3p00L0p35 = diff.covering(tgate.interacting(tgate.with_area(0.885.um, 1.22.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 2, 2)
+diff_02W3p00L0p35 = diff.covering(tgate.interacting(tgate.with_area(1.0166.um, 1.0836.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 2, 2)
 
 # RF MOS gate with multiplier of 2 width of 3.0um and length of 0.5um
-diff_02W3p00L0p50 = diff.covering(tgate.interacting(tgate.with_area(1.3275.um, 1.6775.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 2, 2)
+diff_02W3p00L0p50 = diff.covering(tgate.interacting(tgate.with_area(1.4651.um, 1.5351.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 2, 2)
 
 # RF MOS gate with multiplier of 2 width of 5.0um and length of 0.35um
-diff_02W5p00L0p35 = diff.covering(tgate.interacting(tgate.with_area(1.485.um, 2.02.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 2, 2)
+diff_02W5p00L0p35 = diff.covering(tgate.interacting(tgate.with_area(1.6966.um, 1.8036.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 2, 2)
 
 # RF MOS gate with multiplier of 2 width of 5.0um and length of 0.5um
-diff_02W5p00L0p50 = diff.covering(tgate.interacting(tgate.with_area(2.2275.um, 2.7775.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 2, 2)
+diff_02W5p00L0p50 = diff.covering(tgate.interacting(tgate.with_area(2.4451.um, 2.5551.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 2, 2)
 
 # RF MOS gate with multiplier of 4 width of 3.0um and length of 0.35um
-diff_04W3p00L0p35 = diff.covering(tgate.interacting(tgate.with_area(0.885.um, 1.22.um).interacting(tgate.edges.with_length(2.95.um, 3.05.um))), 4, 4)
+diff_04W3p00L0p35 = diff.covering(tgate.interacting(tgate.with_area(1.0166.um, 1.0836.um).interacting(tgate.edges.with_length(2.99.um, 3.01.um))), 4, 4)
 
 # RF MOS gate with multiplier of 4 width of 5.0um and length of 0.35um
-diff_04W5p00L0p35 = diff.covering(tgate.interacting(tgate.with_area(1.485.um, 2.02.um).interacting(tgate.edges.with_length(4.95.um, 5.05.um))), 4, 4)
+diff_04W5p00L0p35 = diff.covering(tgate.interacting(tgate.with_area(1.6966.um, 1.8036.um).interacting(tgate.edges.with_length(4.99.um, 5.01.um))), 4, 4)
 
 
 #===== TYPES ======
@@ -2748,9 +2748,11 @@ logger.info("Starting LVS MIMCAP CONNECTIONS")
 
 # mim on metal3
 connect(capm , via3)
+connect(met3_ncap , met3_con)
 
 # mim on metal4
 connect(capm2, via4)
+connect(met4_ncap , met4_con)
 
 
 #================================
@@ -3166,6 +3168,8 @@ logger.info("Starting PHOTODIODE EXTRACTION")
 # Photodiode
 logger.info("Extracting Photodiode")
 extract_devices(diode("sky130_fd_pr__photodiode"), { "N" => photodiode_n , "P" => photodiode_p})
+ignore_parameter("sky130_fd_pr__photodiode","A")
+ignore_parameter("sky130_fd_pr__photodiode","p")
 
 
 #================================
@@ -3309,14 +3313,12 @@ logger.info("Starting MIMCAP EXTRACTION")
 
 # sky130_fd_pr__model__cap_mim capacitor
 logger.info("Extracting sky130_fd_pr__model__cap_mim device")
-extract_devices(capacitor("sky130_fd_pr__model__cap_mim", 2e-15, MIMCap), { "P1" => met3_ncap, "P2" => capm })
-tolerance("sky130_fd_pr__model__cap_mim", "C", :relative => 1)
+extract_devices(capacitor("sky130_fd_pr__model__cap_mim", 2e-15, MIMCap), { "P1" => met3_con, "P2" => capm })
 
 
 # sky130_fd_pr__model__cap_mim_m4 capacitor
 logger.info("Extracting sky130_fd_pr__model__cap_mim_m4 device")
-extract_devices(capacitor("sky130_fd_pr__model__cap_mim_m4", 2e-15, MIMCap), { "P1" => met4_ncap, "P2" => capm2 })
-tolerance("sky130_fd_pr__model__cap_mim_m4", "C", :relative => 1)
+extract_devices(capacitor("sky130_fd_pr__model__cap_mim_m4", 2e-15, MIMCap), { "P1" => met4_con, "P2" => capm2 })
 
 
 
