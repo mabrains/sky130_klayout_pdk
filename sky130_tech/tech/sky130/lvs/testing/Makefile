@@ -20,6 +20,9 @@
 SHELL        := /bin/bash
 Testing_DIR  ?= $(shell pwd)
 run_folder    = $(shell date +'run_%Y_%m_%d_%H_%M')
+CASES 		 := $(wildcard testcases/*.cdl)
+CASES		 += $(wildcard testcases/fixed_devices/*.cdl)
+CONN_CASES	 := $(wildcard connectivity_test/*.cdl)
 
 .DEFAULT_GOAL := all
 
@@ -33,25 +36,27 @@ all: test_lvs_main test_lvs_collective test_lvs_connectivity
 test_lvs_main_gha_%:
 	@cd $(Testing_DIR)
 	@file=`find . -iname $*.gds`
-	@net="$${file//'./testcases/'/}"; net="$${net//fixed_devices/}";
-	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$$file --net=$${net//.gds/.cdl} ; then exit 0; \
-		else python3 regression_result.py --db=$${file//.gds/.lvsdb} ; fi
-#	@if python3 run_lvs.py --design=$${file//.gds/_dim_fail.gds} --net=$${net//.gds/_dim_fail.cdl} ; then exit 1; \
-#		else python3 regression_result.py --db=$${file//.gds/_dim_fail.lvsdb} ; fi
-#	@if python3 run_lvs.py --design=$${file//.gds/_lyr_fail.gds} --net=$${net//.gds/_lyr_fail.cdl} ; then exit 1; \
-#		else python3 regression_result.py --db=$${file//.gds/_lyr_fail.lvsdb} ; fi
-#	@if python3 run_lvs.py --design=$${file//.gds/_net_fail.gds} --net=$${net//.gds/_net_fail.cdl} ; then exit 1; \
-#		else python3 regression_result.py --db=$${file//.gds/_net_fail.lvsdb} ; fi
+	@net="$${file//'./testcases/'/}"; net="$${net//'fixed_devices/'/}";
+	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$$file --net=$${net//.gds/.cdl} ; then echo PASS CASE MATCHED; \
+		else python3 regression_result.py --db=$${file//.gds/.lvsdb} ; fi;
+	@file="$${file//'./testcases/'/'./fail_cases/'}";
+	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$${file//.gds/_dim_fail.gds} --net=$${net//.gds/_dim_fail.cdl} ; then exit 1; \
+		else python3 regression_result.py --db=$${file//.gds/_dim_fail.lvsdb} ; fi
+	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$${file//.gds/_lyr_fail.gds} --net=$${net//.gds/_lyr_fail.cdl} ; then exit 1; \
+		else python3 regression_result.py --db=$${file//.gds/_lyr_fail.lvsdb} ; fi
+	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$${file//.gds/_net_fail.gds} --net=$${net//.gds/_net_fail.cdl} ; then exit 1; \
+		else python3 regression_result.py --db=$${file//.gds/_net_fail.lvsdb} ; fi
 
 .ONESHELL:
-test_lvs_main: 
-	@cd $(Testing_DIR)/..
-	@mkdir -p testing/$(run_folder)
-	@search_dir=`ls testing/testcases/*.gds testing/testcases/fixed_devices/*.gds`
-	@for file in $$search_dir ; do cdl="$${file//'testing/testcases/'/}"; cdl="$${cdl//'fixed_devices/'/}"; \
-	if python3 run_lvs.py --design=$$file --net=$${cdl//.gds/.cdl}  |& tee -a testing/$(run_folder)/main_results.log ; then continue; \
-		else python3 regression_result.py --db=$${file//.gds/.lvsdb} ; fi; done
-	@echo "Congratulations! Testing main lvs is finished successfully"
+%.cdl : %.gds
+	@file="$<"
+	@mkdir -p $(run_folder)/main
+	@device="$${file//'testcases/'/}"; device="$${device//'fixed_devices/'/}"; device="$${device//.gds/}"
+	@$(MAKE) test_lvs_main_gha_$$device |& tee $(run_folder)/main/$$device.log
+
+.ONESHELL:
+test_lvs_main: $(CASES)
+	@echo "Congratulations! Testing main LVS is finished successfully"
 
 #=================================
 # ----- TEST COLLECTIVE LVS ------
@@ -61,23 +66,24 @@ test_lvs_main:
 test_lvs_collective: 
 	@cd $(Testing_DIR)
 	@mkdir -p $(run_folder)
-	@search_dir=`ls collective_test/*.gds`
-	@for file in $$search_dir ; do cdl="$${file//collective_test/}"; \
-	python3 ../run_lvs.py --design=$$file --net=$${cdl//.gds/.cdl}  |& tee -a $(run_folder)/collective_results.log  ; done
-	@echo "Congratulations! Testing collective lvs is finished successfully"
+	@python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=collective_test/collective.gds --net=collective.cdl |& tee -a $(run_folder)/collective_results.log
+	@echo "Congratulations! Testing collective LVS is finished successfully"
 
 #=================================
 # ---- TEST CONNECTIVITY LVS -----
 #=================================
 
+# .ONESHELL:
+# %.cdl : %.gds
+# 	@cd $(Testing_DIR)
+# 	@mkdir -p $(run_folder)
+# 	@file="$<"
+# 	@cdl="$${file//'connectivity_test/'/}";
+# 	@python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$$file --net=$${cdl//.gds/.cdl}  |& tee -a $(run_folder)/connectivity_results.log
+
 .ONESHELL:
-test_lvs_connectivity: 
-	@cd $(Testing_DIR)
-	@mkdir -p $(run_folder)
-	@search_dir=`ls connectivity_test/*.gds`
-	@for file in $$search_dir ; do cdl="$${file//connectivity_test/}"; \
-	python3 ../run_lvs.py --design=$$file --net=$${cdl//.gds/.cdl}  |& tee -a $(run_folder)/connectivity_results.log  ; done
-	@echo "Congratulations! Testing connectivity lvs is finished successfully"
+test_lvs_connectivity: $(CONN_CASES)
+	@echo "Congratulations! Testing connectivity LVS is finished successfully"
 
 #==========================
 # --------- HELP ----------

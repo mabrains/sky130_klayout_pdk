@@ -14,7 +14,7 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-.SUBCKT sky130_fd_pr__diode_pd2nw_11v0
+.SUBCKT sky130_fd_pr__diode_pd2nw_11v0 
 + D0_000 D1_000
 + D0_001 D1_001
 + D0_002 D1_002
