@@ -32,19 +32,24 @@ all: test_lvs_main test_lvs_collective test_lvs_connectivity
 .ONESHELL:
 test_lvs_main_gha_%:
 	@cd $(Testing_DIR)
-	@file=`find . -iname $**.gds`
-	@design="$${file//testcases/}"; design="$${design//fixed_devices/}";
-	@loc="$${file//$$design/}";
-	@if python3 ../run_lvs.py --design=$$loc/$$design --net=$${design//.gds/.cdl} ; then exit 1; \
+	@file=`find . -iname $*.gds`
+	@net="$${file//'./testcases/'/}"; net="$${net//fixed_devices/}";
+	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$$file --net=$${net//.gds/.cdl} ; then exit 0; \
 		else python3 regression_result.py --db=$${file//.gds/.lvsdb} ; fi
+#	@if python3 run_lvs.py --design=$${file//.gds/_dim_fail.gds} --net=$${net//.gds/_dim_fail.cdl} ; then exit 1; \
+#		else python3 regression_result.py --db=$${file//.gds/_dim_fail.lvsdb} ; fi
+#	@if python3 run_lvs.py --design=$${file//.gds/_lyr_fail.gds} --net=$${net//.gds/_lyr_fail.cdl} ; then exit 1; \
+#		else python3 regression_result.py --db=$${file//.gds/_lyr_fail.lvsdb} ; fi
+#	@if python3 run_lvs.py --design=$${file//.gds/_net_fail.gds} --net=$${net//.gds/_net_fail.cdl} ; then exit 1; \
+#		else python3 regression_result.py --db=$${file//.gds/_net_fail.lvsdb} ; fi
 
 .ONESHELL:
 test_lvs_main: 
-	@cd $(Testing_DIR)
-	@mkdir -p $(run_folder)
-	@search_dir=`ls testcases/*.gds testcases/fixed_devices/*.gds`
-	@for file in $$search_dir ; do cdl="$${file//testcases/}"; cdl="$${cdl//fixed_devices/}"; \
-	if python3 ../run_lvs.py --design=$$file --net=$${cdl//.gds/.cdl}  |& tee -a $(run_folder)/main_results.log ; then exit 1; \
+	@cd $(Testing_DIR)/..
+	@mkdir -p testing/$(run_folder)
+	@search_dir=`ls testing/testcases/*.gds testing/testcases/fixed_devices/*.gds`
+	@for file in $$search_dir ; do cdl="$${file//'testing/testcases/'/}"; cdl="$${cdl//'fixed_devices/'/}"; \
+	if python3 run_lvs.py --design=$$file --net=$${cdl//.gds/.cdl}  |& tee -a testing/$(run_folder)/main_results.log ; then continue; \
 		else python3 regression_result.py --db=$${file//.gds/.lvsdb} ; fi; done
 	@echo "Congratulations! Testing main lvs is finished successfully"
 

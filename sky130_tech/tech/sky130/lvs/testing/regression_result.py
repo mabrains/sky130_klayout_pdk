@@ -14,7 +14,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-"""Run Skywater 130nm LVS.
+"""Run Skywater 130nm LVS regression results.
 
 Usage: 
     regression_result.py (--help| -h)
@@ -69,12 +69,12 @@ def main():
         for i, check in enumerate(results_table):
             if int(circuits_table[i][1]) > int(check[1]):
                 logging.error('Error: Found false postive case')
-                raise ValueError('Error: Found false postive case')
             elif int(circuits_table[i][1]) < int(check[1]):
                 logging.error('Error: Found false negative case')
-                raise ValueError('Error: Found false negative case')
             else:
-                logging.info(f"Device number {check[0]} has passed")
+                logging.error(f"Device number {check[0]} has matched")
+
+        raise ValueError('Error: Found cases did not behave as expected')
 
 
 if __name__ == "__main__":
