@@ -1,0 +1,21 @@
+ 
+* Copyright 2022 Mabrains
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Affero General Public License as published
+* by the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU Affero General Public License for more details.
+* 
+* You should have received a copy of the GNU Affero General Public License
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+.SUBCKT sky130_fd_pr__rf_pfet_01v8_aF06W2p00L0p15 DRAIN GATE SOURCE BULK
+
+Mx DRAIN GATE SOURCE BULK sky130_fd_pr__rf_pfet_01v8_aF06W2p00L0p15 W=12.0u L=0.15u nf=6 m=1 ad=0.29p as=0.29p pd=3.74u ps=3.74u nrd=0.145 nrs=0.145 sa=0 sb=0 sd=0
+
+.ENDS 

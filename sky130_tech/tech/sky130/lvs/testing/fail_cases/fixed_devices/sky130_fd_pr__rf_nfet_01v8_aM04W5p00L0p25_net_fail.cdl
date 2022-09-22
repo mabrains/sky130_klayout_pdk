@@ -1,0 +1,21 @@
+ 
+* Copyright 2022 Mabrains
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Affero General Public License as published
+* by the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU Affero General Public License for more details.
+* 
+* You should have received a copy of the GNU Affero General Public License
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+.SUBCKT sky130_fd_pr__rf_nfet_01v8_aM04W5p00L0p25 DRAIN GATE SOURCE SUBSTRATE
+
+Mx_net_fail DRAIN_net_fail GATE_net_fail SOURCE_net_fail SUBSTRATE sky130_fd_pr__rf_nfet_01v8_aM04W5p00L0p25 w=24.689999999999998u l=0.308625u nf=4 m=1 ad=0.8950124999999999p as=0.8950124999999999p pd=7.60452u ps=7.60452u nrd=0.071601 nrs=0.071601 sa=0.0 sb=0.0 sd=0.0
+
+.ENDS

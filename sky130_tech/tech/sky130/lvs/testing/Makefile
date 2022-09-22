@@ -22,7 +22,9 @@ Testing_DIR  ?= $(shell pwd)
 run_folder    = $(shell date +'run_%Y_%m_%d_%H_%M')
 CASES 		 := $(wildcard testcases/*.cdl)
 CASES		 += $(wildcard testcases/fixed_devices/*.cdl)
-CONN_CASES	 := $(wildcard connectivity_test/*.cdl)
+MAIN		 := $(CASES:testcases/%=%)
+CASES		 := $(MAIN:fixed_devices/%.cdl=test_lvs_main_gha_%)
+CONN_CASES	 := $(wildcard connectivity_test/*.gds)
 
 .DEFAULT_GOAL := all
 
@@ -48,13 +50,6 @@ test_lvs_main_gha_%:
 		else python3 regression_result.py --db=$${file//.gds/_net_fail.lvsdb} ; fi
 
 .ONESHELL:
-%.cdl : %.gds
-	@file="$<"
-	@mkdir -p $(run_folder)/main
-	@device="$${file//'testcases/'/}"; device="$${device//'fixed_devices/'/}"; device="$${device//.gds/}"
-	@$(MAKE) test_lvs_main_gha_$$device |& tee $(run_folder)/main/$$device.log
-
-.ONESHELL:
 test_lvs_main: $(CASES)
 	@echo "Congratulations! Testing main LVS is finished successfully"
 
@@ -73,13 +68,13 @@ test_lvs_collective:
 # ---- TEST CONNECTIVITY LVS -----
 #=================================
 
-# .ONESHELL:
-# %.cdl : %.gds
-# 	@cd $(Testing_DIR)
-# 	@mkdir -p $(run_folder)
-# 	@file="$<"
-# 	@cdl="$${file//'connectivity_test/'/}";
-# 	@python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$$file --net=$${cdl//.gds/.cdl}  |& tee -a $(run_folder)/connectivity_results.log
+.ONESHELL:
+connectivity_test/% : $(PDK_ROOT)/$(PDK)/run_lvs.py
+	@cd $(Testing_DIR)
+	@mkdir -p $(run_folder)/connectivity_test
+	@file="$@"
+	@cdl="$${file//'connectivity_test/'/}";
+	@python3 $< --design=$$file --net=$${cdl//.gds/.cdl}  |& tee $(run_folder)/connectivity_test/$${cdl//.gds/.log}
 
 .ONESHELL:
 test_lvs_connectivity: $(CONN_CASES)

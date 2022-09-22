@@ -1,0 +1,20 @@
+ 
+* Copyright 2022 Mabrains
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Affero General Public License as published
+* by the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU Affero General Public License for more details.
+* 
+* You should have received a copy of the GNU Affero General Public License
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.
+.SUBCKT sky130_fd_pr__rf_pfet_01v8_lvt_aM02W3p00L0p35 DRAIN GATE SOURCE BULK_net_fail
+
+Mx_net_fail DRAIN_net_fail GATE_net_fail SOURCE_net_fail BULK_net_fail sky130_fd_pr__rf_pfet_01v8_lvt_aM02W3p00L0p35 w=7.407u l=0.43207499999999993u nf=2 m=1 ad=0.5370075p as=0.5370075p pd=4.41951u ps=4.41951u nrd=0.11937614999999999 nrs=0.11937614999999999 sa=0.0 sb=0.0 sd=0.0
+
+.ENDS

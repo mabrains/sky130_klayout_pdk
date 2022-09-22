@@ -64,7 +64,7 @@ def main():
 
     results_table = Sort([subl for subl in results_table if subl[0] != 0])
 
-    if results_table == circuits_table:
+    if (results_table == circuits_table) or ( results_table == [] and "fail" in args["--db"] ):
         logging.info("===================================================")
         logging.info("Congratualtions! All cases have passed successfully")
         logging.info("===================================================")

@@ -1,0 +1,20 @@
+ 
+* Copyright 2022 Mabrains
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Affero General Public License as published
+* by the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU Affero General Public License for more details.
+* 
+* You should have received a copy of the GNU Affero General Public License
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.
+.SUBCKT sky130_fd_pr__rf_pfet_01v8_aM02W3p00L0p15 DRAIN GATE SOURCE BULK_dim_fail
+
+Mx_dim_fail DRAIN_dim_fail GATE_dim_fail SOURCE_dim_fail BULK_dim_fail sky130_fd_pr__rf_pfet_01v8_aM02W3p00L0p15 w=6.0u l=0.15u nf=2 m=1 ad=0.435p as=0.435p pd=3.58u ps=3.58u nrd=0.0967 nrs=0.0967 sa=0 sb=0 sd=0
+
+.ENDS
