@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-name: Regression testing fixed devices
+name: Regression testing non fixed devices and other fixed devices than RF MOSFET
 concurrency:
   group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
@@ -34,8 +34,8 @@ jobs:
       - id: set-matrix
         run: |
           cd sky130_tech/tech/sky130/lvs/testing
-          main_files=`echo '[' ; ls testcases/fixed_devices/*.gds --format=commas|sed -e 's/^/\"/'|sed -e 's/,$/\",/'|sed -e 's/\([^,]\)$/\1\"\]/'|sed -e 's/, /\", \"/g'`
-          main_files="${main_files//'testcases/fixed_devices/'/}"; main_files="${main_files//'.gds'/}";
+          main_files=`echo '[' ; find testcases/ ! -iname '*.cdl' -a ! -iname '*sky130_fd_pr__rf_*fet*'  | tr '\n' ','|sed -e 's/^/\"/'|sed -e 's/,$/\"]/'|sed -e 's/,/\", \"/g'`
+          main_files="${main_files//'testcases/'/}"; main_files="${main_files//'fixed_devices/'/}"; main_files="${main_files//'.gds'/}"; main_files="${main_files//'"", '/}";
           main_files=`echo $main_files | jq -c .`
           echo $main_files
           echo "::set-output name=main_files::$main_files"
