@@ -18,12 +18,13 @@
 
 Usage:
     run_lvs.py (--help| -h)
-    run_lvs.py (--design=<layout_path>) (--net=<netlist_path>) [--thr=<thr>] [--run_mode=<run_mode>] [--lvs_sub=<sub_name>] [--no_net_names] [--set_spice_comments] [--set_scale] [--set_verbose] [--set_schematic_simplify] [--set_net_only] [--set_top_lvl_pins] [--set_combine] [--set_purge] [--set_purge_nets]
+    run_lvs.py (--design=<layout_path>) (--net=<netlist_path>) [--report=<report_output_path>] [--thr=<thr>] [--run_mode=<run_mode>] [--lvs_sub=<sub_name>] [--no_net_names] [--set_spice_comments] [--set_scale] [--set_verbose] [--set_schematic_simplify] [--set_net_only] [--set_top_lvl_pins] [--set_combine] [--set_purge] [--set_purge_nets]
 
 Options:
     --help -h                           Print this help message.
     --design=<layout_path>              The input GDS file path.
     --net=<netlist_path>                The input netlist file path.
+    --report=<report_output_path>       The output database file path.
     --thr=<thr>                         Number of cores to be used by LVS checker
     --run_mode=<run_mode>               Select klayout mode Allowed modes (flat , deep, tiling). [default: deep]
     --lvs_sub=<sub_name>                Assign the substrate name used in design.
@@ -86,8 +87,13 @@ def main():
         else:
             print("The script must be given a netlist file or a path to be able to run LVS")
             exit()
+        
+        if args["--report"]:
+            report = args["--report"]
+        else:
+            report = file_name[0]
 
-        subprocess.check_call(f"klayout -b -r {pdk_root}/{pdk}/sky130.lvs -rd input={path} -rd report={file_name[0]}.lvsdb -rd schematic={args['--net']} -rd target_netlist=extracted_netlist_{file_name[0]}.cir -rd thr={workers_count} {switches}", shell=True)
+        subprocess.check_call(f"klayout -b -r {pdk_root}/{pdk}/sky130.lvs -rd input={path} -rd report={report}.lvsdb -rd schematic={args['--net']} -rd target_netlist=extracted_netlist_{file_name[0]}.cir -rd thr={workers_count} {switches}", shell=True)
 
     else:
         print("The script must be given a layout file or a path to be able to run LVS")

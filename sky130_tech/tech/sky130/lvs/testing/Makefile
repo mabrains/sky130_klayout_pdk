@@ -18,11 +18,11 @@
 #=========================================================================
 
 SHELL        := /bin/bash
-Testing_DIR  ?= $(shell pwd)
+Testing_DIR  ?= $(shell realpath .)
 PDK_ROOT     ?= $(shell realpath ../..)
 PDK          ?= $(shell basename `realpath ..`)
-run_folder    = $(shell date +'run_%Y_%m_%d_%H_%M')
-CASES 		 := $(wildcard testcases/*.cdl)
+run_folder   := $(shell realpath $$(date +'run_%Y_%m_%d_%H_%M'))
+CASES 		 := $(wildcard testcases/*pfet*.cdl)
 CASES		 += $(wildcard testcases/fixed_devices/*.cdl)
 MAIN		 := $(CASES:testcases/%=%)
 MID_CASES	 := $(MAIN:fixed_devices/%.cdl=test_lvs_main_gha_%)
@@ -36,6 +36,10 @@ all: test_lvs_main test_lvs_collective test_lvs_connectivity
 #=================================
 # -------- TEST MAIN LVS ---------
 #=================================
+.ONESHELL:
+$(run_folder):
+	@echo "## Our current Run folder: $(run_folder)"
+	@mkdir -p $(run_folder)
 
 .ONESHELL:
 test_lvs_main_gha_%:
@@ -44,18 +48,22 @@ test_lvs_main_gha_%:
 	@cd $(Testing_DIR)
 	@file=`find . -iname $*.gds`
 	@net="$${file//'./testcases/'/}"; net="$${net//'fixed_devices/'/}";
-	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$$file --net=$${net//.gds/.cdl} ; then echo PASS CASE MATCHED; \
+	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$$file --net=$${net//.gds/.cdl} --report=$(run_folder)/$* > $(run_folder)/$*_pass_lvs.log 2>&1 ; then echo PASS CASE MATCHED; \
 		else python3 regression_result.py --db=$${file//.gds/.lvsdb} ; exit 1; fi;
 	@file="$${file//'./testcases/'/'./fail_cases/'}";
-	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$${file//.gds/_dim_fail.gds} --net=$${net//.gds/_dim_fail.cdl} ; then exit 1; \
+	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$${file//.gds/_dim_fail.gds} --net=$${net//.gds/_dim_fail.cdl} --report=$(run_folder)/$* > $(run_folder)/$*_fail_dim_lvs.log 2>&1 ; then exit 1; \
 		else python3 regression_result.py --db=$${file//.gds/_dim_fail.lvsdb} ; fi
-	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$${file//.gds/_lyr_fail.gds} --net=$${net//.gds/_lyr_fail.cdl} ; then exit 1; \
+	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$${file//.gds/_lyr_fail.gds} --net=$${net//.gds/_lyr_fail.cdl} --report=$(run_folder)/$* > $(run_folder)/$*_fail_layer_lvs.log 2>&1 ; then exit 1; \
 		else python3 regression_result.py --db=$${file//.gds/_lyr_fail.lvsdb} ; fi
-	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$${file//.gds/_net_fail.gds} --net=$${net//.gds/_net_fail.cdl} ; then exit 1; \
+	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$${file//.gds/_net_fail.gds} --net=$${net//.gds/_net_fail.cdl} --report=$(run_folder)/$* > $(run_folder)/$*_fail_layer_lvs.log 2>&1 ; then exit 1; \
 		else python3 regression_result.py --db=$${file//.gds/_net_fail.lvsdb} ; fi
 
 .ONESHELL:
-test_lvs_main: $(CASES)
+test_lvs_main: $(run_folder)
+	@$(MAKE) run_all_test_cases
+
+.ONESHELL:
+run_all_test_cases: $(CASES)
 	@echo "Congratulations! Testing main LVS is finished successfully"
 
 #=================================
@@ -65,7 +73,6 @@ test_lvs_main: $(CASES)
 .ONESHELL:
 test_lvs_collective: 
 	@cd $(Testing_DIR)
-	@mkdir -p $(run_folder)
 	@python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=collective_test/collective.gds --net=collective.cdl |& tee -a $(run_folder)/collective_results.log
 	@echo "Congratulations! Testing collective LVS is finished successfully"
 
