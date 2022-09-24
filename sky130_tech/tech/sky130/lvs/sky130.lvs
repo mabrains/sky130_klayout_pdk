@@ -450,7 +450,7 @@ class Custom3TerminalExtractor < RBA::GenericDeviceExtractor
       if terminals.size > 1
 
         terminals.each do |term|
-          if "#{RBA::Region::new(term).interacting(conductor1.merged.interacting(RBA::Region::new(terminals[0])))}".empty?
+          if "#{RBA::Region::new(term).interacting(conductor.merged.interacting(RBA::Region::new(terminals[0])))}".empty?
             terminals = [terminals[0], term]
             break
           end
