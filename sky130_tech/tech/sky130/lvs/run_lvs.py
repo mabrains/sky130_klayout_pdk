@@ -103,8 +103,14 @@ if __name__ == "__main__":
     workers_count = os.cpu_count()*2 if args["--thr"] == None else int(args["--thr"])
 
     # Env. variables
-    pdk_root = os.environ['PDK_ROOT']
-    pdk      = os.environ['PDK']
+    if os.environ.get('PDK_ROOT') is not None:
+        ## if PDK_ROOT is defined, we assume that PDK is defined as well. Will error out if PDK_ROOT only is defined.
+        pdk_root = os.environ['PDK_ROOT']
+        pdk      = os.environ['PDK']
+    else:
+        pdk_full_path = os.path.dirname(os.path.abspath(__file__))
+        pdk_root = os.path.dirname(pdk_full_path)
+        pdk      = os.path.basename(pdk_full_path)
 
     # ========= Checking Klayout version =========
     klayout_v_ = os.popen("klayout -v").read()

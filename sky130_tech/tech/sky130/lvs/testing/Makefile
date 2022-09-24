@@ -19,8 +19,8 @@
 
 SHELL        := /bin/bash
 Testing_DIR  ?= $(shell pwd)
-PDK_ROOT     ?= $(shell dirname `dirname $PWD`)
-PDK          ?= $(shell basename `dirname $PWD`)
+PDK_ROOT     ?= $(shell realpath ../..)
+PDK          ?= $(shell basename `realpath ..`)
 run_folder    = $(shell date +'run_%Y_%m_%d_%H_%M')
 CASES 		 := $(wildcard testcases/*.cdl)
 CASES		 += $(wildcard testcases/fixed_devices/*.cdl)
@@ -40,6 +40,7 @@ all: test_lvs_main test_lvs_collective test_lvs_connectivity
 .ONESHELL:
 test_lvs_main_gha_%:
 	@echo "## Running test case for $*"
+	@echo "PDK_ROOT = $(PDK_ROOT) and PDK = $(PDK)"
 	@cd $(Testing_DIR)
 	@file=`find . -iname $*.gds`
 	@net="$${file//'./testcases/'/}"; net="$${net//'fixed_devices/'/}";
