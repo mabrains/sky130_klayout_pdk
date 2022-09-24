@@ -15,6 +15,6 @@
 
 .SUBCKT sky130_fd_pr__npn_05v5_W1p00L1p00 B C E SUBSTRATE
 
-Qx_net_fail B_net_fail C_net_fail E_net_fail SUBSTRATE sky130_fd_pr__npn_05v5_W1p00L1p00
+Qx_net_fail B_net_fail C_net_fail E_net_fail SUBSTRATE sky130_fd_pr__npn_05v5_W1p00L2p00
 
 .ENDS

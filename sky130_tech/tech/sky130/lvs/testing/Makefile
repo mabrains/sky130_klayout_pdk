@@ -40,7 +40,7 @@ test_lvs_main_gha_%:
 	@file=`find . -iname $*.gds`
 	@net="$${file//'./testcases/'/}"; net="$${net//'fixed_devices/'/}";
 	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$$file --net=$${net//.gds/.cdl} ; then echo PASS CASE MATCHED; \
-		else python3 regression_result.py --db=$${file//.gds/.lvsdb} ; fi;
+		else python3 regression_result.py --db=$${file//.gds/.lvsdb} ; exit 1; fi;
 	@file="$${file//'./testcases/'/'./fail_cases/'}";
 	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$${file//.gds/_dim_fail.gds} --net=$${net//.gds/_dim_fail.cdl} ; then exit 1; \
 		else python3 regression_result.py --db=$${file//.gds/_dim_fail.lvsdb} ; fi

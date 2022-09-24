@@ -15,6 +15,6 @@
 
 .SUBCKT sky130_fd_pr__rf_test_coil3 L0 L1 TAP SUBSTRATE
 
-Lx_net_fail L0_net_fail L1_net_fail TAP_net_fail SUBSTRATE sky130_fd_pr__rf_ind_05_220
+Lx_net_fail L0_net_fail L1_net_fail TAP_net_fail SUBSTRATE sky130_fd_pr__rf_ind_06_220
 
 .ENDS

@@ -14,8 +14,8 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-.SUBCKT sky130_fd_pr__rf_nfet_01v8_lvt_aM02W5p00L0p25 GATE
+.SUBCKT sky130_fd_pr__rf_nfet_01v8_lvt_aM02W5p00L0p25 DRAIN GATE SOURCE SUBSTRATE
 
-Mx GATE sky130_fd_pr__rf_nfet_01v8_lvt_aM02W5p00L0p25 W=10.0u L=0.25u nf=2 m=1 ad=0.725p as=0.725p pd=5.58u ps=5.58u nrd=0.058 nrs=0.058 sa=0 sb=0 sd=0
+Mx DRAIN GATE SOURCE SUBSTRATE sky130_fd_pr__rf_nfet_01v8_lvt_aM02W5p00L0p25 W=10.0u L=0.25u nf=2 m=1 ad=0.725p as=0.725p pd=5.58u ps=5.58u nrd=0.058 nrs=0.058 sa=0 sb=0 sd=0
 
 .ENDS 

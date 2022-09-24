@@ -15,6 +15,6 @@
 
 .SUBCKT sky130_fd_pr__pnp_05v5_W0p68L0p68 Base Collector Emitter SUBSTRATE
 
-Qx_net_fail Base_net_fail Collector_net_fail Emitter_net_fail SUBSTRATE sky130_fd_pr__pnp_05v5_W0p68L0p68
+Qx_net_fail Base_net_fail Collector_net_fail Emitter_net_fail SUBSTRATE sky130_fd_pr__pnp_05v5_W0p68L1p68
 
 .ENDS

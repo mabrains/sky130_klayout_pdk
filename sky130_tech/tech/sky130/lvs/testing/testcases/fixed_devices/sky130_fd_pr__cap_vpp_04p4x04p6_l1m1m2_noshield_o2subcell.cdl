@@ -14,8 +14,8 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-.SUBCKT sky130_fd_pr__cap_vpp_04p4x04p6_l1m1m2_noshield_o2subcell 
+.SUBCKT sky130_fd_pr__cap_vpp_04p4x04p6_l1m1m2_noshield_o2subcell C0 C1 SUB
 
-Cx  sky130_fd_pr__cap_vpp_04p4x04p6_l1m1m2_noshield_o2subcell
+Cx C0 C1 SUB sky130_fd_pr__cap_vpp_04p4x04p6_l1m1m2_noshield_o2subcell
 
 .ENDS 

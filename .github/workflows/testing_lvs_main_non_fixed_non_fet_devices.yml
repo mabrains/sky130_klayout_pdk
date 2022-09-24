@@ -35,7 +35,7 @@ jobs:
         run: |
           cd sky130_tech/tech/sky130/lvs/testing
           main_files=`echo '[' ; find testcases/ ! -iname '*.cdl' -a ! -iname '*sky130_fd_pr__rf_*fet*'  | tr '\n' ','|sed -e 's/^/\"/'|sed -e 's/,$/\"]/'|sed -e 's/,/\", \"/g'`
-          main_files="${main_files//'testcases/'/}"; main_files="${main_files//'fixed_devices/'/}"; main_files="${main_files//'.gds'/}"; main_files="${main_files//'"", '/}";
+          main_files="${main_files//'testcases/'/}"; main_files="${main_files//'fixed_devices'/}"; main_files="${main_files//'/'/}"; main_files="${main_files//'.gds'/}"; main_files="${main_files//'"", '/}";
           main_files=`echo $main_files | jq -c .`
           echo $main_files
           echo "::set-output name=main_files::$main_files"
