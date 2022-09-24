@@ -19,11 +19,14 @@
 
 SHELL        := /bin/bash
 Testing_DIR  ?= $(shell pwd)
+PDK_ROOT     ?= $(shell dirname `dirname $PWD`)
+PDK          ?= $(shell basename `dirname $PWD`)
 run_folder    = $(shell date +'run_%Y_%m_%d_%H_%M')
 CASES 		 := $(wildcard testcases/*.cdl)
 CASES		 += $(wildcard testcases/fixed_devices/*.cdl)
 MAIN		 := $(CASES:testcases/%=%)
-CASES		 := $(MAIN:fixed_devices/%.cdl=test_lvs_main_gha_%)
+MID_CASES	 := $(MAIN:fixed_devices/%.cdl=test_lvs_main_gha_%)
+CASES	 	 := $(MID_CASES:%.cdl=test_lvs_main_gha_%)
 CONN_CASES	 := $(wildcard connectivity_test/*.gds)
 
 .DEFAULT_GOAL := all
@@ -36,6 +39,7 @@ all: test_lvs_main test_lvs_collective test_lvs_connectivity
 
 .ONESHELL:
 test_lvs_main_gha_%:
+	@echo "## Running test case for $*"
 	@cd $(Testing_DIR)
 	@file=`find . -iname $*.gds`
 	@net="$${file//'./testcases/'/}"; net="$${net//'fixed_devices/'/}";

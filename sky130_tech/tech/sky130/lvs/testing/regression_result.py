@@ -88,7 +88,7 @@ if __name__ == "__main__":
     args          = docopt(__doc__, version='LVS Checker: 0.1')
     
     # Env. variables
-    if environ.get('PDK_ROOT') is not None:
+    if os.environ.get('PDK_ROOT') is not None:
         ## if PDK_ROOT is defined, we assume that PDK is defined as well. Will error out if PDK_ROOT only is defined.
         pdk_root = os.environ['PDK_ROOT']
         pdk      = os.environ['PDK']
