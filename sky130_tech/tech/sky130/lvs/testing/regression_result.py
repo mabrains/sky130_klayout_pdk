@@ -88,8 +88,14 @@ if __name__ == "__main__":
     args          = docopt(__doc__, version='LVS Checker: 0.1')
     
     # Env. variables
-    pdk_root = os.environ['PDK_ROOT']
-    pdk      = os.environ['PDK']
+    if environ.get('PDK_ROOT') is not None:
+        ## if PDK_ROOT is defined, we assume that PDK is defined as well. Will error out if PDK_ROOT only is defined.
+        pdk_root = os.environ['PDK_ROOT']
+        pdk      = os.environ['PDK']
+    else:
+        pdk_full_path = os.path.dirname(os.path.abspath(__file__))
+        pdk_root = os.path.dirname(pdk_full_path) 
+        pdk      = os.path.basename(pdk_full_path)
 
     # ========= Checking Klayout version =========
     klayout_v_ = os.popen("klayout -v").read()
