@@ -16,28 +16,28 @@
 
 .SUBCKT sky130_fd_sc_ms__dlymetal6s2s_1 A VGND VNB VPB VPWR X
 *.PININFO A:I VGND:I VNB:I VPB:I VPWR:I X:O
-MMIN1 Ab net055 VGND VNB nfet_01v8_lvt m=1 w=0.42U l=0.15U mult=1
+MMIN1 Ab net055 VGND VNB sky130_fd_pr__nfet_01v8_lvt m=1 w=0.42U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MMIN2 net47 Ab VGND VNB nfet_01v8_lvt m=1 w=0.74U l=0.15U mult=1
+MMIN2 net47 Ab VGND VNB sky130_fd_pr__nfet_01v8_lvt m=1 w=0.74U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI6 net055 net59 VGND VNB nfet_01v8_lvt m=1 w=0.74U l=0.15U mult=1
+MI6 net055 net59 VGND VNB sky130_fd_pr__nfet_01v8_lvt m=1 w=0.74U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI15 net55 A VGND VNB nfet_01v8_lvt m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MI15 net55 A VGND VNB sky130_fd_pr__nfet_01v8_lvt m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI9 net59 X VGND VNB nfet_01v8_lvt m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MI9 net59 X VGND VNB sky130_fd_pr__nfet_01v8_lvt m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI16 X net55 VGND VNB nfet_01v8_lvt m=1 w=0.74U l=0.15U mult=1 sa=0.265
+MI16 X net55 VGND VNB sky130_fd_pr__nfet_01v8_lvt m=1 w=0.74U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MMIP1 Ab net055 VPWR VPB pfet_01v8 m=1 w=0.42U l=0.18U mult=1 sa=0.265
+MMIP1 Ab net055 VPWR VPB sky130_fd_pr__pfet_01v8 m=1 w=0.42U l=0.18U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MMIP2 net47 Ab VPWR VPB pfet_01v8 m=1 w=1.12U l=0.18U mult=1 sa=0.265
+MMIP2 net47 Ab VPWR VPB sky130_fd_pr__pfet_01v8 m=1 w=1.12U l=0.18U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI7 net055 net59 VPWR VPB pfet_01v8 m=1 w=1.12U l=0.18U mult=1 sa=0.265
+MI7 net055 net59 VPWR VPB sky130_fd_pr__pfet_01v8 m=1 w=1.12U l=0.18U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI8 net59 X VPWR VPB pfet_01v8 m=1 w=0.42U l=0.18U mult=1 sa=0.265
+MI8 net59 X VPWR VPB sky130_fd_pr__pfet_01v8 m=1 w=0.42U l=0.18U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI18 X net55 VPWR VPB pfet_01v8 m=1 w=1.12U l=0.18U mult=1 sa=0.265
+MI18 X net55 VPWR VPB sky130_fd_pr__pfet_01v8 m=1 w=1.12U l=0.18U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI17 net55 A VPWR VPB pfet_01v8 m=1 w=0.42U l=0.18U mult=1 sa=0.265
+MI17 net55 A VPWR VPB sky130_fd_pr__pfet_01v8 m=1 w=0.42U l=0.18U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
 .ENDS sky130_fd_sc_ms__dlymetal6s2s_1

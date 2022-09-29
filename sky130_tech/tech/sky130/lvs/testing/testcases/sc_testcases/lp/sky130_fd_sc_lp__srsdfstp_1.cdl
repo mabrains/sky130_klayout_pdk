@@ -17,108 +17,108 @@
 .SUBCKT sky130_fd_sc_lp__srsdfstp_1 CLK D SCD SCE SET_B SLEEP_B KAPWR VGND VNB VPB VPWR Q
 *.PININFO CLK:I D:I SCD:I SCE:I SET_B:I SLEEP_B:I KAPWR:I VGND:I VNB:I
 *.PININFO VPB:I VPWR:I Q:O
-MI658 M1 M0 VPWR VPB pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MI658 M1 M0 VPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI684 net160 sleep KAPWR VPB pfet_01v8_hvt m=1 w=1.0U l=0.25U mult=1
+MI684 net160 sleep KAPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=1.0U l=0.25U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI663 net204 S0 VPWR VPB pfet_01v8_hvt m=1 w=0.64U l=0.15U mult=1
+MI663 net204 S0 VPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.64U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI660 Q net204 VPWR VPB pfet_01v8_hvt m=1 w=1.26U l=0.15U mult=1
+MI660 Q net204 VPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=1.26U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI659 M1 SET_B VPWR VPB pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1
+MI659 M1 SET_B VPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI662 net144 M1 VPWR VPB pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1
+MI662 net144 M1 VPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI664 M0 clkneg net144 VPB pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1
+MI664 M0 clkneg net144 VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI6 net131 S1 KAPWR VPB pfet_01v8_hvt m=1 w=1.0U l=0.25U mult=1 sa=0.265
+MI6 net131 S1 KAPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=1.0U l=0.25U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI669 S0 clkpos net131 VPB pfet_01v8_hvt m=1 w=1.0U l=0.25U mult=1
+MI669 S0 clkpos net131 VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=1.0U l=0.25U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI674 clkneg SLEEP_B KAPWR VPB pfet_01v8_hvt m=1 w=0.64U l=0.15U mult=1
+MI674 clkneg SLEEP_B KAPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.64U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI648 S1 S0 KAPWR VPB pfet_01v8_hvt m=1 w=1.0U l=0.25U mult=1 sa=0.265
+MI648 S1 S0 KAPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=1.0U l=0.25U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI37 net228 M0 VPWR VPB pfet_01v8_hvt m=1 w=0.84U l=0.15U mult=1
+MI37 net228 M0 VPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.84U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI43 db clkpos M0 VPB pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MI43 db clkpos M0 VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI681 sleep SLEEP_B KAPWR VPB pfet_01v8_hvt m=1 w=1.0U l=0.25U mult=1
+MI681 sleep SLEEP_B KAPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=1.0U l=0.25U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI643 clkneg CLK KAPWR VPB pfet_01v8_hvt m=1 w=0.64U l=0.15U mult=1
+MI643 clkneg CLK KAPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.64U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI635 clkpos clkneg VPWR VPB pfet_01v8_hvt m=1 w=0.64U l=0.15U mult=1
+MI635 clkpos clkneg VPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.64U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI633 sceb SCE VPWR VPB pfet_01v8_hvt m=1 w=0.64U l=0.15U mult=1
+MI633 sceb SCE VPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.64U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI685 S0 SET_B net160 VPB pfet_01v8_hvt m=1 w=1.0U l=0.25U mult=1
+MI685 S0 SET_B net160 VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=1.0U l=0.25U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI687 net87 clkneg S0 VPB pfet_01v8_hvt m=1 w=0.84U l=0.15U mult=1
+MI687 net87 clkneg S0 VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.84U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI686 net228 clkneg net87 VPB pfet_01v8_hvt m=1 w=0.84U l=0.15U mult=1
+MI686 net228 clkneg net87 VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.84U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI101 db sceb p1 VPB pfet_01v8_hvt m=1 w=0.64U l=0.15U mult=1 sa=0.265
+MI101 db sceb p1 VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.64U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI107 p0 SCE VPWR VPB pfet_01v8_hvt m=1 w=0.64U l=0.15U mult=1 sa=0.265
+MI107 p0 SCE VPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.64U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI94 db D p0 VPB pfet_01v8_hvt m=1 w=0.64U l=0.15U mult=1 sa=0.265
+MI94 db D p0 VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.64U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI108 p1 SCD VPWR VPB pfet_01v8_hvt m=1 w=0.64U l=0.15U mult=1 sa=0.265
+MI108 p1 SCD VPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.64U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI680 net243 SLEEP_B VGND VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1
+MI680 net243 SLEEP_B VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI670 net191 SLEEP_B net200 VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1
+MI670 net191 SLEEP_B net200 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI27 net268 S1 net240 VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MI27 net268 S1 net240 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI647 S1 S0 net260 VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MI647 S1 S0 net260 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI678 net260 S0 VGND VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MI678 net260 S0 VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI655 M0 clkpos net255 VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MI655 M0 clkpos net255 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI683 net248 sleep VGND VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1
+MI683 net248 sleep VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI682 net248 SET_B VGND VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1
+MI682 net248 SET_B VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI679 sleep SLEEP_B net243 VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1
+MI679 sleep SLEEP_B net243 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI677 net240 S1 net248 VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MI677 net240 S1 net248 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI656 M1 M0 net208 VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MI656 M1 M0 net208 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI654 net255 M1 VGND VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MI654 net255 M1 VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI36 net228 M0 VGND VNB nfet_01v8 m=1 w=0.64U l=0.15U mult=1 sa=0.265
+MI36 net228 M0 VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.64U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI26 S0 clkneg net268 VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MI26 S0 clkneg net268 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI42 db clkneg M0 VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MI42 db clkneg M0 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI636 clkpos clkneg VGND VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1
+MI636 clkpos clkneg VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI634 sceb SCE VGND VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MI634 sceb SCE VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI657 net208 SET_B VGND VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1
+MI657 net208 SET_B VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI652 net204 S0 VGND VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MI652 net204 S0 VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI673 net200 SLEEP_B VGND VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1
+MI673 net200 SLEEP_B VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI653 Q net204 VGND VNB nfet_01v8 m=1 w=0.84U l=0.15U mult=1 sa=0.265
+MI653 Q net204 VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.84U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI642 clkneg CLK net191 VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1
+MI642 clkneg CLK net191 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI689 net188 clkpos S0 VNB nfet_01v8 m=1 w=0.64U l=0.15U mult=1 sa=0.265
+MI689 net188 clkpos S0 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.64U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI688 net228 clkpos net188 VNB nfet_01v8 m=1 w=0.64U l=0.15U mult=1
+MI688 net228 clkpos net188 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.64U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI98 db D n0 VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265 sb=0.265
+MI98 db D n0 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265 sb=0.265
 + sd=0.28 topography=normal area=0.525 perim=3.1
-MI103 n1 SCD VGND VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MI103 n1 SCD VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.525 perim=3.1
-MI120 db SCE n1 VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MI120 db SCE n1 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.525 perim=3.1
-MI104 n0 sceb VGND VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MI104 n0 sceb VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.525 perim=3.1
 .ENDS sky130_fd_sc_lp__srsdfstp_1

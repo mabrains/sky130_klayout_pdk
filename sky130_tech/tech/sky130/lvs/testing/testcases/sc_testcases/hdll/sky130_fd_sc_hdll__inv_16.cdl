@@ -16,8 +16,8 @@
 
 .SUBCKT sky130_fd_sc_hdll__inv_16 A VGND VNB VPB VPWR Y
 *.PININFO A:I VGND:I VNB:I VPB:I VPWR:I Y:O
-MMIN1 Y A VGND VNB nfet_01v8 m=16 w=0.65U l=0.15U mult=1 sa=0.265
+MMIN1 Y A VGND VNB sky130_fd_pr__nfet_01v8 m=16 w=0.65U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MMIP1 Y A VPWR VPB pfet_01v8_hvt m=16 w=1.0U l=0.18U mult=1 sa=0.265
+MMIP1 Y A VPWR VPB sky130_fd_pr__pfet_01v8_hvt m=16 w=1.0U l=0.18U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
 .ENDS sky130_fd_sc_hdll__inv_16

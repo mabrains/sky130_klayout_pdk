@@ -16,24 +16,24 @@
 
 .SUBCKT sky130_fd_sc_hvl__lsbufhv2hv_lh_1 A LOWHVPWR VGND VNB VPB VPWR X
 *.PININFO A:I LOWHVPWR:I VGND:I VNB:I VPB:I VPWR:I X:O
-MI18 cross2 cross1 VPWR VPB pfet_g5v0d10v5 m=1 w=0.42U l=1.0U mult=1
+MI18 cross2 cross1 VPWR VPB sky130_fd_pr__pfet_g5v0d10v5 m=1 w=0.42U l=1.0U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI7 Abb Ab LOWHVPWR LOWHVPWR pfet_g5v0d10v5 m=1 w=0.75U l=0.5U mult=1
+MI7 Abb Ab LOWHVPWR LOWHVPWR sky130_fd_pr__pfet_g5v0d10v5 m=1 w=0.75U l=0.5U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI15 X cross2 VPWR VPB pfet_g5v0d10v5 m=1 w=1.5U l=0.5U mult=1 sa=0.265
+MI15 X cross2 VPWR VPB sky130_fd_pr__pfet_g5v0d10v5 m=1 w=1.5U l=0.5U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI19 cross1 cross2 VPWR VPB pfet_g5v0d10v5 m=1 w=0.42U l=1.0U mult=1
+MI19 cross1 cross2 VPWR VPB sky130_fd_pr__pfet_g5v0d10v5 m=1 w=0.42U l=1.0U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI27 Ab A LOWHVPWR LOWHVPWR pfet_g5v0d10v5 m=1 w=0.75U l=0.5U mult=1
+MI27 Ab A LOWHVPWR LOWHVPWR sky130_fd_pr__pfet_g5v0d10v5 m=1 w=0.75U l=0.5U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI8 Abb Ab VGND VNB nfet_g5v0d10v5 m=1 w=0.75U l=0.5U mult=1 sa=0.265
+MI8 Abb Ab VGND VNB sky130_fd_pr__nfet_g5v0d10v5 m=1 w=0.75U l=0.5U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI16 X cross2 VGND VNB nfet_g5v0d10v5 m=1 w=0.75U l=0.5U mult=1 sa=0.265
+MI16 X cross2 VGND VNB sky130_fd_pr__nfet_g5v0d10v5 m=1 w=0.75U l=0.5U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI21 cross2 Abb VGND VNB nfet_g5v0d10v5 m=4 w=1.5U l=0.5U mult=1
+MI21 cross2 Abb VGND VNB sky130_fd_pr__nfet_g5v0d10v5 m=4 w=1.5U l=0.5U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI22 cross1 Ab VGND VNB nfet_g5v0d10v5 m=4 w=1.5U l=0.5U mult=1 sa=0.265
+MI22 cross1 Ab VGND VNB sky130_fd_pr__nfet_g5v0d10v5 m=4 w=1.5U l=0.5U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI28 Ab A VGND VNB nfet_g5v0d10v5 m=1 w=0.75U l=0.5U mult=1 sa=0.265
+MI28 Ab A VGND VNB sky130_fd_pr__nfet_g5v0d10v5 m=1 w=0.75U l=0.5U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
 .ENDS sky130_fd_sc_hvl__lsbufhv2hv_lh_1

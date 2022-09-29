@@ -16,6 +16,6 @@
 
 .SUBCKT sky130_fd_sc_lp__sleep_pargate_plv_7 VIRTPWR VPWR SLEEP VPB
 *.PININFO VIRTPWR:? VPWR:? SLEEP:? VPB:?
-M1000 VIRTPWR SLEEP VPWR VPB pfet_01v8_hvt w=7e+06u l=150000u
+M1000 VIRTPWR SLEEP VPWR VPB sky130_fd_pr__pfet_01v8_hvt w=7e+06u l=150000u
 + ad=1.855e+12p pd=1.453e+07u as=1.855e+12p ps=1.453e+07u
 .ENDS sky130_fd_sc_lp__sleep_pargate_plv_7

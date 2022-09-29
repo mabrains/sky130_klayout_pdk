@@ -16,8 +16,8 @@
 
 .SUBCKT sky130_fd_sc_lp__decapkapwr_6 KAPWR VGND VNB VPB VPWR
 *.PININFO KAPWR:I VGND:I VNB:I VPB:I VPWR:I
-MI1 VGND KAPWR VGND VNB nfet_01v8 m=1 w=1.0U l=2.0U mult=1 sa=0.265
+MI1 VGND KAPWR VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=1.0U l=2.0U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MI2 KAPWR VGND KAPWR VPB pfet_01v8_hvt m=1 w=1.0U l=2.0U mult=1 sa=0.265
+MI2 KAPWR VGND KAPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=1.0U l=2.0U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
 .ENDS sky130_fd_sc_lp__decapkapwr_6

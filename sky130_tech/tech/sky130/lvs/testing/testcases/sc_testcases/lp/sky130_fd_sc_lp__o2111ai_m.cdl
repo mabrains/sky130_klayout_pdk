@@ -16,24 +16,24 @@
 
 .SUBCKT sky130_fd_sc_lp__o2111ai_m A1 A2 B1 C1 D1 VGND VNB VPB VPWR Y
 *.PININFO A1:I A2:I B1:I C1:I D1:I VGND:I VNB:I VPB:I VPWR:I Y:O
-MMPA0 VPWR A1 sndA1 VPB pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1
+MMPA0 VPWR A1 sndA1 VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1
 + sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MMPA1 sndA1 A2 Y VPB pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MMPA1 sndA1 A2 Y VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MMPB0 VPWR B1 Y VPB pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MMPB0 VPWR B1 Y VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MMPC0 VPWR C1 Y VPB pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MMPC0 VPWR C1 Y VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MMPD0 VPWR D1 Y VPB pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MMPD0 VPWR D1 Y VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MMNA0 pndA A1 VGND VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MMNA0 pndA A1 VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MMNA1 pndA A2 VGND VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MMNA1 pndA A2 VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MMNB0 pndB B1 pndA VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MMNB0 pndB B1 pndA VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MMNC0 pndC C1 pndB VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MMNC0 pndC C1 pndB VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
-MMND0 Y D1 pndC VNB nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MMND0 Y D1 pndC VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
 .ENDS sky130_fd_sc_lp__o2111ai_m
