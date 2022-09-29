@@ -670,7 +670,7 @@ sub = polygon_layer
 logger.info("Evaluate switches start")
 
 # SCH_SIMPLE
-if $schematic_simplify
+if $schematic_simplify == "true"
   SCH_SIMPLE = $schematic_simplify
 else
   SCH_SIMPLE = false
@@ -679,7 +679,7 @@ end # SCH_SIMPLE
 logger.info("SCH_SIMPLE enabled  %s" % [SCH_SIMPLE])
 
 # NET_ONLY
-if $net_only
+if $net_only == "true"
   NET_ONLY = true
 else
   NET_ONLY = false
@@ -688,7 +688,7 @@ end # NET_ONLY
 logger.info("NET_ONLY enabled  %s" % [NET_ONLY])
 
 # TOP_LVL_PINS
-if $top_lvl_pins
+if $top_lvl_pins == "true"
   TOP_LVL_PINS = true
 else
   TOP_LVL_PINS = false
@@ -697,7 +697,7 @@ end # TOP_LVL_PINS
 logger.info("TOP_LVL_PINS enabled  %s" % [TOP_LVL_PINS])
 
 # COMBINE
-if $combine
+if $combine == "true"
   COMBINE = true
 else
   COMBINE = false
@@ -706,7 +706,7 @@ end # COMBINE
 logger.info("COMBINE enabled  %s" % [COMBINE])
 
 # PURGE
-if $purge
+if $purge == "true"
   PURGE = true
 else
   PURGE = false
@@ -715,7 +715,7 @@ end # PURGE
 logger.info("PURGE enabled  %s" % [PURGE])
 
 # PURGE_NETS
-if $purge_nets
+if $purge_nets == "true"
   PURGE_NETS = true
 else
   PURGE_NETS = false
@@ -724,7 +724,7 @@ end # PURGE_NETS
 logger.info("PURGE_NETS enabled  %s" % [PURGE_NETS])
 
 # SIMPLIFY
-if $net_only || $top_lvl_pins || $combine || $purge || $purge_nets
+if $net_only == "true" || $top_lvl_pins == "true" || $combine == "true" || $purge == "true" || $purge_nets == "true"
   SIMPLIFY = false
 else
   SIMPLIFY = true

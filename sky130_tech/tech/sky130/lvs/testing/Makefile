@@ -21,15 +21,27 @@ SHELL            := /bin/bash
 Testing_DIR      ?= $(shell realpath .)
 PDK_ROOT         := $(shell realpath ../..)
 TESTCASES_DIR    := $(shell realpath ./testcases)
-SC_TESTCASES_DIR := $(shell realpath ./sc_testcases)
+SC_TESTCASES_DIR := $(shell realpath ./testcases/sc_testcases)
 PDK              := $(shell basename `realpath ..`)
 run_folder       := $(shell realpath $$(date +'run_%Y_%m_%d_%H_%M'))
 MAIN 		     := $(wildcard testcases/pass_cases/*.cdl)
 CASES		     := $(MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%)
 MAIN_CONN	     := $(wildcard testcases/connectivity_test/*.gds)
 CONN_CASES       := $(MAIN_CONN:testcases/connectivity_test/%.gds=test_conn_%)
-SC 		         := $(wildcard sc_testcases/hd/*.cdl)
-SC_CASES		 := $(SC:sc_testcases/hd/%.cdl=test_lvs_sc_gha_%)
+SC_HD	         := $(wildcard testcases/sc_testcases/hd/*.cdl)
+SC_HD_CASES		 := $(SC_HD:testcases/sc_testcases/hd/%.cdl=test_lvs_sc_gha_%)
+SC_HDLL	         := $(wildcard testcases/sc_testcases/hdll/*.cdl)
+SC_HDLL_CASES	 := $(SC_HDLL:testcases/sc_testcases/hdll/%.cdl=test_lvs_sc_gha_%)
+SC_HS	         := $(wildcard testcases/sc_testcases/hs/*.cdl)
+SC_HS_CASES		 := $(SC_HS:testcases/sc_testcases/hs/%.cdl=test_lvs_sc_gha_%)
+SC_HVL	         := $(wildcard testcases/sc_testcases/hvl/*.cdl)
+SC_HVL_CASES	 := $(SC_HVL:testcases/sc_testcases/hvl/%.cdl=test_lvs_sc_gha_%)
+SC_LP	         := $(wildcard testcases/sc_testcases/lp/*.cdl)
+SC_LP_CASES		 := $(SC_LP:testcases/sc_testcases/lp/%.cdl=test_lvs_sc_gha_%)
+SC_LS	         := $(wildcard testcases/sc_testcases/ls/*.cdl)
+SC_LS_CASES		 := $(SC_LS:testcases/sc_testcases/ls/%.cdl=test_lvs_sc_gha_%)
+SC_MS	         := $(wildcard testcases/sc_testcases/ms/*.cdl)
+SC_MS_CASES		 := $(SC_MS:testcases/sc_testcases/ms/%.cdl=test_lvs_sc_gha_%)
 
 .DEFAULT_GOAL := all
 
@@ -149,19 +161,67 @@ sonos:
 #=================================
 .phony:
 test_lvs_sc_gha_%: $(run_folder)
-	$(Testing_DIR)/run_test_case_sc.sh $* $(PDK_ROOT) $(PDK) $(SC_TESTCASES_DIR) $(run_folder)
+	@$(Testing_DIR)/run_test_case_sc.sh $* $(PDK_ROOT) $(PDK) $(SC_TESTCASES_DIR) $(run_folder) $(word 4,$(subst _, ,$*))
 
 .ONESHELL:
-test_lvs_sc: $(run_folder)
-	@$(MAKE) run_all_sc_test_cases
+test_lvs_sc: test_lvs_hd_sc test_lvs_hdll_sc test_lvs_hs_sc test_lvs_hvl_sc test_lvs_lp_sc test_lvs_ls_sc test_lvs_ms_sc
+	@echo "Congratulations! Testing All SC LVS has finished successfully"
 
 .ONESHELL:
-print_sc_cases: $(SC_CASES)
-	@echo $(SC_CASES)
+test_lvs_hd_sc: $(run_folder)
+	@$(MAKE) run_hd_sc_test_cases
 
 .ONESHELL:
-run_all_sc_test_cases: $(SC_CASES)
-	@echo "Congratulations! Testing SC LVS has finished successfully"
+run_hd_sc_test_cases: $(SC_HD_CASES)
+	@echo "Congratulations! Testing HD SC LVS has finished successfully"
+
+.ONESHELL:
+test_lvs_hdll_sc: $(run_folder)
+	@$(MAKE) run_hdll_sc_test_cases
+
+.ONESHELL:
+run_hdll_sc_test_cases: $(SC_HDLL_CASES)
+	@echo "Congratulations! Testing HDLL SC LVS has finished successfully"
+
+.ONESHELL:
+test_lvs_hs_sc: $(run_folder)
+	@$(MAKE) run_hs_sc_test_cases
+
+.ONESHELL:
+run_hs_sc_test_cases: $(SC_HS_CASES)
+	@echo "Congratulations! Testing HS SC LVS has finished successfully"
+
+.ONESHELL:
+test_lvs_hvl_sc: $(run_folder)
+	@$(MAKE) run_hvl_sc_test_cases
+
+.ONESHELL:
+run_hvl_sc_test_cases: $(SC_HVL_CASES)
+	@echo "Congratulations! Testing HVL SC LVS has finished successfully"
+
+.ONESHELL:
+test_lvs_lp_sc: $(run_folder)
+	@$(MAKE) run_lp_sc_test_cases
+
+.ONESHELL:
+run_lp_sc_test_cases: $(SC_LP_CASES)
+	@echo "Congratulations! Testing LP SC LVS has finished successfully"
+
+.ONESHELL:
+test_lvs_ls_sc: $(run_folder)
+	@$(MAKE) run_ls_sc_test_cases
+
+.ONESHELL:
+run_ls_sc_test_cases: $(SC_LS_CASES)
+	@echo "Congratulations! Testing LS SC LVS has finished successfully"
+
+.ONESHELL:
+test_lvs_ms_sc: $(run_folder)
+	@$(MAKE) run_ms_sc_test_cases
+
+.ONESHELL:
+run_ms_sc_test_cases: $(SC_MS_CASES)
+	@echo "Congratulations! Testing MS SC LVS has finished successfully"
 
 #==========================
 # --------- HELP ----------
@@ -170,7 +230,8 @@ run_all_sc_test_cases: $(SC_CASES)
 # Help Target
 help:
 	@echo "\n ==== The following are some of the valid targets for this Makefile ====\n"
-	@echo "... all                  	(the default if no target is provided          		)"
-	@echo "... test_lvs_main        	(To run main lvs regression for all devices    		)"
-	@echo "... test_lvs_collective  	(To run collective lvs regression for all devices	)"
-	@echo "... test_lvs_connectivity    (To run connectivity lvs regression for all devices	)"
+	@echo "... all						(the default if no target is provided          			)"
+	@echo "... test_lvs_main			(To run main lvs regression for all devices    			)"
+	@echo "... test_lvs_collective		(To run collective lvs regression for all devices		)"
+	@echo "... test_lvs_connectivity	(To run connectivity lvs regression for all devices		)"
+	@echo "... test_lvs_sc				(To run standard cells lvs regression for all devices	)"

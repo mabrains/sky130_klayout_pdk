@@ -147,3 +147,40 @@ jobs:
           -e PDK=lvs
           "$IMAGE"
           make test_lvs_collective
+  Standard-Cells:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        type: [lvs]
+        test: [hd, hdll, hs, hvl, lp, ls, ms]
+    name: LVS | Standard-Cells
+    env:
+      IMAGE: ghcr.io/mabrains/sky130_klayout_pdk/test
+      PDK_ROOT: /wrk/sky130_tech/tech/sky130
+      PDK: lvs
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build container image
+        run: |
+          docker build -t "$IMAGE" -f- sky130_tech/tech/sky130 <<EOF
+          FROM gcr.io/hdl-containers/klayout
+
+          RUN apt-get update -qq \
+           && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+              make \
+              procps \
+              python3-pip \
+           && apt-get autoclean && apt-get clean && apt-get -y autoremove \
+           && rm -rf /var/lib/apt/lists/*
+
+          RUN --mount=type=bind,target=/tmp/ctx pip3 install -r /tmp/ctx/requirements.txt
+          EOF
+      - name: Testing ${{ matrix.test }} for ${{ matrix.type }}_sc
+        run: >
+          docker run --rm
+          -v $(pwd):/wrk -w /wrk/sky130_tech/tech/sky130/lvs/testing
+          -e PDK_ROOT=/wrk/sky130_tech/tech/sky130
+          -e PDK=lvs
+          "$IMAGE"
+          make test_${{ matrix.type }}_${{ matrix.test }}_sc
