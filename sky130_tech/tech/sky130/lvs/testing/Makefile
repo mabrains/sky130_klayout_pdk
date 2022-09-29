@@ -17,12 +17,19 @@
 # ---------------------------------- LVS ---------------------------------
 #=========================================================================
 
-SHELL        := /bin/bash
-Testing_DIR  ?= $(shell pwd)
-run_folder    = $(shell date +'run_%Y_%m_%d_%H_%M')
-CASES 		 := $(wildcard testcases/*.cdl)
-CASES		 += $(wildcard testcases/fixed_devices/*.cdl)
-CONN_CASES	 := $(wildcard connectivity_test/*.cdl)
+SHELL            := /bin/bash
+Testing_DIR      ?= $(shell realpath .)
+PDK_ROOT         := $(shell realpath ../..)
+TESTCASES_DIR    := $(shell realpath ./testcases)
+SC_TESTCASES_DIR := $(shell realpath ./sc_testcases)
+PDK              := $(shell basename `realpath ..`)
+run_folder       := $(shell realpath $$(date +'run_%Y_%m_%d_%H_%M'))
+MAIN 		     := $(wildcard testcases/pass_cases/*.cdl)
+CASES		     := $(MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%)
+MAIN_CONN	     := $(wildcard testcases/connectivity_test/*.gds)
+CONN_CASES       := $(MAIN_CONN:testcases/connectivity_test/%.gds=test_conn_%)
+SC 		         := $(wildcard sc_testcases/hd/*.cdl)
+SC_CASES		 := $(SC:sc_testcases/hd/%.cdl=test_lvs_sc_gha_%)
 
 .DEFAULT_GOAL := all
 
@@ -31,59 +38,130 @@ all: test_lvs_main test_lvs_collective test_lvs_connectivity
 #=================================
 # -------- TEST MAIN LVS ---------
 #=================================
+.ONESHELL:
+$(run_folder):
+	@echo "## Our current Run folder: $(run_folder)"
+	@mkdir -p $(run_folder)
+
+.phony:
+test_lvs_main_gha_%: $(run_folder)
+	$(Testing_DIR)/run_test_case.sh $* $(PDK_ROOT) $(PDK) $(TESTCASES_DIR) $(run_folder)
+
 
 .ONESHELL:
-test_lvs_main_gha_%:
-	@cd $(Testing_DIR)
-	@file=`find . -iname $*.gds`
-	@net="$${file//'./testcases/'/}"; net="$${net//'fixed_devices/'/}";
-	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$$file --net=$${net//.gds/.cdl} ; then echo PASS CASE MATCHED; \
-		else python3 regression_result.py --db=$${file//.gds/.lvsdb} ; fi;
-	@file="$${file//'./testcases/'/'./fail_cases/'}";
-	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$${file//.gds/_dim_fail.gds} --net=$${net//.gds/_dim_fail.cdl} ; then exit 1; \
-		else python3 regression_result.py --db=$${file//.gds/_dim_fail.lvsdb} ; fi
-	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$${file//.gds/_lyr_fail.gds} --net=$${net//.gds/_lyr_fail.cdl} ; then exit 1; \
-		else python3 regression_result.py --db=$${file//.gds/_lyr_fail.lvsdb} ; fi
-	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$${file//.gds/_net_fail.gds} --net=$${net//.gds/_net_fail.cdl} ; then exit 1; \
-		else python3 regression_result.py --db=$${file//.gds/_net_fail.lvsdb} ; fi
+test_lvs_main: $(run_folder)
+	@$(MAKE) run_all_test_cases
 
 .ONESHELL:
-%.cdl : %.gds
-	@file="$<"
-	@mkdir -p $(run_folder)/main
-	@device="$${file//'testcases/'/}"; device="$${device//'fixed_devices/'/}"; device="$${device//.gds/}"
-	@$(MAKE) test_lvs_main_gha_$$device |& tee $(run_folder)/main/$$device.log
+print_cases: $(CASES)
+	@echo $(CASES)
 
 .ONESHELL:
-test_lvs_main: $(CASES)
-	@echo "Congratulations! Testing main LVS is finished successfully"
+run_all_test_cases: $(CASES)
+	@echo "Congratulations! Testing main LVS has finished successfully"
 
 #=================================
 # ----- TEST COLLECTIVE LVS ------
 #=================================
 
 .ONESHELL:
-test_lvs_collective: 
+test_lvs_collective: $(run_folder)
+	@echo "## Running collision testing"
 	@cd $(Testing_DIR)
-	@mkdir -p $(run_folder)
-	@python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=collective_test/collective.gds --net=collective.cdl |& tee -a $(run_folder)/collective_results.log
-	@echo "Congratulations! Testing collective LVS is finished successfully"
+	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=testcases/collision_test/collision.gds --net=collision.cdl --report=$(run_folder)/collision > $(run_folder)/collision_results.log 2>&1 ; \
+		then echo "Congratulations! Testing collision LVS has finished successfully"; else echo "Testing collision LVS has failed."; exit 1 ; fi
 
 #=================================
 # ---- TEST CONNECTIVITY LVS -----
 #=================================
 
-# .ONESHELL:
-# %.cdl : %.gds
-# 	@cd $(Testing_DIR)
-# 	@mkdir -p $(run_folder)
-# 	@file="$<"
-# 	@cdl="$${file//'connectivity_test/'/}";
-# 	@python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$$file --net=$${cdl//.gds/.cdl}  |& tee -a $(run_folder)/connectivity_results.log
+.ONESHELL:
+test_conn_%:
+	@echo "## Running connectivity testing for $*"
+	@cd $(Testing_DIR)
+	@mkdir -p $(run_folder)/connectivity_test
+	@file=`readlink -f testcases/connectivity_test/$*.gds`
+	@cdl=`readlink -f testcases/connectivity_test/$*.cdl`
+	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$$file --net=$*.cdl --report=$(run_folder)/connectivity_test/$* --lvs_sub=SUB_SRC_D1 > $(run_folder)/connectivity_test/$*_run.log 2>&1 ;
+		then echo "Congratulations! Connectivity test has finished successfully" ; else echo "Connectivity test has failed"; fi
+
+.ONESHELL:
+print_conn_cases: $(CONN_CASES)
+	@echo $(CONN_CASES)
 
 .ONESHELL:
 test_lvs_connectivity: $(CONN_CASES)
 	@echo "Congratulations! Testing connectivity LVS is finished successfully"
+
+nfet:
+	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*nfet*.cdl))
+	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
+	$(MAKE) $(SUB_CASES)
+
+pfet:
+	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*pfet*.cdl))
+	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
+	$(MAKE) $(SUB_CASES)
+
+BJT:
+	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*__npn*.cdl))
+	$(eval SUB_MAIN  += $(wildcard testcases/pass_cases/*__pnp*.cdl))
+	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
+	$(MAKE) $(SUB_CASES)
+
+# RF_BJT:
+# 	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*rf_npn*.cdl))
+# 	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
+# 	$(MAKE) $(SUB_CASES)
+
+diode:
+	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*diode*.cdl))
+	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
+	$(MAKE) $(SUB_CASES)
+
+resistor:
+	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*res*.cdl))
+	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
+	$(MAKE) $(SUB_CASES)
+
+cap_var:
+	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*cap_var*.cdl))
+	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
+	$(MAKE) $(SUB_CASES)
+
+cap_mim:
+	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*cap_mim*.cdl))
+	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
+	$(MAKE) $(SUB_CASES)
+
+# cap_vpp:
+# 	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*cap_vpp*.cdl))
+# 	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
+# 	$(MAKE) $(SUB_CASES)
+
+sonos:
+	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*sonos*.cdl))
+	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
+	$(MAKE) $(SUB_CASES)
+
+#=================================
+# -------- TEST SC LVS ---------
+#=================================
+.phony:
+test_lvs_sc_gha_%: $(run_folder)
+	$(Testing_DIR)/run_test_case_sc.sh $* $(PDK_ROOT) $(PDK) $(SC_TESTCASES_DIR) $(run_folder)
+
+.ONESHELL:
+test_lvs_sc: $(run_folder)
+	@$(MAKE) run_all_sc_test_cases
+
+.ONESHELL:
+print_sc_cases: $(SC_CASES)
+	@echo $(SC_CASES)
+
+.ONESHELL:
+run_all_sc_test_cases: $(SC_CASES)
+	@echo "Congratulations! Testing SC LVS has finished successfully"
 
 #==========================
 # --------- HELP ----------

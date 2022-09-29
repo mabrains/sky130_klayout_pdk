@@ -18,25 +18,27 @@
 
 Usage:
     run_lvs.py (--help| -h)
-    run_lvs.py (--design=<layout_path>) (--net=<netlist_path>) [--thr=<thr>] [--run_mode=<run_mode>] [--lvs_sub=<sub_name>] [--no_net_names] [--set_spice_comments] [--set_scale] [--set_verbose] [--set_schematic_simplify] [--set_net_only] [--set_top_lvl_pins] [--set_combine] [--set_purge] [--set_purge_nets]
+    run_lvs.py (--design=<layout_path>) (--net=<netlist_path>) [--report=<report_output_path>] [--output_netlist=<output_netlist_path>] [--thr=<thr>] [--run_mode=<run_mode>] [--lvs_sub=<sub_name>] [--no_net_names] [--set_spice_comments] [--set_scale] [--set_verbose] [--set_schematic_simplify] [--set_net_only] [--set_top_lvl_pins] [--set_combine] [--set_purge] [--set_purge_nets]
 
 Options:
-    --help -h                           Print this help message.
-    --design=<layout_path>              The input GDS file path.
-    --net=<netlist_path>                The input netlist file path.
-    --thr=<thr>                         Number of cores to be used by LVS checker
-    --run_mode=<run_mode>               Select klayout mode Allowed modes (flat , deep, tiling). [default: deep]
-    --lvs_sub=<sub_name>                Assign the substrate name used in design.
-    --no_net_names                      Discard net names in extracted netlist.
-    --set_spice_comments                Set netlist comments in extracted netlist.
-    --set_scale                         Set scale of 1e6 in extracted netlist.
-    --set_verbose                       Set verbose mode.
-    --set_schematic_simplify            Set schematic simplification in input netlist.
-    --set_net_only                      Set netlist object creation only in extracted netlist.
-    --set_top_lvl_pins                  Set top level pins only in extracted netlist.
-    --set_combine                       Set netlist combine only in extracted netlist.
-    --set_purge                         Set netlist purge all only in extracted netlist.
-    --set_purge_nets                    Set netlist purge nets only in extracted netlist.
+    --help -h                                   Print this help message.
+    --design=<layout_path>                      The input GDS file path.
+    --net=<netlist_path>                        The input netlist file path.
+    --report=<report_output_path>               The output database file path.
+    --output_netlist=<output_netlist_path>      Output netlist path.
+    --thr=<thr>                                 Number of cores to be used by LVS checker
+    --run_mode=<run_mode>                       Select klayout mode Allowed modes (flat , deep, tiling). [default: deep]
+    --lvs_sub=<sub_name>                        Assign the substrate name used in design.
+    --no_net_names                              Discard net names in extracted netlist.
+    --set_spice_comments                        Set netlist comments in extracted netlist.
+    --set_scale                                 Set scale of 1e6 in extracted netlist.
+    --set_verbose                               Set verbose mode.
+    --set_schematic_simplify                    Set schematic simplification in input netlist.
+    --set_net_only                              Set netlist object creation only in extracted netlist.
+    --set_top_lvl_pins                          Set top level pins only in extracted netlist.
+    --set_combine                               Set netlist combine only in extracted netlist.
+    --set_purge                                 Set netlist purge all only in extracted netlist.
+    --set_purge_nets                            Set netlist purge nets only in extracted netlist.
 """
 
 from docopt import docopt
@@ -54,6 +56,10 @@ def main():
     else:
         logging.error("Allowed klayout modes are (flat , deep , tiling) only")
         exit()
+
+    
+    if args["--output_netlist"]:
+        switches += "-rd target_netlist={} ".format(args["--output_netlist"])
 
     switches = switches + '-rd spice_net_names=false ' if args["--no_net_names"] else switches + '-rd spice_net_names=true '
 
@@ -86,8 +92,13 @@ def main():
         else:
             print("The script must be given a netlist file or a path to be able to run LVS")
             exit()
+        
+        if args["--report"]:
+            report = args["--report"]
+        else:
+            report = file_name[0]
 
-        subprocess.check_call(f"klayout -b -r {pdk_root}/{pdk}/sky130.lvs -rd input={path} -rd report={file_name[0]}.lvsdb -rd schematic={args['--net']} -rd target_netlist=extracted_netlist_{file_name[0]}.cir -rd thr={workers_count} {switches}", shell=True)
+        subprocess.check_call(f"klayout -b -r {pdk_root}/{pdk}/sky130.lvs -rd input={path} -rd report={report}.lvsdb -rd schematic={args['--net']} -rd target_netlist=extracted_netlist_{file_name[0]}.cir -rd thr={workers_count} {switches}", shell=True)
 
     else:
         print("The script must be given a layout file or a path to be able to run LVS")
@@ -103,8 +114,14 @@ if __name__ == "__main__":
     workers_count = os.cpu_count()*2 if args["--thr"] == None else int(args["--thr"])
 
     # Env. variables
-    pdk_root = os.environ['PDK_ROOT']
-    pdk      = os.environ['PDK']
+    if os.environ.get('PDK_ROOT') is not None:
+        ## if PDK_ROOT is defined, we assume that PDK is defined as well. Will error out if PDK_ROOT only is defined.
+        pdk_root = os.environ['PDK_ROOT']
+        pdk      = os.environ['PDK']
+    else:
+        pdk_full_path = os.path.dirname(os.path.abspath(__file__))
+        pdk_root = os.path.dirname(pdk_full_path)
+        pdk      = os.path.basename(pdk_full_path)
 
     # ========= Checking Klayout version =========
     klayout_v_ = os.popen("klayout -v").read()
