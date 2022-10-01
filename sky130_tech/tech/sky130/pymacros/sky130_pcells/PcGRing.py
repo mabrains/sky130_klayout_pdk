@@ -205,41 +205,41 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
       # Generate licon contacts
       #--------------------------
       # length of contacts row: bottom
-      pathLen = int((l+w)/grid)*grid  
+      pathLen = round((l+w)/grid)*grid  
       self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, grid, 0-(l+w)/2.0, 0-(h+w)/2.0, "R0" )
       
       # length of contacts row: Top
-      pathLen = int((l+w)/grid)*grid  
+      pathLen = round((l+w)/grid)*grid  
       self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, grid, 0-(l+w)/2.0, 0+(h+w)/2.0, "R0" )
       
       # Heights of contacts row: Left
-      pathLen = int((h+w)/grid)*grid  
+      pathLen = round((h+w)/grid)*grid  
       self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, grid, 0-(h+w)/2.0, 0-(l+w)/2.0, "R90" )
       
       # Heights of contacts row: Right
-      pathLen = int((h+w)/grid)*grid  
+      pathLen = round((h+w)/grid)*grid  
       self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, grid, 0-(h+w)/2.0, 0+(l+w)/2.0, "R90" )
       
       # Generate mcon contacts
       #--------------------------
       # length of contacts row: bottom
       if BmCON:
-        pathLen = int((l+w)/grid)*grid  
+        pathLen = round((l+w)/grid)*grid  
         self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, grid, 0-(l+w)/2.0, 0-(h+w)/2.0, "R0" )
       
       # length of contacts row: Top
       if TmCON:
-        pathLen = int((l+w)/grid)*grid  
+        pathLen = round((l+w)/grid)*grid  
         self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, grid, 0-(l+w)/2.0, 0+(h+w)/2.0, "R0" )
       
       # Heights of contacts row: Left
       if LmCON:
-        pathLen = int((h+w)/grid)*grid  
+        pathLen = round((h+w)/grid)*grid  
         self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, grid, 0-(h+w)/2.0, 0-(l+w)/2.0, "R90" )
       
       # Heights of contacts row: Right
       if RmCON:
-        pathLen = int((h+w)/grid)*grid  
+        pathLen = round((h+w)/grid)*grid  
         self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, grid, 0-(h+w)/2.0, 0+(l+w)/2.0, "R90" )
     
     def rectRowCenterToCenter(self, l_rect, pathLen, min_rect_spc, rect_size, grid, varCrd, fixCrd, R):
