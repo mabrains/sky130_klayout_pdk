@@ -170,7 +170,7 @@ class pcPmos18Generator(pya.PCellDeclarationHelper):
       hgring = w+extPC+2*widStack+2*gate_tap_spc
 
       instpcGRing = pcGRingGenerator()
-      gring = instpcGRing._GRing(self.layout, self.cell, well, wgring, lgring, hgring, self.LmCON, self.RmCON, self.BmCON, self.TmCON)
+      gring = instpcGRing._GRing(self.layout, self.cell, well, False, False, wgring, lgring, hgring, self.LmCON, self.RmCON, self.BmCON, self.TmCON)
 
       if subring:
         wsubgring_licon = licon_size+2*max(li_enc_licon_2,diff_licon_enc_2)
@@ -186,7 +186,7 @@ class pcPmos18Generator(pya.PCellDeclarationHelper):
         hsubgring = round((round(hsubgring/grid/2.0, 2))*grid*2.0, 2)
         wsubgring = round((round(wsubgring/grid/2.0, 2))*grid*2.0, 2)
         
-        subgring = instpcGRing._GRing(self.layout, self.cell, subwell, wsubgring, lsubgring, hsubgring, self.LmCON, self.RmCON, self.BmCON, self.TmCON)
+        subgring = instpcGRing._GRing(self.layout, self.cell, subwell, False, False, wsubgring, lsubgring, hsubgring, self.LmCON, self.RmCON, self.BmCON, self.TmCON)
 
     def _Pmos18(self, w, l, sab, gate_contact, gate_contact_num, finger_num, subring):
       self.wellgring = "N+Tap"

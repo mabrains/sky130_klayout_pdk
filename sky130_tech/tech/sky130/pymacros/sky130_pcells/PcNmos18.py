@@ -172,7 +172,7 @@ class pcNmos18Generator(pya.PCellDeclarationHelper):
       hgring = w+extPC+2*widStack+2*gate_tap_spc
 
       instpcGRing = pcGRingGenerator()
-      instpcGRing._GRing(self.layout, self.cell, well, wgring, lgring, hgring, self.LmCON, self.RmCON, self.BmCON, self.TmCON)
+      instpcGRing._GRing(self.layout, self.cell, well, False, False, wgring, lgring, hgring, self.LmCON, self.RmCON, self.BmCON, self.TmCON)
 
     def _Nmos18(self, w, l, sab, gate_contact, gate_contact_num, finger_num):
 
