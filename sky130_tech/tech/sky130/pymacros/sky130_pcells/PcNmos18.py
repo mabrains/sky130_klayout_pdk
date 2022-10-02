@@ -49,7 +49,7 @@ class pcNmos18Generator(pya.PCellDeclarationHelper):
         self.param("LmCON", self.TypeBoolean, "Left CA",default=True)
         self.param("RmCON", self.TypeBoolean, "Right CA",default=True)
         self.param("BmCON", self.TypeBoolean, "Bottom CA",default=True)
-        self.param("TmCON", self.TypeBoolean, "Right CA",default=True)
+        self.param("TmCON", self.TypeBoolean, "Top CA",default=True)
 
     def display_text_impl(self):
 
