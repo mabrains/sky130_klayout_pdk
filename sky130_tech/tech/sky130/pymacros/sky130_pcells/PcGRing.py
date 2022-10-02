@@ -199,7 +199,7 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
       if (LmCON == False) & (TmCON+RmCON+BmCON == 3):
         self.cell.shapes(l_lay).insert(pya.DPath(path_trb, w+2*l_lay_enc))
       if (TmCON == False) & (RmCON+BmCON+LmCON == 3):
-        self.cell.shapes(l_lay).insert(pya.Path(path_rbl, w+2*l_lay_enc))
+        self.cell.shapes(l_lay).insert(pya.DPath(path_rbl, w+2*l_lay_enc))
        
       # 1 shape 
       if (BmCON+RmCON+TmCON == 0) & (LmCON == True):
