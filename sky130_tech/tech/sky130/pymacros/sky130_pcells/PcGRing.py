@@ -80,27 +80,27 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
       # active layers_definitions
       # match-case only possible thru py 3.10. check ur python version by print(sys.version)
       if well == "N+Tap":
+        layList = ["li","tap","nsdm","nwell"]
+        encList = [0.0, 0.0, npsdm_enc_tap, nwell_enc_ntap]
+        
         if hvnwell:
-          layList = ["li","tap","nsdm","nwell","hvi"]
-          encList = [0.0, 0.0, npsdm_enc_tap, nwell_enc_ntap, hvnwell_enc_tap]
-        else:
-          if dnwell:
-            layList = ["li","tap","nsdm","nwell", "dnwell"]
-            encList = [0.0, 0.0, npsdm_enc_tap, nwell_enc_ntap, dnwell_enc_tap]
-          else:
-            layList = ["li","tap","nsdm","nwell"]
-            encList = [0.0, 0.0, npsdm_enc_tap, nwell_enc_ntap]
+          layList = layList+["hvi"]
+          encList = encList+[hvnwell_enc_tap]
         
         if dnwell:
-        # dnwell blanket 
+          layList = layList+["dnwell"]
+          encList = encList+[dnwell_enc_tap]
+          
+          # dnwell blanket 
           l_lay = self.layout.layer(dnwell_lay_num,dnwell_lay_dt)
           self.cell.shapes(l_lay).insert(pya.DBox(0-l/2.0, 0-h/2.0,l/2.0, h/2.0))
         else:
-        # nwell blanket  
+          # nwell blanket  
           l_lay = self.layout.layer(nwell_lay_num,nwell_lay_dt)
           self.cell.shapes(l_lay).insert(pya.DBox(0-l/2.0, 0-h/2.0,l/2.0, h/2.0))
-        #hvi blanket
+        
         if hvnwell:
+          #hvi blanket
           l_lay = self.layout.layer(hvi_lay_num,hvi_lay_dt)
           self.cell.shapes(l_lay).insert(pya.DBox(0-l/2.0, 0-h/2.0,l/2.0, h/2.0))
           
