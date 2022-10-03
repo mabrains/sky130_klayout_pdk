@@ -79,11 +79,18 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
       
       # active layers_definitions
       # match-case only possible thru py 3.10. check ur python version by print(sys.version)
-      if well == "N+Tap" or well == "N+Tap in DNW":
+      if well == "N+Tap":
         layList = ["li","tap","nsdm","nwell"]
         encList = [0.0, 0.0, npsdm_enc_tap, nwell_enc_ntap]
         
+        # nwell blanket  
+        l_lay = self.layout.layer(nwell_lay_num,nwell_lay_dt)
+        self.cell.shapes(l_lay).insert(pya.DBox(0-l/2.0, 0-h/2.0,l/2.0, h/2.0))
+        
       if well == "N+Tap in DNW":
+      
+        layList = ["li","tap","nsdm","nwell"]
+        encList = [0.0, 0.0, npsdm_enc_tap, nwell_enc_ntap]
       
         if hvnwell:
           layList = layList+["hvi"]
