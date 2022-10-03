@@ -32,9 +32,9 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
         
         # declare the parameters
         self.param("des_param", self.TypeString, "Description", default= "SkyWater 130nm Guard Ring Pcell", readonly = True)
-        self.param("well",self.TypeString,"Well", default="P+Tap",choices=(["N+Tap", "N+Tap"],["P+Tap", "P+Tap"],["N+S/D", "N+S/D"],["P+S/D","P+S/D"])) 
+        self.param("well",self.TypeString,"Well", default="P+Tap",choices=(["N+Tap", "N+Tap"],["N+Tap in DNW","N+Tap in DNW"],["P+Tap", "P+Tap"],["N+S/D", "N+S/D"],["P+S/D","P+S/D"])) 
         self.param("hvnwell", self.TypeBoolean, "Thick Oxide",default=False)
-        self.param("dnwell", self.TypeBoolean, "Deep-Nwell",default=False)
+        self.param("nwell_hole", self.TypeBoolean, "Nwell-Hole",default=False)
         self.param("w", self.TypeDouble, "Width", default=0.29)
         self.param("l", self.TypeDouble, "Length", default=5.0)
         self.param("h", self.TypeDouble, "Height", default=5.0)
@@ -48,7 +48,7 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
         return "pcGRing (w=%.4gum,l=%.4gum)" % (self.w,self.l)
 
 
-    def _GRing(self,layout, cell, well, hvnwell, dnwell, w, l, h, LmCON, RmCON, BmCON, TmCON):
+    def _GRing(self,layout, cell, well, hvnwell, nwell_hole, w, l, h, LmCON, RmCON, BmCON, TmCON):
       # draw polygons ring paths
       
       self.layout = layout
@@ -66,11 +66,11 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
       nwell_enc_ntap = 0.180
       hvnwell_enc_tap = 0.33
       
-      #Min enclosure of nwell hole by deep nwell outside UHVI = 1.03
-      dnwell_enc_nwell = 1.03
+      #Min enclosure of nwell hole by deep nwell outside UHVI = 1.03um
+      dnwell_enc_nwellH = 1.03
       
-      #calculate enclosure of tap by dnwell
-      dnwell_enc_tap = dnwell_enc_nwell+nwell_enc_ntap
+      #Deep nwell must be enclosed by nwell by atleast 0.4um Exempted inside UHVI or :drc_tag:`areaid.lw` 
+      nwell_enc_dnwell = 0.4
       
       #cell center-mark
       l_prBpundary = self.layout.layer(prbndry_lay_num,prbndry_lay_dt)
@@ -79,31 +79,39 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
       
       # active layers_definitions
       # match-case only possible thru py 3.10. check ur python version by print(sys.version)
-      if well == "N+Tap":
+      if well == "N+Tap" or well == "N+Tap in DNW":
         layList = ["li","tap","nsdm","nwell"]
         encList = [0.0, 0.0, npsdm_enc_tap, nwell_enc_ntap]
         
+      if well == "N+Tap in DNW":
+      
         if hvnwell:
           layList = layList+["hvi"]
           encList = encList+[hvnwell_enc_tap]
-        
-        if dnwell:
-          layList = layList+["dnwell"]
-          encList = encList+[dnwell_enc_tap]
           
-          # dnwell blanket 
-          l_lay = self.layout.layer(dnwell_lay_num,dnwell_lay_dt)
+          #hvi blanket
+          l_lay = self.layout.layer(hvi_lay_num,hvi_lay_dt)
           self.cell.shapes(l_lay).insert(pya.DBox(0-l/2.0, 0-h/2.0,l/2.0, h/2.0))
+      
+        if nwell_hole:
+          # dnwell blanket 
+          dnwell_enc_tap = -nwell_enc_ntap+dnwell_enc_nwellH
+          l_lay = self.layout.layer(dnwell_lay_num,dnwell_lay_dt)
+          self.cell.shapes(l_lay).insert(pya.DBox(
+            0-l/2.0-dnwell_enc_tap, 0-h/2.0-dnwell_enc_tap,
+            l/2.0+dnwell_enc_tap, h/2.0+dnwell_enc_tap))
         else:
+          # dnwell blanket
+          #calculate dnwell BBox
+          dx_dnwell = w+nwell_enc_ntap-nwell_enc_dnwell 
+          l_lay = self.layout.layer(dnwell_lay_num,dnwell_lay_dt)
+          self.cell.shapes(l_lay).insert(pya.DBox(
+            0-l/2.0-dx_dnwell, 0-h/2.0-dx_dnwell,
+            l/2.0+dx_dnwell, h/2.0+dx_dnwell))
           # nwell blanket  
           l_lay = self.layout.layer(nwell_lay_num,nwell_lay_dt)
           self.cell.shapes(l_lay).insert(pya.DBox(0-l/2.0, 0-h/2.0,l/2.0, h/2.0))
         
-        if hvnwell:
-          #hvi blanket
-          l_lay = self.layout.layer(hvi_lay_num,hvi_lay_dt)
-          self.cell.shapes(l_lay).insert(pya.DBox(0-l/2.0, 0-h/2.0,l/2.0, h/2.0))
-          
       if well == "P+Tap":
         layList = ["li","tap","psdm"]
         encList = [0.0, 0.0, npsdm_enc_tap]  
@@ -310,4 +318,4 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
     def produce_impl(self):
       
       # call GRing sub fucntion (_GRing)
-      self._GRing(self.layout,self.cell,self.well,self.hvnwell,self.dnwell,self.w,self.l,self.h,self.LmCON,self.RmCON,self.BmCON,self.TmCON)
+      self._GRing(self.layout,self.cell,self.well,self.hvnwell,self.nwell_hole,self.w,self.l,self.h,self.LmCON,self.RmCON,self.BmCON,self.TmCON)
