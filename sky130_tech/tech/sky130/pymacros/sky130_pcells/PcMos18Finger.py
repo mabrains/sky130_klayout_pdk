@@ -110,6 +110,7 @@ class pcMos18FingerGenerator:
       extPC = 2*max(met1_spc,met2_spc,poly_diff_ext,li_spc)
       totPC = widPC+extPC
      
+      gate_toggle = 0
       for i in range(0,finger_num):
         if gate_contact == "Bottom":
           self.cell.shapes(l_poly).insert(pya.DBox(-lenRx/2.0+sab_max+i*(lenPC+sab_min), -totPC/2.0, -lenRx/2.0+sab_max+lenPC+i*(lenPC+sab_min), widPC/2.0+poly_diff_ext))
@@ -117,6 +118,13 @@ class pcMos18FingerGenerator:
           self.cell.shapes(l_poly).insert(pya.DBox(-lenRx/2.0+sab_max+i*(lenPC+sab_min), -widPC/2.0-poly_diff_ext, -lenRx/2.0+sab_max+lenPC+i*(lenPC+sab_min), totPC/2.0))
         if gate_contact == "Both":
           self.cell.shapes(l_poly).insert(pya.DBox(-lenRx/2.0+sab_max+i*(lenPC+sab_min), -totPC/2.0, -lenRx/2.0+sab_max+lenPC+i*(lenPC+sab_min), totPC/2.0))
+        if gate_contact == "Alternate":
+          if gate_toggle == 0:
+            self.cell.shapes(l_poly).insert(pya.DBox(-lenRx/2.0+sab_max+i*(lenPC+sab_min), -totPC/2.0, -lenRx/2.0+sab_max+lenPC+i*(lenPC+sab_min), widPC/2.0+poly_diff_ext))
+            gate_toggle = 1
+          else:
+            self.cell.shapes(l_poly).insert(pya.DBox(-lenRx/2.0+sab_max+i*(lenPC+sab_min), -widPC/2.0-poly_diff_ext, -lenRx/2.0+sab_max+lenPC+i*(lenPC+sab_min), totPC/2.0))
+            gate_toggle = 0
      
       #---------------------
       #   draw Tran well
@@ -176,16 +184,24 @@ class pcMos18FingerGenerator:
       widStack_licon = gate_contact_num*licon_size+(gate_contact_num-1)*licon_spc+2*max(poly_licon_enc_2, npc_enc_pc_licon, li_enc_licon_2)
       widStack_mcon = gate_contact_num*mcon_size+(gate_contact_num-1)*mcon_spc+2*met_mcon_enc_2
       widStack = max(widStack_licon, widStack_mcon)
-      lenStack_licon = licon_size+2*max(diff_licon_enc_1,li_enc_licon_2)
+      lenStack_licon = licon_size+2*max(poly_licon_enc_2,li_enc_licon_2)
       lenStack_mcon = mcon_size+2*met_mcon_enc_1
       lenStack = max(self.l, lenStack_licon, lenStack_mcon)
      
+      gate_toggle = 0 
       for i in range(0,finger_num):
         if gate_contact == "Bottom" or gate_contact == "Both":  
           instViaStack._PcViaStack(self.layout, self.cell, widStack, lenStack, -5, 1,pya.DPoint(-lenRx/2.0+sab_max+i*(lenPC+sab_min)+lenPC/2.0,-(totPC+widStack)/2.0))
         if gate_contact == "Top" or gate_contact == "Both":  
           instViaStack._PcViaStack(self.layout, self.cell, widStack, lenStack, -5, 1,pya.DPoint(-lenRx/2.0+sab_max+i*(lenPC+sab_min)+lenPC/2.0,(totPC+widStack)/2.0))
-     
+        if gate_contact == "Alternate":
+          if gate_toggle == 0:
+            instViaStack._PcViaStack(self.layout, self.cell, widStack, lenStack, -5, 1,pya.DPoint(-lenRx/2.0+sab_max+i*(lenPC+sab_min)+lenPC/2.0,-(totPC+widStack)/2.0))
+            gate_toggle = 1
+          else:
+            instViaStack._PcViaStack(self.layout, self.cell, widStack, lenStack, -5, 1,pya.DPoint(-lenRx/2.0+sab_max+i*(lenPC+sab_min)+lenPC/2.0,(totPC+widStack)/2.0))
+            gate_toggle = 0
+
       # generate stack from Metal1 to Metal2
       #calulate contacts cell width/length
       lenStack = max(self.l, via_size+2*max(met1_via_enc_1,met2_via_enc_1))
@@ -196,3 +212,10 @@ class pcMos18FingerGenerator:
           instViaStack._PcViaStack(self.layout, self.cell, widStack, lenStack, 0, 2,pya.DPoint(-lenRx/2.0+sab_max+i*(lenPC+sab_min)+lenPC/2.0,-(totPC+widStack)/2.0))
         if gate_contact == "Top" or gate_contact == "Both":
           instViaStack._PcViaStack(self.layout, self.cell, widStack, lenStack, 0, 2,pya.DPoint(-lenRx/2.0+sab_max+i*(lenPC+sab_min)+lenPC/2.0,(totPC+widStack)/2.0))
+        if gate_contact == "Alternate":
+          if gate_toggle == 0:
+            instViaStack._PcViaStack(self.layout, self.cell, widStack, lenStack, 0, 2,pya.DPoint(-lenRx/2.0+sab_max+i*(lenPC+sab_min)+lenPC/2.0,-(totPC+widStack)/2.0))
+            gate_toggle = 1
+          else:
+            instViaStack._PcViaStack(self.layout, self.cell, widStack, lenStack, 0, 2,pya.DPoint(-lenRx/2.0+sab_max+i*(lenPC+sab_min)+lenPC/2.0,(totPC+widStack)/2.0))
+            gate_toggle = 0
