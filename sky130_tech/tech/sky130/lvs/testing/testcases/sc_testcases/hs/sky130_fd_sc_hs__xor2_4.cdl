@@ -17,23 +17,23 @@
 .SUBCKT sky130_fd_sc_hs__xor2_4 A B VGND VNB VPB VPWR X
 *.PININFO A:I B:I VGND:I VNB:I VPB:I VPWR:I X:O
 MMNnor0 inor A VGND VNB sky130_fd_pr__nfet_01v8_lvt m=2 w=0.74U l=0.15U mult=1
-+ sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sa=0.265 sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMNnor1 inor B VGND VNB sky130_fd_pr__nfet_01v8_lvt m=2 w=0.74U l=0.15U mult=1
-+ sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sa=0.265 sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMNaoi10 VGND A sndNA VNB sky130_fd_pr__nfet_01v8_lvt m=4 w=0.74U l=0.15U mult=1
-+ sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sa=0.265 sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMNaoi11 sndNA B X VNB sky130_fd_pr__nfet_01v8_lvt m=4 w=0.74U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMNaoi20 X inor VGND VNB sky130_fd_pr__nfet_01v8_lvt m=2 w=0.74U l=0.15U mult=1
-+ sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sa=0.265 sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMPnor0 VPWR A sndPA VPB sky130_fd_pr__pfet_01v8 m=2 w=1.0U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMPnor1 sndPA B inor VPB sky130_fd_pr__pfet_01v8 m=2 w=1.0U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMPaoi10 pmid A VPWR VPB sky130_fd_pr__pfet_01v8 m=4 w=1.12U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMPaoi11 pmid B VPWR VPB sky130_fd_pr__pfet_01v8 m=4 w=1.12U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMPaoi20 X inor pmid VPB sky130_fd_pr__pfet_01v8 m=4 w=1.12U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 .ENDS sky130_fd_sc_hs__xor2_4

@@ -17,23 +17,23 @@
 .SUBCKT sky130_fd_sc_ls__mux2i_1 A0 A1 S VGND VNB VPB VPWR Y
 *.PININFO A0:I A1:I S:I VGND:I VNB:I VPB:I VPWR:I Y:O
 MMNA00 Y A0 smdNA0 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.74U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMNA01 smdNA0 Sb VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.74U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMNA10 Y A1 sndNA1 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.74U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMNA11 sndNA1 S VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.74U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMIN1 Sb S VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.55U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMPA00 VPWR S sndPS VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=1.12U l=0.15U mult=1
-+ sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sa=0.265 sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMPA01 sndPS A0 Y VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=1.12U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMPA10 VPWR Sb sndPSb VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=1.12U l=0.15U mult=1
-+ sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sa=0.265 sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMPA11 sndPSb A1 Y VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=1.12U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMIP1 Sb S VPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.84U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 .ENDS sky130_fd_sc_ls__mux2i_1

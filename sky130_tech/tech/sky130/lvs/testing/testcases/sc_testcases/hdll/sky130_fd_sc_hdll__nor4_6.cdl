@@ -17,19 +17,19 @@
 .SUBCKT sky130_fd_sc_hdll__nor4_6 A B C D VGND VNB VPB VPWR Y
 *.PININFO A:I B:I C:I D:I VGND:I VNB:I VPB:I VPWR:I Y:O
 MMP0 VPWR A sndPA VPB sky130_fd_pr__pfet_01v8_hvt m=6 w=1.0U l=0.18U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.028 perim=0.76
++ sb=0.265 sd=0.28 area=0.028 perim=0.76
 MMP1 sndPA B sndPB VPB sky130_fd_pr__pfet_01v8_hvt m=6 w=1.0U l=0.18U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.028 perim=0.76
++ sb=0.265 sd=0.28 area=0.028 perim=0.76
 MMP2 sndPB C sndPC VPB sky130_fd_pr__pfet_01v8_hvt m=6 w=1.0U l=0.18U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.028 perim=0.76
++ sb=0.265 sd=0.28 area=0.028 perim=0.76
 MMP3 sndPC D Y VPB sky130_fd_pr__pfet_01v8_hvt m=6 w=1.0U l=0.18U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.028 perim=0.76
++ sb=0.265 sd=0.28 area=0.028 perim=0.76
 MMN0 Y A VGND VNB sky130_fd_pr__nfet_01v8 m=6 w=0.65U l=0.15U mult=1 sa=0.265 sb=0.265
-+ sd=0.28 topography=normal area=0.028 perim=0.76
++ sd=0.28 area=0.028 perim=0.76
 MMN1 Y B VGND VNB sky130_fd_pr__nfet_01v8 m=6 w=0.65U l=0.15U mult=1 sa=0.265 sb=0.265
-+ sd=0.28 topography=normal area=0.028 perim=0.76
++ sd=0.28 area=0.028 perim=0.76
 MMN2 Y C VGND VNB sky130_fd_pr__nfet_01v8 m=6 w=0.65U l=0.15U mult=1 sa=0.265 sb=0.265
-+ sd=0.28 topography=normal area=0.028 perim=0.76
++ sd=0.28 area=0.028 perim=0.76
 MMN3 Y D VGND VNB sky130_fd_pr__nfet_01v8 m=6 w=0.65U l=0.15U mult=1 sa=0.265 sb=0.265
-+ sd=0.28 topography=normal area=0.028 perim=0.76
++ sd=0.28 area=0.028 perim=0.76
 .ENDS sky130_fd_sc_hdll__nor4_6

@@ -161,7 +161,7 @@ sonos:
 #=================================
 .phony:
 test_lvs_sc_gha_%: $(run_folder)
-	@$(Testing_DIR)/run_test_case_sc.sh $* $(PDK_ROOT) $(PDK) $(SC_TESTCASES_DIR) $(run_folder) $(word 4,$(subst _, ,$*))
+	@$(Testing_DIR)/run_test_case_sc.sh $* $(PDK_ROOT) $(PDK) $(SC_TESTCASES_DIR) $(run_folder) $(word 4,$(subst _, ,$*)) VNB
 
 .ONESHELL:
 test_lvs_sc: test_lvs_hd_sc test_lvs_hdll_sc test_lvs_hs_sc test_lvs_hvl_sc test_lvs_lp_sc test_lvs_ls_sc test_lvs_ms_sc

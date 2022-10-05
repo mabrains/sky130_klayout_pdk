@@ -16,9 +16,9 @@
 
 .SUBCKT sky130_fd_sc_hd__a21bo_4 A1 A2 B1_N VGND VNB VPB VPWR X
 *.PININFO A1:I A2:I B1_N:I VGND:I VNB:I VPB:I VPWR:I X:O
-MMPA0 pndA A1 VPWR VPB sky130_fd_pr__pfet_01v8_hvt m=2 w=1.0u l=0.15u mult=1 sa=0.265
+MMPA0 pndA A2 VPWR VPB sky130_fd_pr__pfet_01v8_hvt m=2 w=1.0u l=0.15u mult=1 sa=0.265
 + sb=0.265 sd=0.28 area=0.063 perim=1.14
-MMPA1 pndA A2 VPWR VPB sky130_fd_pr__pfet_01v8_hvt m=2 w=1.0u l=0.15u mult=1 sa=0.265
+MMPA1 pndA A1 VPWR VPB sky130_fd_pr__pfet_01v8_hvt m=2 w=1.0u l=0.15u mult=1 sa=0.265
 + sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMPB0 y B1 pndA VPB sky130_fd_pr__pfet_01v8_hvt m=2 w=1.0u l=0.15u mult=1 sa=0.265
 + sb=0.265 sd=0.28 area=0.063 perim=1.14

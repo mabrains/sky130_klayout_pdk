@@ -17,11 +17,11 @@
 .SUBCKT sky130_fd_sc_hvl__buf_4 A VGND VNB VPB VPWR X
 *.PININFO A:I VGND:I VNB:I VPB:I VPWR:I X:O
 MMIN1 Ab A VGND VNB sky130_fd_pr__nfet_g5v0d10v5 m=1 w=0.75U l=0.5U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMIN2 X Ab VGND VNB sky130_fd_pr__nfet_g5v0d10v5 m=4 w=0.75U l=0.5U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMIP1 Ab A VPWR VPB sky130_fd_pr__pfet_g5v0d10v5 m=1 w=1.5U l=0.5U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMIP2 X Ab VPWR VPB sky130_fd_pr__pfet_g5v0d10v5 m=4 w=1.5U l=0.5U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 .ENDS sky130_fd_sc_hvl__buf_4

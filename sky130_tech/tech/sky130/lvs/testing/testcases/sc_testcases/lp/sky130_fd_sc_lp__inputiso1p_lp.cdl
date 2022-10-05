@@ -17,23 +17,23 @@
 .SUBCKT sky130_fd_sc_lp__inputiso1p_lp A SLEEP VGND VNB VPB VPWR X
 *.PININFO A:I SLEEP:I VGND:I VNB:I VPB:I VPWR:I X:O
 MMP0 VPWR SLEEP sndPA VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1
-+ sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sa=0.265 sb=0.265 sd=0.28 area=0.063 perim=1.14
 MI7 sndPA A net62 VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=0.42U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MI8 net34 net62 X VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=1.26U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MI15 VPWR net62 net34 VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=1.26U l=0.15U mult=1
-+ sa=0.265 sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sa=0.265 sb=0.265 sd=0.28 area=0.063 perim=1.14
 MI10 net66 A VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MI9 net62 SLEEP net50 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MMIN2 X net62 net46 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MI17 net62 A net66 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MI16 net50 SLEEP VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 MI14 net46 net62 VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
-+ sb=0.265 sd=0.28 topography=normal area=0.063 perim=1.14
++ sb=0.265 sd=0.28 area=0.063 perim=1.14
 .ENDS sky130_fd_sc_lp__inputiso1p_lp

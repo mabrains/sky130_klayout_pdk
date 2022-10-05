@@ -6,6 +6,7 @@ export PDK=$3
 export TESTCASES_DIR=`readlink -f $4`
 export RUN_FOLDER=`readlink -f $5`
 export LIB=$6
+export GND=$7
 
 echo "## Running test case for $CASE_NAME"
 echo "PDK_ROOT = $PDK_ROOT and PDK = $PDK"
@@ -18,7 +19,7 @@ if [ -f $gds_file ]
 then
     if [ -f $cdl_file ]
     then
-        python3 $PDK_ROOT/$PDK/run_lvs.py --design=$gds_file --net=$cdl_file --output_netlist=$RUN_FOLDER/${CASE_NAME}_pass_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_pass > $RUN_FOLDER/${CASE_NAME}_pass_lvs.log 2>&1
+        python3 $PDK_ROOT/$PDK/run_lvs.py --design=$gds_file --net=$cdl_file --output_netlist=$RUN_FOLDER/${CASE_NAME}_pass_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_pass --lvs_sub=${GND-sky130_gnd} > $RUN_FOLDER/${CASE_NAME}_pass_lvs.log 2>&1
         return_code=$?
         if [ "$return_code" != "0" ]
         then

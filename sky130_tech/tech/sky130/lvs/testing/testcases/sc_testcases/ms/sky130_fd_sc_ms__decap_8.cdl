@@ -17,7 +17,7 @@
 .SUBCKT sky130_fd_sc_ms__decap_8 VGND VNB VPB VPWR
 *.PININFO VGND:I VNB:I VPB:I VPWR:I
 MI1 VGND VPWR VNB nshort m=2 w=0.42U l=1.0U mult=1 sa=0.265 sb=0.265
-+ sd=0.28 topography=normal area=0.063 perim=1.14
++ sd=0.28 area=0.063 perim=1.14
 MI2 VPWR VGND VPB phighvt m=2 w=1.0U l=1.0U mult=1 sa=0.265 sb=0.265
-+ sd=0.28 topography=normal area=0.063 perim=1.14
++ sd=0.28 area=0.063 perim=1.14
 .ENDS sky130_fd_sc_ms__decap_8
