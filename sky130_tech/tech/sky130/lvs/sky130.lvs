@@ -573,6 +573,7 @@ class VPP3DeviceExtractor < RBA::GenericDeviceExtractor
             device = create_device()
           
             # provide the device terminals to connect the metal to later
+            device.set_parameter(RBA::DeviceClassCapacitorWithBulk::PARAM_C, 2e-16)
             define_terminal(device, RBA::DeviceClassCapacitorWithBulk::TERMINAL_A, 1, cc)
             define_terminal(device, RBA::DeviceClassCapacitorWithBulk::TERMINAL_B, 2, b)
             define_terminal(device, RBA::DeviceClassCapacitorWithBulk::TERMINAL_W, 3, e)
