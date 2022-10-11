@@ -17,31 +17,38 @@
 # ---------------------------------- LVS ---------------------------------
 #=========================================================================
 
-SHELL            := /bin/bash
-Testing_DIR      ?= $(shell realpath .)
-PDK_ROOT         := $(shell realpath ../..)
-TESTCASES_DIR    := $(shell realpath ./testcases)
-SC_TESTCASES_DIR := $(shell realpath ./testcases/sc_testcases)
-PDK              := $(shell basename `realpath ..`)
-run_folder       := $(shell realpath $$(date +'run_%Y_%m_%d_%H_%M'))
-MAIN 		     := $(wildcard testcases/pass_cases/*.cdl)
-CASES		     := $(MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%)
-MAIN_CONN	     := $(wildcard testcases/connectivity_test/*.gds)
-CONN_CASES       := $(MAIN_CONN:testcases/connectivity_test/%.gds=test_conn_%)
-SC_HD	         := $(wildcard testcases/sc_testcases/hd/*.cdl)
-SC_HD_CASES		 := $(SC_HD:testcases/sc_testcases/hd/%.cdl=test_lvs_sc_gha_%)
-SC_HDLL	         := $(wildcard testcases/sc_testcases/hdll/*.cdl)
-SC_HDLL_CASES	 := $(SC_HDLL:testcases/sc_testcases/hdll/%.cdl=test_lvs_sc_gha_%)
-SC_HS	         := $(wildcard testcases/sc_testcases/hs/*.cdl)
-SC_HS_CASES		 := $(SC_HS:testcases/sc_testcases/hs/%.cdl=test_lvs_sc_gha_%)
-SC_HVL	         := $(wildcard testcases/sc_testcases/hvl/*.cdl)
-SC_HVL_CASES	 := $(SC_HVL:testcases/sc_testcases/hvl/%.cdl=test_lvs_sc_gha_%)
-SC_LP	         := $(wildcard testcases/sc_testcases/lp/*.cdl)
-SC_LP_CASES		 := $(SC_LP:testcases/sc_testcases/lp/%.cdl=test_lvs_sc_gha_%)
-SC_LS	         := $(wildcard testcases/sc_testcases/ls/*.cdl)
-SC_LS_CASES		 := $(SC_LS:testcases/sc_testcases/ls/%.cdl=test_lvs_sc_gha_%)
-SC_MS	         := $(wildcard testcases/sc_testcases/ms/*.cdl)
-SC_MS_CASES		 := $(SC_MS:testcases/sc_testcases/ms/%.cdl=test_lvs_sc_gha_%)
+SHELL            	:= /bin/bash
+Testing_DIR      	?= $(shell realpath .)
+PDK_ROOT         	:= $(shell realpath ../..)
+TESTCASES_DIR    	:= $(shell realpath ./testcases)
+SC_TESTCASES_DIR	:= $(shell realpath ./testcases/sc_testcases)
+PDK              	:= $(shell basename `realpath ..`)
+run_folder       	:= $(shell realpath $$(date +'run_%Y_%m_%d_%H_%M'))
+MAIN 		     	:= $(wildcard testcases/pass_cases/*.cdl)
+CASES		     	:= $(MAIN:testcases/pass_cases/%.cdl=test_lvs_main_local_%)
+MAIN_CONN	     	:= $(wildcard testcases/connectivity_test/*.gds)
+CONN_CASES       	:= $(MAIN_CONN:testcases/connectivity_test/%.gds=test_conn_%)
+SC_HD	         	:= $(wildcard testcases/sc_testcases/hd/*.cdl)
+SC_HD_GHA		 	:= $(SC_HD:testcases/sc_testcases/hd/%.cdl=test_lvs_sc_gha_%)
+SC_HD_LOCAL		 	:= $(SC_HD:testcases/sc_testcases/hd/%.cdl=test_lvs_sc_local_%)
+SC_HDLL	         	:= $(wildcard testcases/sc_testcases/hdll/*.cdl)
+SC_HDLL_GHA	 		:= $(SC_HDLL:testcases/sc_testcases/hdll/%.cdl=test_lvs_sc_gha_%)
+SC_HDLL_LOCAL 		:= $(SC_HDLL:testcases/sc_testcases/hdll/%.cdl=test_lvs_sc_local_%)
+SC_HS	         	:= $(wildcard testcases/sc_testcases/hs/*.cdl)
+SC_HS_GHA		 	:= $(SC_HS:testcases/sc_testcases/hs/%.cdl=test_lvs_sc_gha_%)
+SC_HS_LOCAL		 	:= $(SC_HS:testcases/sc_testcases/hs/%.cdl=test_lvs_sc_local_%)
+SC_HVL	         	:= $(wildcard testcases/sc_testcases/hvl/*.cdl)
+SC_HVL_GHA	 		:= $(SC_HVL:testcases/sc_testcases/hvl/%.cdl=test_lvs_sc_gha_%)
+SC_HVL_LOCAL 		:= $(SC_HVL:testcases/sc_testcases/hvl/%.cdl=test_lvs_sc_local_%)
+SC_LP	         	:= $(wildcard testcases/sc_testcases/lp/*.cdl)
+SC_LP_GHA		 	:= $(SC_LP:testcases/sc_testcases/lp/%.cdl=test_lvs_sc_gha_%)
+SC_LP_LOCAL		 	:= $(SC_LP:testcases/sc_testcases/lp/%.cdl=test_lvs_sc_local_%)
+SC_LS	         	:= $(wildcard testcases/sc_testcases/ls/*.cdl)
+SC_LS_GHA		 	:= $(SC_LS:testcases/sc_testcases/ls/%.cdl=test_lvs_sc_gha_%)
+SC_LS_LOCAL		 	:= $(SC_LS:testcases/sc_testcases/ls/%.cdl=test_lvs_sc_local_%)
+SC_MS	         	:= $(wildcard testcases/sc_testcases/ms/*.cdl)
+SC_MS_GHA		 	:= $(SC_MS:testcases/sc_testcases/ms/%.cdl=test_lvs_sc_gha_%)
+SC_MS_LOCAL		 	:= $(SC_MS:testcases/sc_testcases/ms/%.cdl=test_lvs_sc_local_%)
 
 .DEFAULT_GOAL := all
 
@@ -50,6 +57,7 @@ all: test_lvs_main test_lvs_collective test_lvs_connectivity
 #=================================
 # -------- TEST MAIN LVS ---------
 #=================================
+
 .ONESHELL:
 $(run_folder):
 	@echo "## Our current Run folder: $(run_folder)"
@@ -57,19 +65,65 @@ $(run_folder):
 
 .phony:
 test_lvs_main_gha_%: $(run_folder)
-	$(Testing_DIR)/run_test_case.sh $* $(PDK_ROOT) $(PDK) $(TESTCASES_DIR) $(run_folder)
-
-
-.ONESHELL:
-test_lvs_main: $(run_folder)
-	@$(MAKE) run_all_test_cases
+	@$(Testing_DIR)/run_test_case.sh $* $(PDK_ROOT) $(PDK) $(TESTCASES_DIR) $(run_folder) GHA
 
 .ONESHELL:
-print_cases: $(CASES)
-	@echo $(CASES)
+test_lvs_main_local_%: $(run_folder)
+	@$(Testing_DIR)/run_test_case.sh $* $(PDK_ROOT) $(PDK) $(TESTCASES_DIR) $(run_folder) LOCAL
+
+nfet:
+	@$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*nfet*.cdl))
+	@$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_local_%))
+	@$(MAKE) $(SUB_CASES)
+
+pfet:
+	@$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*pfet*.cdl))
+	@$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_local_%))
+	@$(MAKE) $(SUB_CASES)
+
+BJT:
+	@$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*__npn*.cdl))
+	@$(eval SUB_MAIN  += $(wildcard testcases/pass_cases/*__pnp*.cdl))
+	@$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_local_%))
+	@$(MAKE) $(SUB_CASES)
+
+# RF_BJT:
+# 	@$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*rf_npn*.cdl))
+# 	@$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_local_%))
+# 	@$(MAKE) $(SUB_CASES)
+
+diode:
+	@$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*diode*.cdl))
+	@$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_local_%))
+	@$(MAKE) $(SUB_CASES)
+
+resistor:
+	@$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*res*.cdl))
+	@$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_local_%))
+	@$(MAKE) $(SUB_CASES)
+
+cap_var:
+	@$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*cap_var*.cdl))
+	@$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_local_%))
+	@$(MAKE) $(SUB_CASES)
+
+cap_mim:
+	@$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*cap_mim*.cdl))
+	@$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_local_%))
+	@$(MAKE) $(SUB_CASES)
+
+cap_vpp:
+	@$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*cap_vpp*.cdl))
+	@$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_local_%))
+	@$(MAKE) $(SUB_CASES)
+
+sonos:
+	@$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*sonos*.cdl))
+	@$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
+	@$(MAKE) $(SUB_CASES)
 
 .ONESHELL:
-run_all_test_cases: $(CASES)
+test_lvs_main: $(run_folder) $(CASES)
 	@echo "Congratulations! Testing main LVS has finished successfully"
 
 #=================================
@@ -82,6 +136,7 @@ test_lvs_collective: $(run_folder)
 	@cd $(Testing_DIR)
 	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=testcases/collision_test/collision.gds --net=collision.cdl --report=$(run_folder)/collision > $(run_folder)/collision_results.log 2>&1 ; \
 		then echo "Congratulations! Testing collision LVS has finished successfully"; else echo "Testing collision LVS has failed."; exit 1 ; fi
+
 
 #=================================
 # ---- TEST CONNECTIVITY LVS -----
@@ -98,129 +153,84 @@ test_conn_%:
 		then echo "Congratulations! Connectivity test has finished successfully" ; else echo "Connectivity test has failed"; fi
 
 .ONESHELL:
-print_conn_cases: $(CONN_CASES)
-	@echo $(CONN_CASES)
-
-.ONESHELL:
 test_lvs_connectivity: $(CONN_CASES)
 	@echo "Congratulations! Testing connectivity LVS is finished successfully"
 
-nfet:
-	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*nfet*.cdl))
-	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
-	$(MAKE) $(SUB_CASES)
-
-pfet:
-	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*pfet*.cdl))
-	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
-	$(MAKE) $(SUB_CASES)
-
-BJT:
-	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*__npn*.cdl))
-	$(eval SUB_MAIN  += $(wildcard testcases/pass_cases/*__pnp*.cdl))
-	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
-	$(MAKE) $(SUB_CASES)
-
-# RF_BJT:
-# 	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*rf_npn*.cdl))
-# 	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
-# 	$(MAKE) $(SUB_CASES)
-
-diode:
-	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*diode*.cdl))
-	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
-	$(MAKE) $(SUB_CASES)
-
-resistor:
-	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*res*.cdl))
-	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
-	$(MAKE) $(SUB_CASES)
-
-cap_var:
-	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*cap_var*.cdl))
-	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
-	$(MAKE) $(SUB_CASES)
-
-cap_mim:
-	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*cap_mim*.cdl))
-	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
-	$(MAKE) $(SUB_CASES)
-
-# cap_vpp:
-# 	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*cap_vpp*.cdl))
-# 	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
-# 	$(MAKE) $(SUB_CASES)
-
-sonos:
-	$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*sonos*.cdl))
-	$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_gha_%))
-	$(MAKE) $(SUB_CASES)
 
 #=================================
 # -------- TEST SC LVS ---------
 #=================================
+
 .phony:
 test_lvs_sc_gha_%: $(run_folder)
-	@$(Testing_DIR)/run_test_case_sc.sh $* $(PDK_ROOT) $(PDK) $(SC_TESTCASES_DIR) $(run_folder) $(word 4,$(subst _, ,$*)) VNB
+	@$(Testing_DIR)/run_test_case.sh $* $(PDK_ROOT) $(PDK) $(SC_TESTCASES_DIR) $(run_folder) GHA VNB $(word 4,$(subst _, ,$*)) SC
+
+.phony:
+test_lvs_sc_local_%: $(run_folder)
+	@$(Testing_DIR)/run_test_case.sh $* $(PDK_ROOT) $(PDK) $(SC_TESTCASES_DIR) $(run_folder) LOCAL VNB $(word 4,$(subst _, ,$*)) SC
 
 .ONESHELL:
 test_lvs_sc: test_lvs_hd_sc test_lvs_hdll_sc test_lvs_hs_sc test_lvs_hvl_sc test_lvs_lp_sc test_lvs_ls_sc test_lvs_ms_sc
 	@echo "Congratulations! Testing All SC LVS has finished successfully"
 
 .ONESHELL:
-test_lvs_hd_sc: $(run_folder)
-	@$(MAKE) run_hd_sc_test_cases
+test_lvs_sc_local: test_lvs_hd_sc_local test_lvs_hdll_sc_local test_lvs_hs_sc_local test_lvs_hvl_sc_local test_lvs_lp_sc_local test_lvs_ls_sc_local test_lvs_ms_sc_local
+	@echo "Congratulations! Testing All SC LVS has finished successfully"
 
 .ONESHELL:
-run_hd_sc_test_cases: $(SC_HD_CASES)
+test_lvs_hd_sc: $(run_folder) $(SC_HD_GHA)
 	@echo "Congratulations! Testing HD SC LVS has finished successfully"
 
 .ONESHELL:
-test_lvs_hdll_sc: $(run_folder)
-	@$(MAKE) run_hdll_sc_test_cases
+test_lvs_hd_sc_local: $(run_folder) $(SC_HD_LOCAL)
+	@echo "Congratulations! Testing HD SC LVS has finished successfully"
 
 .ONESHELL:
-run_hdll_sc_test_cases: $(SC_HDLL_CASES)
+test_lvs_hdll_sc: $(run_folder) $(SC_HDLL_GHA)
 	@echo "Congratulations! Testing HDLL SC LVS has finished successfully"
 
 .ONESHELL:
-test_lvs_hs_sc: $(run_folder)
-	@$(MAKE) run_hs_sc_test_cases
+test_lvs_hdll_sc_local: $(run_folder) $(SC_HDLL_LOCAL)
+	@echo "Congratulations! Testing HDLL SC LVS has finished successfully"
 
 .ONESHELL:
-run_hs_sc_test_cases: $(SC_HS_CASES)
+test_lvs_hs_sc: $(run_folder) $(SC_HS_GHA)
 	@echo "Congratulations! Testing HS SC LVS has finished successfully"
 
 .ONESHELL:
-test_lvs_hvl_sc: $(run_folder)
-	@$(MAKE) run_hvl_sc_test_cases
+test_lvs_hs_sc_local: $(run_folder) $(SC_HS_LOCAL)
+	@echo "Congratulations! Testing HS SC LVS has finished successfully"
 
 .ONESHELL:
-run_hvl_sc_test_cases: $(SC_HVL_CASES)
+test_lvs_hvl_sc: $(run_folder) $(SC_HVL_GHA)
 	@echo "Congratulations! Testing HVL SC LVS has finished successfully"
 
 .ONESHELL:
-test_lvs_lp_sc: $(run_folder)
-	@$(MAKE) run_lp_sc_test_cases
+test_lvs_hvl_sc_local: $(run_folder) $(SC_HVL_LOCAL)
+	@echo "Congratulations! Testing HVL SC LVS has finished successfully"
 
 .ONESHELL:
-run_lp_sc_test_cases: $(SC_LP_CASES)
+test_lvs_lp_sc: $(run_folder) $(SC_LP_GHA)
 	@echo "Congratulations! Testing LP SC LVS has finished successfully"
 
 .ONESHELL:
-test_lvs_ls_sc: $(run_folder)
-	@$(MAKE) run_ls_sc_test_cases
+test_lvs_lp_sc_local: $(run_folder) $(SC_LP_LOCAL)
+	@echo "Congratulations! Testing LP SC LVS has finished successfully"
 
 .ONESHELL:
-run_ls_sc_test_cases: $(SC_LS_CASES)
+test_lvs_ls_sc: $(run_folder) $(SC_LS_GHA)
 	@echo "Congratulations! Testing LS SC LVS has finished successfully"
 
 .ONESHELL:
-test_lvs_ms_sc: $(run_folder)
-	@$(MAKE) run_ms_sc_test_cases
+test_lvs_ls_sc_local: $(run_folder) $(SC_LS_LOCAL)
+	@echo "Congratulations! Testing LS SC LVS has finished successfully"
 
 .ONESHELL:
-run_ms_sc_test_cases: $(SC_MS_CASES)
+test_lvs_ms_sc: $(run_folder) $(SC_MS_GHA)
+	@echo "Congratulations! Testing MS SC LVS has finished successfully"
+
+.ONESHELL:
+test_lvs_ms_sc_local: $(run_folder) $(SC_MS_LOCAL)
 	@echo "Congratulations! Testing MS SC LVS has finished successfully"
 
 #==========================
