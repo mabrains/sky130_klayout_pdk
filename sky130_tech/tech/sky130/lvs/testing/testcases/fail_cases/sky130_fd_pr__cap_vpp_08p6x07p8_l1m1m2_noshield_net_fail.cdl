@@ -16,6 +16,6 @@
 
 .SUBCKT sky130_fd_pr__cap_vpp_08p6x07p8_l1m1m2_noshield C0 C1 SUB
 
-Cx_net_fail C0_net_fail C1_net_fail SUB sky130_fd_pr__cap_vpp_22p5x23p1_pol1m1m2m3m4m5_noshield
+Cx_net_fail C0_net_fail C1_net_fail SUB sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x6
 
 .ENDS

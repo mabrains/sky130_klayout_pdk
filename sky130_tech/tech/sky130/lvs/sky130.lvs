@@ -408,7 +408,10 @@ class Custom4TerminalExtractor < RBA::GenericDeviceExtractor
       if (terminals.size > 1) and (terminals2.size > 0)
 
         terminals.each do |term|
-          if "#{RBA::Region::new(term).interacting(conductor1.merged.interacting(RBA::Region::new(terminals[0])))}".empty?
+          if terminals[0] == term
+            next
+          end
+          if !"#{RBA::Region::new(term).extents.interacting(RBA::Region::new(terminals[0]).extents)}".empty?
             terminals = [terminals[0], term]
             break
           end
@@ -490,7 +493,10 @@ class Custom3TerminalExtractor < RBA::GenericDeviceExtractor
       if terminals.size > 1
 
         terminals.each do |term|
-          if "#{RBA::Region::new(term).interacting(conductor.merged.interacting(RBA::Region::new(terminals[0])))}".empty?
+          if terminals[0] == term
+            next
+          end
+          if !"#{RBA::Region::new(term).extents.interacting(RBA::Region::new(terminals[0]).extents)}".empty?
             terminals = [terminals[0], term]
             break
           end
@@ -1210,11 +1216,20 @@ vpp_55_47 = vpp.edges.with_length(55.46, 55.48)
 # ---- METAL ----
 # ===============
 
-met1_vpp  = met1.interacting(met1_pin).and(vpp)
-met2_vpp  = met2.interacting(met2_pin).and(vpp)
-met3_vpp  = met3.interacting(met3_pin).and(vpp)
-met4_vpp  = met4.interacting(met4_pin).and(vpp)
-met5_vpp  = met5.interacting(met5_pin).and(vpp)
+poly_vpp  = poly.and(vpp)
+li_vpp    =   li.and(vpp)
+met1_vpp  = met1.and(vpp)
+met2_vpp  = met2.and(vpp)
+met3_vpp  = met3.and(vpp)
+met4_vpp  = met4.and(vpp)
+met5_vpp  = met5.and(vpp)
+
+licon_vpp = licon.and(vpp)
+mcon_vpp  =  mcon.and(vpp)
+via1_vpp  =  via1.and(vpp)
+via2_vpp  =  via2.and(vpp)
+via3_vpp  =  via3.and(vpp)
+via4_vpp  =  via4.and(vpp)
 
 # met4_xvpp = met4.interacting(met4.extents.edges.with_length(55.1.um , 55.12.um )).interacting(met4.extents.edges.with_length(28.89.um , 28.91.um ))
 
@@ -1615,25 +1630,32 @@ logger.info("Starting LVS VPP CAP CONNECTIONS")
 connect(vpp_sub      , pwell_label)
 
 connect(met1_vpp     ,   met1_con)
-connect(met1_vpp     ,   met1_pin)
 connect(met1_vpp     , met1_label)
 
 connect(met2_vpp     ,   met2_con)
-connect(met2_vpp     ,   met2_pin)
 connect(met2_vpp     , met2_label)
 
 connect(met3_vpp     ,  met3_ncap)
-connect(met3_vpp     ,   met3_pin)
 connect(met3_vpp     , met3_label)
 
 connect(met4_vpp     ,  met4_ncap)
-connect(met4_vpp     ,   met4_pin)
 connect(met4_vpp     , met4_label)
 
 connect(met5_vpp     ,   met5_con)
-connect(met5_vpp     ,   met5_pin)
 connect(met5_vpp     , met5_label)
 
+connect(poly_vpp     ,  licon_vpp)
+connect(licon_vpp    ,     li_vpp)
+connect(li_vpp       ,   mcon_vpp)
+connect(mcon_vpp     ,   met1_vpp)
+connect(met1_vpp     ,   via1_vpp)
+connect(via1_vpp     ,   met2_vpp)
+connect(met2_vpp     ,   via2_vpp)
+connect(via2_vpp     ,   met3_vpp)
+connect(met3_vpp     ,   via3_vpp)
+connect(via3_vpp     ,   met4_vpp)
+connect(met4_vpp     ,   via4_vpp)
+connect(via4_vpp     ,   met5_vpp)
 
 #================================
 # ---- SONOS CONNECTIONS -----
