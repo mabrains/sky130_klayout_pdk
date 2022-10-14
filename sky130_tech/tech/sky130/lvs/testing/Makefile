@@ -112,6 +112,11 @@ cap_mim:
 	@$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_local_%))
 	@$(MAKE) $(SUB_CASES)
 
+inductor:
+	@$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*coil*.cdl))
+	@$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_local_%))
+	@$(MAKE) $(SUB_CASES)
+
 cap_vpp:
 	@$(eval SUB_MAIN  := $(wildcard testcases/pass_cases/*cap_vpp*.cdl))
 	@$(eval SUB_CASES := $(SUB_MAIN:testcases/pass_cases/%.cdl=test_lvs_main_local_%))
@@ -127,14 +132,14 @@ test_lvs_main: $(run_folder) $(CASES)
 	@echo "Congratulations! Testing main LVS has finished successfully"
 
 #=================================
-# ----- TEST COLLECTIVE LVS ------
+# ------ TEST COLLISION LVS ------
 #=================================
 
 .ONESHELL:
-test_lvs_collective: $(run_folder)
+test_lvs_collision: $(run_folder)
 	@echo "## Running collision testing"
 	@cd $(Testing_DIR)
-	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=testcases/collision_test/collision.gds --net=collision.cdl --report=$(run_folder)/collision > $(run_folder)/collision_results.log 2>&1 ; \
+	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=testcases/collision_test/collision.gds --net=collision.cdl --report=$(run_folder)/collision --lvs_sub=SUBSTRATE > $(run_folder)/collision_results.log 2>&1 ; \
 		then echo "Congratulations! Testing collision LVS has finished successfully"; else echo "Testing collision LVS has failed."; exit 1 ; fi
 
 

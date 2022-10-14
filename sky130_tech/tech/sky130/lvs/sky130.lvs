@@ -69,14 +69,51 @@ else
   logger.info("No substrate name given, default name is sky130_gnd")
 end
 
+#=== CUSTOM WRITER CLASS ===
+class SubcircuitModels < RBA::NetlistSpiceWriterDelegate
+
+  def write_device(device)
+    device_class = device.device_class
+    if device_class.name.include?('fet')
+      str = "M" + device.expanded_name
+    elsif device_class.name.include?('diode')
+      str = "D" + device.expanded_name
+    elsif device_class.name.include?('npn') or device_class.name.include?('pnp')
+      str = "Q" + device.expanded_name
+    elsif device_class.name.include?('res')
+      str = "R" + device.expanded_name
+    elsif device_class.name.include?('ind') or device_class.name.include?('coil')
+      str = "L" + device.expanded_name
+    elsif device_class.name.include?('cap')
+      str = "C" + device.expanded_name
+    else
+      str = "#{device.id}" + device.expanded_name
+    end
+    device_class.terminal_definitions.each do |td|
+      str += " " + net_to_string(device.net_for_terminal(td.id))
+    end
+    str += " " + device_class.name
+    unless device_class.name.include?('vpp') || device_class.name.include?('ind')
+      device_class.parameter_definitions.each do |pd|
+        str += " " + pd.name + ("=%.12g" % device.parameter(pd.id))
+      end
+    end
+    emit_line(str)
+  end      
+
+end
+
+#=== CUSTOM WRITER ===
+custom_spice_writer = RBA::NetlistSpiceWriter::new(SubcircuitModels::new)
+
 #=== NET NAMES OPTION ===
 # true: use net names instead of numbers
 # false: use numbers for nets
 if $spice_net_names == "false"
-  spice_with_net_names = false
+  custom_spice_writer.use_net_names = false
   logger.info("Extracted netlist with net names: #{$spice_net_names}")
 else
-  spice_with_net_names = true
+  custom_spice_writer.use_net_names = true
   logger.info("Extracted netlist with net names: true")
 end
 
@@ -84,18 +121,18 @@ end
 # true: put in comments with details
 # false: no comments
 if $spice_comments == "true"
-  spice_with_comments = true
+  custom_spice_writer.with_comments = true
   logger.info("Extracted netlist with comments in details: #{$spice_comments}")
 else
-  spice_with_comments = false
+  custom_spice_writer.with_comments = false
   logger.info("Extracted netlist with comments in details: false")
 end
 
 if $target_netlist
-  target_netlist($target_netlist, write_spice(spice_with_net_names, spice_with_comments), "Extracted by KLayout with SKY130 LVS runset on : #{Time.now.strftime("%d/%m/%Y %H:%M")}")
+  target_netlist($target_netlist, custom_spice_writer, "Extracted by KLayout with SKY130 LVS runset on : #{Time.now.strftime("%d/%m/%Y %H:%M")}")
   logger.info("Extracted netlist file: #{$target_netlist}")
 else
-  target_netlist(File.join(File.dirname(RBA::CellView::active.filename), source.cell_name+"_extracted.cir"), write_spice(spice_with_net_names, spice_with_comments),  "Extracted by KLayout with SKY130 LVS runset on : #{Time.now.strftime("%d/%m/%Y %H:%M")}")
+  target_netlist(File.join(File.dirname(RBA::CellView::active.filename), source.cell_name+"_extracted.cir"), custom_spice_writer,  "Extracted by KLayout with SKY130 LVS runset on : #{Time.now.strftime("%d/%m/%Y %H:%M")}")
   logger.info("Extracted netlist file: #{source.cell_name}_extracted.cir")
 end
 
@@ -360,9 +397,93 @@ class FixBJT4Transistor < RBA::GenericDeviceExtractor
   end
 end
 
-
 #====================== CUSTOM FOUR TERMINAL EXTRACTOR =========================
-class Custom4TerminalExtractor < RBA::GenericDeviceExtractor
+class InductorExtractor < RBA::GenericDeviceExtractor
+
+  def initialize(name)
+    self.name = name
+  end
+
+  def setup
+
+    define_layer("C1", "Conductor1")
+    define_layer("C2", "Conductor2")
+    define_layer("M", "Marker")
+    define_layer("B", "Bulk")
+
+    register_device_class(RBA::DeviceClassMOS4Transistor::new)
+
+  end
+
+  def extract_devices(layer_geometry)
+
+    # layer_geometry provides the input layers in the order they are 
+    # defined with "define_layer"
+    # conductor is supposed to be "conductor outside marker"
+    conductor1 = layer_geometry[0]
+    conductor2 = layer_geometry[1]
+    marker     = layer_geometry[2]
+    bulk       = layer_geometry[3]
+
+    marker_merged = marker.merged
+    bulk_merged   = bulk.merged
+
+    # this will be the edge where the marker turns into conductor
+    marker_edges  = (marker_merged.edges & (conductor1))
+    marker_edges2 = (marker_merged.edges & (conductor2))
+
+    marker_merged.each do |r|
+
+      # identify the edges where this marker shape ends
+      interface_edges = marker_edges.interacting(RBA::Region::new(r))
+
+      # form terminal shapes from these edges
+      terminals  = interface_edges.extended_out(1).merged
+      terminals2 = marker_edges2.extended_out(1).merged
+
+      if (terminals.size > 1) and (terminals2.size > 0)
+
+        terminals.each do |term|
+          if "#{RBA::Region::new(term).interacting(conductor1.merged.interacting(RBA::Region::new(terminals[0])))}".empty?
+            terminals = [terminals[0], term]
+            break
+          end
+        end
+
+        device = create_device
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_S, 0,   terminals[0]);
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_G, 0,   terminals[1]);
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_D, 1,  terminals2[0]);
+        define_terminal(device, RBA::DeviceClassMOS4Transistor::TERMINAL_B, 3, bulk_merged[0]);
+
+      end
+      
+    end
+
+  end
+
+  def get_connectivity(layout, layers)
+  
+    # marker is used for extraction
+    # conductor is used for producing the terminals
+    conductor1 = layers[0]
+    conductor2 = layers[1]
+    marker     = layers[2]
+    bulk       = layers[3]
+    conn = RBA::Connectivity::new
+    conn.connect(marker    , marker)
+    conn.connect(conductor1, marker)
+    conn.connect(conductor2, marker)
+    conn.connect(bulk      , marker)
+
+    return conn
+
+  end
+
+end
+
+#====================== CUSTOM FOUR TERMINAL VPP EXTRACTOR =========================
+class VPP4Extractor < RBA::GenericDeviceExtractor
 
   def initialize(name)
     self.name = name
@@ -450,8 +571,8 @@ class Custom4TerminalExtractor < RBA::GenericDeviceExtractor
 end
 
 
-#====================== CUSTOM THREE TERMINAL EXTRACTOR =========================
-class Custom3TerminalExtractor < RBA::GenericDeviceExtractor
+#====================== CUSTOM THREE TERMINAL VPP EXTRACTOR =========================
+class VPP3Extractor < RBA::GenericDeviceExtractor
 
   def initialize(name)
     self.name = name
@@ -534,7 +655,7 @@ end
 
 
 #====================== CUSTOM VPP NHV EXTRACTOR =========================
-class VPP3DeviceExtractor < RBA::GenericDeviceExtractor
+class VPP3NHVExtractor < RBA::GenericDeviceExtractor
 
   def initialize(name)
     self.name = name
@@ -1159,6 +1280,25 @@ varactor_bulk_hvt = ptap_conn.holes.interacting(varactor_gate_hvt)
 
 
 #==================================
+# ----- INDUCTOR DERIVATIONS ------
+#==================================
+
+logger.info("Starting INDUCTOR DERIVATIONS")
+
+# General Inductor derivation
+inductor_sub = inductor.and(extent)
+
+# RF Inductor with 3 turns and internal diameter of 90um
+coil_1 = inductor.interacting(met3.or(met2).and(inductor.covering(met2.and(inductor), 3, 3)).holes.width(100.um, projection).with_distance(89.um, 91.um).polygons)
+
+# RF Inductor with 5 turns and internal diameter of 125um
+coil_2 = inductor.interacting(met3.or(met2).and(inductor.covering(met2.and(inductor), 5, 5)).holes.width(135.um, projection).with_distance(124.um, 126.um).polygons)
+
+# RF Inductor with 5 turns and internal diameter of 220um
+coil_3 = inductor.interacting(met3.or(met2).and(inductor.covering(met2.and(inductor), 5, 5)).holes.width(230.um, projection).with_distance(219.um, 221.um).polygons)
+
+
+#==================================
 # ------ VPP CAP DERIVATIONS ------
 #==================================
 
@@ -1614,6 +1754,16 @@ connect(pwell_term    , licon)
 
 
 #================================
+# ---- INDUCTOR CONNECTIONS -----
+#================================
+
+logger.info("Starting LVS INDUCTOR CONNECTIONS")
+
+# General Inductor capacitor connections
+connect(inductor_sub      , pwell_label)
+
+
+#================================
 # ------- VPP CONNECTIONS -------
 #================================
 
@@ -1953,6 +2103,25 @@ extract_devices(capacitor_with_bulk("sky130_fd_pr__cap_var_hvt", 4.4e-15, VarCap
 
 
 #==================================
+# ------ INDUCTOR EXTRACTION ------
+#==================================
+
+# logger.info("Starting INDUCTOR EXTRACTION")
+
+# # RF Inductor with 3 turns and internal diameter of 90um
+# logger.info("Extracting RF Inductor with 3 turns and internal diameter of 90um")
+# extract_devices(InductorExtractor::new("sky130_fd_pr__rf_ind_03_90"), {"C1" => met3_ncap, "C2" => met2_con, "M" => coil_1, "B" => inductor_sub })
+
+# # RF Inductor with 5 turns and internal diameter of 125um
+# logger.info("Extracting RF Inductor with 5 turns and internal diameter of 125um")
+# extract_devices(InductorExtractor::new("sky130_fd_pr__rf_ind_05_125"), {"C1" => met3_ncap, "C2" => met2_con, "M" => coil_2, "B" => inductor_sub })
+
+# # RF Inductor with 5 turns and internal diameter of 220um
+# logger.info("Extracting RF Inductor with 5 turns and internal diameter of 220um")
+# extract_devices(InductorExtractor::new("sky130_fd_pr__rf_ind_05_220"), {"C1" => met3_ncap, "C2" => met2_con, "M" => coil_3, "B" => inductor_sub })
+
+
+#==================================
 # ---------- VPP EXTRACTION -------
 #==================================
 
@@ -1960,236 +2129,236 @@ logger.info("Starting VARACTOR EXTRACTION")
 
 # VPP capacitor with dimensions of 2.4um x 4.6um and with layers of m1m2 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_02p4x04p6_m1m2_noshield")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_02p4x04p6_m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_02p4x04p6_m1m2_noshield, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_02p4x04p6_m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_02p4x04p6_m1m2_noshield, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 2.7um x 6.1um and with layers of m1m2m3m4 and shieldl1
 logger.info("Extracting sky130_fd_pr__cap_vpp_02p7x06p1_m1m2m3m4_shieldl1_fingercap")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_02p7x06p1_m1m2m3m4_shieldl1_fingercap"), {"C" => met2_vpp, "M" => vpp_02p7x06p1_m1m2m3m4_shieldl1_fingercap, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_02p7x06p1_m1m2m3m4_shieldl1_fingercap"), {"C" => met2_vpp, "M" => vpp_02p7x06p1_m1m2m3m4_shieldl1_fingercap, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 2.7um x 11.1um and with layers of m1m2m3m4 and shieldl1
 logger.info("Extracting sky130_fd_pr__cap_vpp_02p7x11p1_m1m2m3m4_shieldl1_fingercap")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_02p7x11p1_m1m2m3m4_shieldl1_fingercap"), {"C" => met2_vpp, "M" => vpp_02p7x11p1_m1m2m3m4_shieldl1_fingercap, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_02p7x11p1_m1m2m3m4_shieldl1_fingercap"), {"C" => met2_vpp, "M" => vpp_02p7x11p1_m1m2m3m4_shieldl1_fingercap, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 2.7um x 21.1um and with layers of m1m2m3m4 and shieldl1
 logger.info("Extracting sky130_fd_pr__cap_vpp_02p7x21p1_m1m2m3m4_shieldl1_fingercap")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_02p7x21p1_m1m2m3m4_shieldl1_fingercap"), {"C" => met2_vpp, "M" => vpp_02p7x21p1_m1m2m3m4_shieldl1_fingercap, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_02p7x21p1_m1m2m3m4_shieldl1_fingercap"), {"C" => met2_vpp, "M" => vpp_02p7x21p1_m1m2m3m4_shieldl1_fingercap, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 2.7um x 41.1um and with layers of m1m2m3m4 and shieldl1
 logger.info("Extracting sky130_fd_pr__cap_vpp_02p7x41p1_m1m2m3m4_shieldl1_fingercap")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_02p7x41p1_m1m2m3m4_shieldl1_fingercap"), {"C" => met2_vpp, "M" => vpp_02p7x41p1_m1m2m3m4_shieldl1_fingercap, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_02p7x41p1_m1m2m3m4_shieldl1_fingercap"), {"C" => met2_vpp, "M" => vpp_02p7x41p1_m1m2m3m4_shieldl1_fingercap, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 2.9um x 6.1um and with layers of m1m2m3m4 and shieldl1
 logger.info("Extracting sky130_fd_pr__cap_vpp_02p9x06p1_m1m2m3m4_shieldl1_fingercap2")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_02p9x06p1_m1m2m3m4_shieldl1_fingercap2"), {"C" => met2_vpp, "M" => vpp_02p9x06p1_m1m2m3m4_shieldl1_fingercap2, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_02p9x06p1_m1m2m3m4_shieldl1_fingercap2"), {"C" => met2_vpp, "M" => vpp_02p9x06p1_m1m2m3m4_shieldl1_fingercap2, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 3.9um x 3.9um and with layers of m1m2 and shieldl1 with floatm3
 logger.info("Extracting sky130_fd_pr__cap_vpp_03p9x03p9_m1m2_shieldl1_floatm3")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_03p9x03p9_m1m2_shieldl1_floatm3"), {"C1" => met2_vpp, "C2" => met3_vpp, "M" => vpp_03p9x03p9_m1m2_shieldl1_floatm3, "B" => vpp_sub })
+extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_03p9x03p9_m1m2_shieldl1_floatm3"), {"C1" => met2_vpp, "C2" => met3_vpp, "M" => vpp_03p9x03p9_m1m2_shieldl1_floatm3, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 4.4um x 4.6um and with layers of l1m1m2 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_04p4x04p6_l1m1m2_noshield")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_l1m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_04p4x04p6_l1m1m2_noshield, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_l1m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_04p4x04p6_l1m1m2_noshield, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 4.4um x 4.6um and with layers of l1m1m2 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_04p4x04p6_l1m1m2_noshield_o2subcell")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_l1m1m2_noshield_o2subcell"), {"C" => met2_vpp, "M" => vpp_04p4x04p6_l1m1m2_noshield_o2subcell, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_l1m1m2_noshield_o2subcell"), {"C" => met2_vpp, "M" => vpp_04p4x04p6_l1m1m2_noshield_o2subcell, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 4.4um x 4.6um and with layers of l1m1m2 and shieldpo with floatm3
 logger.info("Extracting sky130_fd_pr__cap_vpp_04p4x04p6_l1m1m2_shieldpo_floatm3")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_l1m1m2_shieldpo_floatm3"), {"C1" => met2_vpp, "C2" => met3_vpp, "M" => vpp_04p4x04p6_l1m1m2_shieldpo_floatm3, "B" => vpp_sub })
+extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_l1m1m2_shieldpo_floatm3"), {"C1" => met2_vpp, "C2" => met3_vpp, "M" => vpp_04p4x04p6_l1m1m2_shieldpo_floatm3, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 4.4um x 4.6um and with layers of m1m2m3 and shieldl1
 logger.info("Extracting sky130_fd_pr__cap_vpp_04p4x04p6_m1m2m3_shieldl1")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_m1m2m3_shieldl1"), {"C" => met2_vpp, "M" => vpp_04p4x04p6_m1m2m3_shieldl1, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_m1m2m3_shieldl1"), {"C" => met2_vpp, "M" => vpp_04p4x04p6_m1m2m3_shieldl1, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 4.4um x 4.6um and with layers of m1m2m3 and shieldl1m5 with floatm4
 logger.info("Extracting sky130_fd_pr__cap_vpp_04p4x04p6_m1m2m3_shieldl1m5_floatm4")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_m1m2m3_shieldl1m5_floatm4"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_04p4x04p6_m1m2m3_shieldl1m5_floatm4, "B" => vpp_sub })
+extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_m1m2m3_shieldl1m5_floatm4"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_04p4x04p6_m1m2m3_shieldl1m5_floatm4, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 4.4um x 4.6um and with layers of m1m2 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_04p4x04p6_m1m2_noshield")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_04p4x04p6_m1m2_noshield, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_04p4x04p6_m1m2_noshield, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 4.4um x 4.6um and with layers of m1m2 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_04p4x04p6_m1m2_noshield_o2")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_m1m2_noshield_o2"), {"C" => met2_vpp, "M" => vpp_04p4x04p6_m1m2_noshield_o2, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_m1m2_noshield_o2"), {"C" => met2_vpp, "M" => vpp_04p4x04p6_m1m2_noshield_o2, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 4.4um x 4.6um and with layers of m1m2 and shieldl1
 logger.info("Extracting sky130_fd_pr__cap_vpp_04p4x04p6_m1m2_shieldl1")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_m1m2_shieldl1"), {"C" => met2_vpp, "M" => vpp_04p4x04p6_m1m2_shieldl1, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_04p4x04p6_m1m2_shieldl1"), {"C" => met2_vpp, "M" => vpp_04p4x04p6_m1m2_shieldl1, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 5.9um x 5.9um and with layers of m1m2m3m4 and shieldl1
 logger.info("Extracting sky130_fd_pr__cap_vpp_05p9x05p9_m1m2m3m4_shieldl1_wafflecap")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_05p9x05p9_m1m2m3m4_shieldl1_wafflecap"), {"C" => met2_vpp, "M" => vpp_05p9x05p9_m1m2m3m4_shieldl1_wafflecap, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_05p9x05p9_m1m2m3m4_shieldl1_wafflecap"), {"C" => met2_vpp, "M" => vpp_05p9x05p9_m1m2m3m4_shieldl1_wafflecap, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 6.8um x 6.1um and with layers of l1m1m2m3 and shieldpom4
 logger.info("Extracting sky130_fd_pr__cap_vpp_06p8x06p1_l1m1m2m3_shieldpom4")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_06p8x06p1_l1m1m2m3_shieldpom4"), {"C1" => met2_vpp, "C2" => met4_vpp, "M" => vpp_06p8x06p1_l1m1m2m3_shieldpom4, "B" => vpp_sub })
+extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_06p8x06p1_l1m1m2m3_shieldpom4"), {"C1" => met2_vpp, "C2" => met4_vpp, "M" => vpp_06p8x06p1_l1m1m2m3_shieldpom4, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 6.8um x 6.1um and with layers of m1m2m3 and shieldl1m4
 logger.info("Extracting sky130_fd_pr__cap_vpp_06p8x06p1_m1m2m3_shieldl1m4")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_06p8x06p1_m1m2m3_shieldl1m4"), {"C1" => met2_vpp, "C2" => met4_vpp, "M" => vpp_06p8x06p1_m1m2m3_shieldl1m4, "B" => vpp_sub })
+extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_06p8x06p1_m1m2m3_shieldl1m4"), {"C1" => met2_vpp, "C2" => met4_vpp, "M" => vpp_06p8x06p1_m1m2m3_shieldl1m4, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 8.6um x 7.8um and with layers of l1m1m2 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_08p6x07p8_l1m1m2_noshield")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_l1m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_08p6x07p8_l1m1m2_noshield, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_l1m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_08p6x07p8_l1m1m2_noshield, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 8.6um x 7.8um and with layers of l1m1m2 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_08p6x07p8_l1m1m2_noshield_o2subcell")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_l1m1m2_noshield_o2subcell"), {"C" => met2_vpp, "M" => vpp_08p6x07p8_l1m1m2_noshield_o2subcell, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_l1m1m2_noshield_o2subcell"), {"C" => met2_vpp, "M" => vpp_08p6x07p8_l1m1m2_noshield_o2subcell, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 8.6um x 7.8um and with layers of l1m1m2 and shieldpo with floatm3
 logger.info("Extracting sky130_fd_pr__cap_vpp_08p6x07p8_l1m1m2_shieldpo_floatm3")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_l1m1m2_shieldpo_floatm3"), {"C1" => met2_vpp, "C2" => met3_vpp, "M" => vpp_08p6x07p8_l1m1m2_shieldpo_floatm3, "B" => vpp_sub })
+extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_l1m1m2_shieldpo_floatm3"), {"C1" => met2_vpp, "C2" => met3_vpp, "M" => vpp_08p6x07p8_l1m1m2_shieldpo_floatm3, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 8.6um x 7.8um and with layers of m1m2m3 and shieldl1
 logger.info("Extracting sky130_fd_pr__cap_vpp_08p6x07p8_m1m2m3_shieldl1")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_m1m2m3_shieldl1"), {"C" => met2_vpp, "M" => vpp_08p6x07p8_m1m2m3_shieldl1, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_m1m2m3_shieldl1"), {"C" => met2_vpp, "M" => vpp_08p6x07p8_m1m2m3_shieldl1, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 8.6um x 7.8um and with layers of m1m2m3 and shieldl1m5 with floatm4
 logger.info("Extracting sky130_fd_pr__cap_vpp_08p6x07p8_m1m2m3_shieldl1m5_floatm4")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_m1m2m3_shieldl1m5_floatm4"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_08p6x07p8_m1m2m3_shieldl1m5_floatm4, "B" => vpp_sub })
+extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_m1m2m3_shieldl1m5_floatm4"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_08p6x07p8_m1m2m3_shieldl1m5_floatm4, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 8.6um x 7.8um and with layers of m1m2 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_08p6x07p8_m1m2_noshield")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_08p6x07p8_m1m2_noshield, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_08p6x07p8_m1m2_noshield, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 8.6um x 7.8um and with layers of m1m2 and shieldl1
 logger.info("Extracting sky130_fd_pr__cap_vpp_08p6x07p8_m1m2_shieldl1")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_m1m2_shieldl1"), {"C" => met2_vpp, "M" => vpp_08p6x07p8_m1m2_shieldl1, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_08p6x07p8_m1m2_shieldl1"), {"C" => met2_vpp, "M" => vpp_08p6x07p8_m1m2_shieldl1, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 11.3um x 11.3um and with layers of m1m2m3m4 and shieldl1
 logger.info("Extracting sky130_fd_pr__cap_vpp_11p3x11p3_m1m2m3m4_shieldl1_wafflecap")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p3x11p3_m1m2m3m4_shieldl1_wafflecap"), {"C" => met2_vpp, "M" => vpp_11p3x11p3_m1m2m3m4_shieldl1_wafflecap, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_11p3x11p3_m1m2m3m4_shieldl1_wafflecap"), {"C" => met2_vpp, "M" => vpp_11p3x11p3_m1m2m3m4_shieldl1_wafflecap, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 11.3um x 11.8um and with layers of l1m1m2m3m4 and shieldm5
 logger.info("Extracting vpp cap sky130_fd_pr__cap_vpp_11p3x11p8_l1m1m2m3m4_shieldm5_nhv")
-extract_devices(VPP3DeviceExtractor::new("sky130_fd_pr__cap_vpp_11p3x11p8_l1m1m2m3m4_shieldm5_nhv"),
+extract_devices(VPP3NHVExtractor::new("sky130_fd_pr__cap_vpp_11p3x11p8_l1m1m2m3m4_shieldm5_nhv"),
                  { "MARKER" => vpp_11p3x11p8_l1m1m2m3m4_shieldm5_nhv, "tA" =>  met2_vpp, "tB" => met1_vpp, "tW" => met5_vpp })
 
 # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4 and shieldm5
 logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldm5")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldm5"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldm5, "B" => vpp_sub })
+extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldm5"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldm5, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4 and shieldpom5
 logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5, "B" => vpp_sub })
+extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5, "B" => vpp_sub })
 
 # # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4 and shieldpom5
 # logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x6")
-# extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x6"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x6, "B" => vpp_sub })
+# extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x6"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x6, "B" => vpp_sub })
 
 # # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4 and shieldpom5
 # logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x7")
-# extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x7"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x7, "B" => vpp_sub })
+# extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x7"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x7, "B" => vpp_sub })
 
 # # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4 and shieldpom5
 # logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x8")
-# extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x8"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x8, "B" => vpp_sub })
+# extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x8"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x8, "B" => vpp_sub })
 
 # # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4 and shieldpom5
 # logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x9")
-# extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x9"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x9, "B" => vpp_sub })
+# extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x9"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x9, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4 and shieldpom5
 logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x, "B" => vpp_sub })
+extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3 and shieldm4
 logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3_shieldm4")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3_shieldm4"), {"C1" => met2_vpp, "C2" => met4_vpp, "M" => vpp_11p5x11p7_l1m1m2m3_shieldm4, "B" => vpp_sub })
+extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3_shieldm4"), {"C1" => met2_vpp, "C2" => met4_vpp, "M" => vpp_11p5x11p7_l1m1m2m3_shieldm4, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3 and shieldpom4
 logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3_shieldpom4")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3_shieldpom4"), {"C1" => met2_vpp, "C2" => met4_vpp, "M" => vpp_11p5x11p7_l1m1m2m3_shieldpom4, "B" => vpp_sub })
+extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3_shieldpom4"), {"C1" => met2_vpp, "C2" => met4_vpp, "M" => vpp_11p5x11p7_l1m1m2m3_shieldpom4, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2_noshield")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_11p5x11p7_l1m1m2_noshield, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_11p5x11p7_l1m1m2_noshield, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2 and shieldpom3
 logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2_shieldpom3")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2_shieldpom3"), {"C1" => met2_vpp, "C2" => met3_vpp, "M" => vpp_11p5x11p7_l1m1m2_shieldpom3, "B" => vpp_sub })
+extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2_shieldpom3"), {"C1" => met2_vpp, "C2" => met3_vpp, "M" => vpp_11p5x11p7_l1m1m2_shieldpom3, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2m3m4 and shieldl1m5
 logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_m1m2m3m4_shieldl1m5")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2m3m4_shieldl1m5"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_m1m2m3m4_shieldl1m5, "B" => vpp_sub })
+extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2m3m4_shieldl1m5"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_m1m2m3m4_shieldl1m5, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2m3m4 and shieldm5
 logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_m1m2m3m4_shieldm5")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2m3m4_shieldm5"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_m1m2m3m4_shieldm5, "B" => vpp_sub })
+extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2m3m4_shieldm5"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_m1m2m3m4_shieldm5, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2m3 and shieldl1
 logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_m1m2m3_shieldl1")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2m3_shieldl1"), {"C" => met2_vpp, "M" => vpp_11p5x11p7_m1m2m3_shieldl1, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2m3_shieldl1"), {"C" => met2_vpp, "M" => vpp_11p5x11p7_m1m2m3_shieldl1, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2m3 and shieldl1m5 with floatm4
 logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_m1m2m3_shieldl1m5_floatm4")
-extract_devices(Custom4TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2m3_shieldl1m5_floatm4"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_m1m2m3_shieldl1m5_floatm4, "B" => vpp_sub })
+extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2m3_shieldl1m5_floatm4"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_m1m2m3_shieldl1m5_floatm4, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_m1m2_noshield")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_11p5x11p7_m1m2_noshield, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2_noshield"), {"C" => met2_vpp, "M" => vpp_11p5x11p7_m1m2_noshield, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m2 and shieldl1
 logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_m1m2_shieldl1")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2_shieldl1"), {"C" => met2_vpp, "M" => vpp_11p5x11p7_m1m2_shieldl1, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m2_shieldl1"), {"C" => met2_vpp, "M" => vpp_11p5x11p7_m1m2_shieldl1, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of m1m4 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_m1m4_noshield")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m4_noshield"), {"C" => met2_vpp, "M" => vpp_11p5x11p7_m1m4_noshield, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_m1m4_noshield"), {"C" => met2_vpp, "M" => vpp_11p5x11p7_m1m4_noshield, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of pol1m1m2m3m4m5 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_pol1m1m2m3m4m5_noshield")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_11p5x11p7_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_11p5x11p7_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 11.5um x 23.1um and with layers of pol1m1m2m3m4m5 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x23p1_pol1m1m2m3m4m5_noshield")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_11p5x23p1_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_11p5x23p1_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_11p5x23p1_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_11p5x23p1_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 22.5um x 11.7um and with layers of pol1m1m2m3m4m5 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_22p5x11p7_pol1m1m2m3m4m5_noshield")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_22p5x11p7_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_22p5x11p7_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_22p5x11p7_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_22p5x11p7_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 22.5um x 23.1um and with layers of pol1m1m2m3m4m5 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_22p5x23p1_pol1m1m2m3m4m5_noshield")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_22p5x23p1_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_22p5x23p1_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_22p5x23p1_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_22p5x23p1_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 33.6um x 11.7um and with layers of pol1m1m2m3m4m5 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_33p6x11p7_pol1m1m2m3m4m5_noshield")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_33p6x11p7_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_33p6x11p7_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_33p6x11p7_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_33p6x11p7_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 33.6um x 23.1um and with layers of pol1m1m2m3m4m5 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_33p6x23p1_pol1m1m2m3m4m5_noshield")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_33p6x23p1_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_33p6x23p1_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_33p6x23p1_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_33p6x23p1_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 44.7um x 11.7um and with layers of pol1m1m2m3m4m5 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_44p7x11p7_pol1m1m2m3m4m5_noshield")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_44p7x11p7_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_44p7x11p7_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_44p7x11p7_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_44p7x11p7_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 44.7um x 23.1um and with layers of pol1m1m2m3m4m5 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_44p7x23p1_pol1m1m2m3m4m5_noshield")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_44p7x23p1_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_44p7x23p1_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_44p7x23p1_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_44p7x23p1_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 55.8um x 11.7um and with layers of pol1m1m2m3m4m5 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_55p8x11p7_pol1m1m2m3m4m5_noshield")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_55p8x11p7_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_55p8x11p7_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_55p8x11p7_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_55p8x11p7_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 55.8um x 11.7um and with layers of pol1m1m2m3m4m5 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_55p8x11p7_pol1m1m2m3m4m5_noshield_m5pullin")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_55p8x11p7_pol1m1m2m3m4m5_noshield_m5pullin"), {"C" => met2_vpp, "M" => vpp_55p8x11p7_pol1m1m2m3m4m5_noshield_m5pullin, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_55p8x11p7_pol1m1m2m3m4m5_noshield_m5pullin"), {"C" => met2_vpp, "M" => vpp_55p8x11p7_pol1m1m2m3m4m5_noshield_m5pullin, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 55.8um x 23.1um and with layers of pol1m1m2m3m4m5 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_55p8x23p1_pol1m1m2m3m4m5_noshield")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_55p8x23p1_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_55p8x23p1_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_55p8x23p1_pol1m1m2m3m4m5_noshield"), {"C" => met2_vpp, "M" => vpp_55p8x23p1_pol1m1m2m3m4m5_noshield, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 55.8um x 23.1um and with layers of pol1m1m2m3m4m5 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_m5pullin")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_m5pullin"), {"C" => met2_vpp, "M" => vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_m5pullin, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_m5pullin"), {"C" => met2_vpp, "M" => vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_m5pullin, "B" => vpp_sub })
 
 # VPP capacitor with dimensions of 55.8um x 23.1um and with layers of pol1m1m2m3m4m5 and noshield
 logger.info("Extracting sky130_fd_pr__cap_vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_test")
-extract_devices(Custom3TerminalExtractor::new("sky130_fd_pr__cap_vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_test"), {"C" => met2_vpp, "M" => vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_test, "B" => vpp_sub })
+extract_devices(VPP3Extractor::new("sky130_fd_pr__cap_vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_test"), {"C" => met2_vpp, "M" => vpp_55p8x23p1_pol1m1m2m3m4m5_noshield_test, "B" => vpp_sub })
 
 
 #==================================
