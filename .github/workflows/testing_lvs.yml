@@ -146,7 +146,7 @@ jobs:
           -e PDK_ROOT=/wrk/sky130_tech/tech/sky130
           -e PDK=lvs
           "$IMAGE"
-          make test_lvs_collective
+          make test_lvs_collision
   Standard-Cells:
     runs-on: ubuntu-latest
     strategy:
