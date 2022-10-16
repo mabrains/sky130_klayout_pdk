@@ -873,6 +873,13 @@ sub = polygon_layer
 
 logger.info("Evaluate switches start")
 
+# FUSE
+if $fuse
+  FUSE = $fuse
+else
+  FUSE = "m4"
+end # FUSE
+
 # SCH_SIMPLE
 if $schematic_simplify == "true"
   SCH_SIMPLE = $schematic_simplify
@@ -1243,6 +1250,30 @@ met4_resistor = met4.and(met4_res)
 
 # Metal5 resistor
 met5_resistor = met5.and(met5_res)
+
+
+#==================================
+# ------- FUSE DERIVATIONS --------
+#==================================
+
+logger.info("Starting FUSE DERIVATIONS")
+
+if FUSE == "m2"
+
+  # Metal2 fuse
+  met2_fuse_res_layer  = met2.and(met2_fuse)
+
+elsif FUSE == "m3"
+
+  # Metal3 fuse
+  met3_fuse_res_layer  = met3.and(met3_fuse)
+
+else
+
+  # Metal4 fuse
+  met4_fuse_res_layer  = met4.and(met4_fuse)
+
+end
 
 
 #==================================
@@ -1902,14 +1933,14 @@ logger.info("Starting PNP BJT EXTRACTION")
 # sky130_fd_pr__pnp_05v5_W0p68L0p68 BJT
 ignore_parameter("sky130_fd_pr__pnp_05v5_W0p68L0p68","AE")
 logger.info("Extracting sky130_fd_pr__pnp_05v5_W0p68L0p68 BJT")
-extract_devices(bjt4("sky130_fd_pr__pnp_05v5_W0p68L0p68"), { "C" => pnp_5v0_0p68x0p68_c.extents , "B" => pnp_5v0_0p68x0p68_b.extents , "E" => pnp_5v0_0p68x0p68_e,"S" => sub.extents,
-                                  "tC" => pnp_5v0_0p68x0p68_c , "tB" => pnp_5v0_0p68x0p68_b, "tE" => pnp_5v0_0p68x0p68_e, "tS" => sub })
+extract_devices(bjt3("sky130_fd_pr__pnp_05v5_W0p68L0p68"), { "C" => pnp_5v0_0p68x0p68_c.extents , "B" => pnp_5v0_0p68x0p68_b.extents , "E" => pnp_5v0_0p68x0p68_e,
+                                  "tC" => pnp_5v0_0p68x0p68_c , "tB" => pnp_5v0_0p68x0p68_b, "tE" => pnp_5v0_0p68x0p68_e })
 
 # sky130_fd_pr__pnp_05v5_W3p40L3p40 BJT
 ignore_parameter("sky130_fd_pr__pnp_05v5_W3p40L3p40","AE")
 logger.info("Extracting sky130_fd_pr__pnp_05v5_W3p40L3p40 BJT")
-extract_devices(bjt4("sky130_fd_pr__pnp_05v5_W3p40L3p40"), { "C" => pnp_5v0_3p4x3p4_c.extents , "B" => pnp_5v0_3p4x3p4_b.extents , "E" => pnp_5v0_3p4x3p4_e,"S" => sub.extents,
-                                "tC" => pnp_5v0_3p4x3p4_c , "tB" => pnp_5v0_3p4x3p4_b, "tE" => pnp_5v0_3p4x3p4_e, "tS" => sub })
+extract_devices(bjt3("sky130_fd_pr__pnp_05v5_W3p40L3p40"), { "C" => pnp_5v0_3p4x3p4_c.extents , "B" => pnp_5v0_3p4x3p4_b.extents , "E" => pnp_5v0_3p4x3p4_e,
+                                "tC" => pnp_5v0_3p4x3p4_c , "tB" => pnp_5v0_3p4x3p4_b, "tE" => pnp_5v0_3p4x3p4_e })
 
 
 #================================
@@ -2069,6 +2100,33 @@ extract_devices(resistor("sky130_fd_pr__res_generic_m4", 47, NResistor), { "R" =
 # sky130_fd_pr__res_generic_m5
 logger.info("Extracting sky130_fd_pr__res_generic_m5 device")
 extract_devices(resistor("sky130_fd_pr__res_generic_m5", 29, NResistor), { "R" => met5_resistor, "C" => met5_con })
+
+
+#==================================
+# ------- FUSE EXTRACTION -------
+#==================================
+
+logger.info("Starting FUSE EXTRACTION")
+
+if FUSE == "m2"
+
+  # sky130_fd_pr__fuse_m2
+  logger.info("Extracting sky130_fd_pr__fuse_m2 device")
+  extract_devices(resistor("sky130_fd_pr__fuse_m2", 120, NResistor), { "R" => met2_fuse_res_layer, "C" => met2_con })
+
+elsif FUSE == "m3"
+
+  # sky130_fd_pr__fuse_m3
+  logger.info("Extracting sky130_fd_pr__fuse_m3 device")
+  extract_devices(resistor("sky130_fd_pr__fuse_m3", 47, NResistor), { "R" => met3_fuse_res_layer, "C" => met3_ncap })
+
+else
+
+  # sky130_fd_pr__fuse_m4
+  logger.info("Extracting sky130_fd_pr__fuse_m4 device")
+  extract_devices(resistor("sky130_fd_pr__fuse_m4", 47, NResistor), { "R" => met4_fuse_res_layer, "C" => met4_ncap })
+
+end
 
 
 #==================================

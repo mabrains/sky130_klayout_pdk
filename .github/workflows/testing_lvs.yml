@@ -38,7 +38,8 @@ jobs:
           main_files="${main_files//'testcases/pass_cases/'/}"; main_files="${main_files//'"", '/}"; main_files="${main_files//'.gds'/}";
           main_files=`echo $main_files | jq -c .`
           echo $main_files
-          echo "::set-output name=main_files::$main_files"
+          #echo "::set-output name=main_files::$main_files"
+          export MAIN=$main_files
   Main:
     needs: build-matrix
     runs-on: ubuntu-latest
@@ -47,7 +48,8 @@ jobs:
       matrix:
         type: [lvs]
         test: [main]
-        list: ${{ fromJson(needs.build-matrix.outputs.main_files) }}
+        list: ${{ fromJson($MAIN) }}
+        #list: ${{ fromJson(needs.build-matrix.outputs.main_files) }}
     name: ${{ matrix.type }} | ${{ matrix.test }} ${{ matrix.list }}
     env:
       IMAGE: ghcr.io/mabrains/sky130_klayout_pdk/test
