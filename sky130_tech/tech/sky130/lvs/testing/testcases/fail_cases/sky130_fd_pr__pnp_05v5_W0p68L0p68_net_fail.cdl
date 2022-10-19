@@ -14,8 +14,8 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-.SUBCKT sky130_fd_pr__pnp_05v5_W0p68L0p68 Base Collector Emitter SUBSTRATE
+.SUBCKT sky130_fd_pr__pnp_05v5_W0p68L0p68 Base Collector Emitter
 
-Qx_net_fail Base_net_fail Collector_net_fail Emitter_net_fail SUBSTRATE sky130_fd_pr__pnp_05v5_W3p40L3p40
+Qx_net_fail Base_net_fail Collector_net_fail Emitter_net_fail sky130_fd_pr__pnp_05v5_W3p40L3p40
 
 .ENDS

@@ -38,7 +38,8 @@ jobs:
           main_files="${main_files//'testcases/pass_cases/'/}"; main_files="${main_files//'"", '/}"; main_files="${main_files//'.gds'/}";
           main_files=`echo $main_files | jq -c .`
           echo $main_files
-          echo "::set-output name=main_files::$main_files"
+          #echo "::set-output name=main_files::$main_files"
+          echo "main_files=$main_files" >>$GITHUB_OUTPUT
   Main:
     needs: build-matrix
     runs-on: ubuntu-latest
