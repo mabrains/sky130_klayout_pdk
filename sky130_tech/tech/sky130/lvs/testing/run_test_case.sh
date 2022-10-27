@@ -68,13 +68,8 @@ else
     then
         if [ -f $pass_cdl ]
         then
-            if [[ "$CASE_NAME" == *"vpp"* ]] && [ "$CASE_NAME" != *"top"* ]; then
-               python3 $PDK_ROOT/$PDK/run_lvs.py --design=$pass_gds --net=$pass_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_pass_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_pass --set_net_only --set_top_lvl_pins --set_purge --set_purge_nets --run_mode=flat > $RUN_FOLDER/${CASE_NAME}_pass_lvs.log 2>&1
-               return_code=$?
-            else
-                python3 $PDK_ROOT/$PDK/run_lvs.py --design=$pass_gds --net=$pass_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_pass_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_pass > $RUN_FOLDER/${CASE_NAME}_pass_lvs.log 2>&1
-                return_code=$?
-            fi
+            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$pass_gds --net=$pass_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_pass_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_pass > $RUN_FOLDER/${CASE_NAME}_pass_lvs.log 2>&1
+            return_code=$?
             if [ "$return_code" != "0" ]
             then
                 echo "## Pass test case $CASE_NAME didn't pass as expected."

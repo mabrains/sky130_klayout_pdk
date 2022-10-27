@@ -207,9 +207,9 @@
 + D0 D1
 + Collector Base Emitter
 + Collector Base Emitter
-* + L0_54 L1_54 SUBSTRATE_54 TAP_54
-* + L0_55 L1_55 SUBSTRATE_55 TAP_55
-* + L0_56 L1_56 SUBSTRATE_56 TAP_56
+* + L0_54 L1_54 TAP_54
+* + L0_55 L1_55 TAP_55
+* + L0_56 L1_56 TAP_56
 
 
 C000 C0_000 C1_000 SUBSTRATE sky130_fd_pr__cap_var_hvt A=0.18p P=2.36u
@@ -596,10 +596,10 @@ Qx Collector Base Emitter sky130_fd_pr__pnp_05v5_W0p68L0p68
 
 Qx Collector Base Emitter sky130_fd_pr__pnp_05v5_W3p40L3p40
 
-* Lx L0_54 L1_54 TAP_54 SUBSTRATE_54 sky130_fd_pr__rf_test_coil1
+Lx L0_54 L1_54 TAP_54 sky130_fd_pr__rf_ind_03_90
 
-* Lx L0_55 L1_55 TAP_55 SUBSTRATE_55 sky130_fd_pr__rf_test_coil2
+Lx L0_55 L1_55 TAP_55 sky130_fd_pr__rf_ind_05_125
 
-* Lx L0_56 L1_56 TAP_56 SUBSTRATE_56 sky130_fd_pr__rf_test_coil3
+Lx L0_56 L1_56 TAP_56 sky130_fd_pr__rf_ind_05_220
 
 .ENDS

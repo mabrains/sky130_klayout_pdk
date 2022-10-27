@@ -14,7 +14,7 @@ gen*.py
 *.lvsdb
 *.cir
 *.lvsdb
-run_*
+run_*/
 *.lyrdb
 
 pymacros/sky130_pcells/__pycache__/*
