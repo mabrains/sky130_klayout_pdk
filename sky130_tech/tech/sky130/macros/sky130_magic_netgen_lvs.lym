@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description>Run Magic LVS</description>
+ <version/>
+ <category/>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>false</autorun>
+ <autorun-early>false</autorun-early>
+ <shortcut/>
+ <show-in-menu>true</show-in-menu>
+ <group-name/>
+ <menu-path>skymenu&gt;end("sky130 PDK").end</menu-path>
+ <interpreter>ruby</interpreter>
+ <dsl-interpreter-name/>
+ <text>module MyMacro
+ 
+  include RBA
+
+  # Options
+  combine = ""
+  distrib = ""
+  no_attr = ""
+  purge = ""
+  trim_hash = ""
+  trim_exclam = ""
+  mode = ""
+  # End Options
+
+  gds_base = File.basename(RBA::Application.instance.main_window.current_view.active_cellview.filename, ".*")
+  gds_dir = File.expand_path(File.dirname(RBA::Application.instance.main_window.current_view.active_cellview.filename))
+  cell_name = RBA::CellView::active.cell_name
+
+  str = '#    batch script for running Magic LVS
+crashbackups stop
+snap internal
+gds flatglob *__example_*
+gds flatten true
+'
+
+  str = str + "gds read #{gds_dir}/#{gds_base}\nload #{cell_name}"
+
+  str = str + '
+select top cell
+expand
+extract all
+ext2spice lvs 
+ext2spice subcircuit off
+'
+  str = str + "ext2spice -f ngspice #{combine}#{distrib}#{no_attr}#{purge}#{trim_hash}#{trim_exclam}#{mode}-o #{cell_name}_lvs_extracted.cdl\nquit"
+
+  File.open(File.expand_path(File.dirname(__FILE__)) + "/sky130_magic_lvs.tcl", 'w') { |f| f.write(str) }
+  
+  system( "gnome-terminal --title=Magic-LVS --working-directory=#{gds_dir} -- sh -c 'magic -dnull -noconsole -rcfile $PDK_ROOT/$PDK/libs.tech/magic/$PDK.magicrc #{File.expand_path(File.dirname(__FILE__))}/sky130_magic_lvs.tcl; cat #{cell_name}_lvs_extracted.cdl; read line'" )
+  sleep(1)
+  system( "gnome-terminal --title=Netgen-LVS --working-directory=#{gds_dir} -- sh -c 'netgen -batch lvs "+'"'+"#{gds_base}.cdl #{cell_name}"+'"'+" "+'"'+"#{cell_name}_lvs_extracted.cdl #{cell_name}"+'"'+" $PDK_ROOT/$PDK/libs.tech/netgen/$PDK_setup.tcl #{cell_name}_netgen.log; cat #{cell_name}_netgen.log; read line'" )
+  sleep(1)
+  system( "rm #{File.expand_path(File.dirname(__FILE__))}/sky130_magic_lvs.tcl" )
+
+end
+</text>
+</klayout-macro>

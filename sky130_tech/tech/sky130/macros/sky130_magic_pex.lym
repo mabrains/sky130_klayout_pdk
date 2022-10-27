@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description>Run Magic PEX</description>
+ <version/>
+ <category/>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>false</autorun>
+ <autorun-early>false</autorun-early>
+ <shortcut/>
+ <show-in-menu>true</show-in-menu>
+ <group-name/>
+ <menu-path>skymenu&gt;end("sky130 PDK").end</menu-path>
+ <interpreter>ruby</interpreter>
+ <dsl-interpreter-name/>
+ <text>module MyMacro
+ 
+  include RBA
+
+  # Options
+  combine = ""
+  distrib = ""
+  no_attr = ""
+  purge = ""
+  trim_hash = ""
+  trim_exclam = ""
+  mode = ""
+  # End Options
+
+  gds_base = File.basename(RBA::Application.instance.main_window.current_view.active_cellview.filename, ".*")
+  gds_dir = File.expand_path(File.dirname(RBA::Application.instance.main_window.current_view.active_cellview.filename))
+  cell_name = RBA::CellView::active.cell_name
+
+  str = '#    batch script for running Magic PEX
+crashbackups stop
+snap internal
+gds flatglob *__example_*
+gds flatten true
+'
+
+  str = str + "gds read #{gds_dir}/#{gds_base}\nload #{cell_name}"
+
+  str = str + '
+select top cell
+expand
+extract all
+ext2sim labels on
+ext2sim
+extresist tolerance 10
+extresist
+ext2spice lvs
+ext2spice cthresh 0.01
+ext2spice extresist on
+'
+  str = str + "ext2spice -f ngspice #{combine}#{distrib}#{no_attr}#{purge}#{trim_hash}#{trim_exclam}#{mode}-o #{cell_name}_pex_extracted.spice\nquit"
+
+  File.open(File.expand_path(File.dirname(__FILE__)) + "/sky130_magic_pex.tcl", 'w') { |f| f.write(str) }
+  
+  system( "gnome-terminal --title=Magic-PEX --working-directory=#{gds_dir} -- sh -c 'magic -dnull -noconsole -rcfile $PDK_ROOT/$PDK/libs.tech/magic/$PDK.magicrc #{File.expand_path(File.dirname(__FILE__))}/sky130_magic_pex.tcl; cat #{cell_name}_pex_extracted.spice; read line'" )
+  sleep(1)
+  system( "rm #{File.expand_path(File.dirname(__FILE__))}/sky130_magic_pex.tcl" )
+
+end
+</text>
+</klayout-macro>

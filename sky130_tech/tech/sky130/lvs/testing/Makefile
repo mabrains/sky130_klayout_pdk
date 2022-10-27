@@ -155,7 +155,7 @@ test_conn_%:
 	@file=`readlink -f testcases/connectivity_test/$*.gds`
 	@cdl=`readlink -f testcases/connectivity_test/$*.cdl`
 	@if python3 $(PDK_ROOT)/$(PDK)/run_lvs.py --design=$$file --net=$*.cdl --report=$(run_folder)/connectivity_test/$* --lvs_sub=SUB_SRC_D1 > $(run_folder)/connectivity_test/$*_run.log 2>&1 ;
-		then echo "Congratulations! Connectivity test has finished successfully" ; else echo "Connectivity test has failed"; fi
+		then echo "Congratulations! Connectivity test has finished successfully" ; else echo "Connectivity test has failed"; exit 1; fi
 
 .ONESHELL:
 test_lvs_connectivity: $(CONN_CASES)

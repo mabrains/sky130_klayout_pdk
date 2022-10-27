@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description>Run Magic DRC</description>
+ <version/>
+ <category/>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>false</autorun>
+ <autorun-early>false</autorun-early>
+ <shortcut/>
+ <show-in-menu>true</show-in-menu>
+ <group-name/>
+ <menu-path>skymenu&gt;end("sky130 PDK").end</menu-path>
+ <interpreter>ruby</interpreter>
+ <dsl-interpreter-name/>
+ <text>module MyMacro
+ 
+  include RBA
+  
+  gds_base = File.basename(RBA::Application.instance.main_window.current_view.active_cellview.filename, ".*")
+  gds_dir = File.expand_path(File.dirname(RBA::Application.instance.main_window.current_view.active_cellview.filename))
+  cell_name = RBA::CellView::active.cell_name
+
+  str = '#    batch script for running Magic DRC
+crashbackups stop
+drc euclidean on
+drc style drc(full)
+drc on
+snap internal
+gds flatglob *__example_*
+gds flatten true
+'
+
+  str = str + "gds read #{gds_dir}/#{gds_base}\nload #{cell_name}"
+
+  str = str + '
+select top cell
+expand
+drc catchup
+set allerrors [drc listall why]
+set oscale [cif scale out]
+set ofile [open sky130_magic_drc.txt w]
+puts $ofile "DRC errors report for current cell"
+puts $ofile "--------------------------------------------"
+foreach {whytext rectlist} $allerrors {
+   puts $ofile ""
+   puts $ofile $whytext
+   foreach rect $rectlist {
+       set llx [format "%.3f" [expr $oscale * [lindex $rect 0]]]
+       set lly [format "%.3f" [expr $oscale * [lindex $rect 1]]]
+       set urx [format "%.3f" [expr $oscale * [lindex $rect 2]]]
+       set ury [format "%.3f" [expr $oscale * [lindex $rect 3]]]
+       puts $ofile "$llx $lly $urx $ury"
+   }
+}
+puts $ofile "--------------------------------------------"
+set drccount [drc listall count total]
+puts $ofile "Total DRC errors count: $drccount"
+close $ofile
+quit
+'
+
+  File.open(File.expand_path(File.dirname(__FILE__)) + "/sky130_magic_drc.tcl", 'w') { |f| f.write(str) }
+  
+  system( "gnome-terminal --title=Magic-DRC --working-directory=#{gds_dir} -- sh -c 'magic -dnull -noconsole -rcfile $PDK_ROOT/$PDK/libs.tech/magic/$PDK.magicrc #{File.expand_path(File.dirname(__FILE__))}/sky130_magic_drc.tcl; cat sky130_magic_drc.txt; read line'" )
+  sleep(1)
+  system( "rm #{File.expand_path(File.dirname(__FILE__))}/sky130_magic_drc.tcl" )
+
+end
+</text>
+</klayout-macro>
