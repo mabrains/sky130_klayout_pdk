@@ -32,7 +32,7 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
         
         # declare the parameters
         self.param("des_param", self.TypeString, "Description", default= "SkyWater 130nm Guard Ring Pcell", readonly = True)
-        self.param("well",self.TypeString,"Well", default="P+Tap",choices=(["N+Tap", "N+Tap"],["N+Tap in DNW","N+Tap in DNW"],["P+Tap", "P+Tap"],["N+S/D", "N+S/D"],["P+S/D","P+S/D"])) 
+        self.param("well",self.TypeString,"Well", default="P+Tap",choices=(["N+Tap", "N+Tap"],["N+Tap in DNW","N+Tap in DNW"],["P+Tap", "P+Tap"])) 
         self.param("hvnwell", self.TypeBoolean, "Thick Oxide",default=False)
         self.param("nwell_hole", self.TypeBoolean, "Nwell-Hole",default=False)
         self.param("w", self.TypeDouble, "Width", default=0.29)
@@ -122,12 +122,6 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
       if well == "P+Tap":
         layList = ["li","tap","psdm"]
         encList = [0.0, 0.0, npsdm_enc_tap]  
-      if well == "N+S/D":
-        layList = ["diff","li","nsdm"]
-        encList = [0.0, 0.0, npsdm_enc_diff]
-      if well == "P+S/D":
-        layList = ["diff","li","psdm"]   
-        encList = [0.0, 0.0, npsdm_enc_diff]
       
       # active layer generation -- all expect M1
       for i in range(0,len(layList)):

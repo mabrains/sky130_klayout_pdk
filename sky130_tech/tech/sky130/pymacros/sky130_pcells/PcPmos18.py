@@ -190,7 +190,7 @@ class pcPmos18Generator(pya.PCellDeclarationHelper):
 
     def _Pmos18(self, w, l, sab, gate_contact, gate_contact_num, finger_num, subring):
       self.wellgring = "N+Tap"
-      self.wellsubgring = "P+S/D"
+      self.wellsubgring = "P+Tap"
       self.wellmos18 = "P+S/D"
       self._pgringTrans(self.cell, self.wellgring, self.wellsubgring, w, l, sab, gate_contact_num, finger_num, subring)
       self._mos18FingerTrans(self.cell, self.wellmos18, w, l, sab, gate_contact, gate_contact_num, finger_num)
