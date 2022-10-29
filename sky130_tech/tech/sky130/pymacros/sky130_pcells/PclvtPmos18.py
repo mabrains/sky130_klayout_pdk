@@ -6,17 +6,17 @@ from sky130_pcells.PcGRing import *
 import pya
 import math
 
-class pcPmos18Generator(pya.PCellDeclarationHelper):
+class pclvtPmos18Generator(pya.PCellDeclarationHelper):
 
     """
-    Description: Nmos18 Pcell for Skywaters 130nm
+    Description: low-vt Pmos18 Pcell for Skywaters 130nm
     """
 
     def __init__(self):
     
         ## Initialize super class.
         
-        super(pcPmos18Generator, self).__init__()
+        super(pclvtPmos18Generator, self).__init__()
 
         #----------------------------
         #         Parameters 
@@ -36,7 +36,7 @@ class pcPmos18Generator(pya.PCellDeclarationHelper):
         # TmCON           : Toggle Top mCON placement (True,False)
 
         # declare the parameters
-        self.param("des_param", self.TypeString, "Description", default= "SkyWater 130nm PMOS18 Pcell", readonly = True)
+        self.param("des_param", self.TypeString, "Description", default= "SkyWater 130nm LVTPMOS18 Pcell", readonly = True)
         self.param("w", self.TypeDouble, "Width", default=5.0)
         self.param("l", self.TypeDouble, "Length", default=5.0)
         self.param("sab", self.TypeDouble, "SAB", default=0.27)
@@ -77,7 +77,7 @@ class pcPmos18Generator(pya.PCellDeclarationHelper):
       instpcMos18Finger = pcMos18FingerGenerator()
       mos18 = instpcMos18Finger._MOS18Finger(self.layout,self.cell,well,w, l, sab, gate_contact, gate_contact_num, finger_num) 
 
-    def _pgringTrans(self, cell, well, subwell, w, l, sab, gate_contact_num, finger_num, subring):
+    def _pgringTrans(self, cell, well, subwell, w, l, sab, gate_contact_num, finger_num, subring, typ):
 
       #calculate width of guard ring. see pcViaStack.py
       #periphery.rst https://github.com/google/skywater-pdk/blob/main/docs/rules/periphery-rules.rst
@@ -188,14 +188,22 @@ class pcPmos18Generator(pya.PCellDeclarationHelper):
         
         subgring = instpcGRing._GRing(self.layout, self.cell, subwell, False, False, wsubgring, lsubgring, hsubgring, self.LmCON, self.RmCON, self.BmCON, self.TmCON)
 
-    def _Pmos18(self, w, l, sab, gate_contact, gate_contact_num, finger_num, subring):
+      if typ != "none":
+        if typ == "lvtn":
+          # draw lvtn low-vt mos to block vt implants
+          llvtn = lgring
+          hlvtn = hgring
+          l_lvtn = self.layout.layer(lvtn_lay_num,lvtn_lay_dt)
+          self.cell.shapes(l_lvtn).insert(pya.DBox(-llvtn/2.0, -hlvtn/2.0, llvtn/2.0, hlvtn/2.0))
+      
+    def _lvtPmos18(self, w, l, sab, gate_contact, gate_contact_num, finger_num, subring):
       self.wellgring = "N+Tap"
       self.wellsubgring = "P+Tap"
       self.wellmos18 = "P+S/D"
-      self._pgringTrans(self.cell, self.wellgring, self.wellsubgring, w, l, sab, gate_contact_num, finger_num, subring)
+      self._pgringTrans(self.cell, self.wellgring, self.wellsubgring, w, l, sab, gate_contact_num, finger_num, subring,"lvtn")
       self._mos18FingerTrans(self.cell, self.wellmos18, w, l, sab, gate_contact, gate_contact_num, finger_num)
 
     def produce_impl(self):
 
       # call GRing sub fucntion (__pcPmos18)
-      pmos18 = self._Pmos18(self.w, self.l, self.sab, self.gate_contact,self.gate_contact_num, self.finger_num, self.subring)
+      pmos18 = self._lvtPmos18(self.w, self.l, self.sab, self.gate_contact,self.gate_contact_num, self.finger_num, self.subring)
