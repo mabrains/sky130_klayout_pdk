@@ -43,7 +43,7 @@ class pcNmos5d10Generator(pya.PCellDeclarationHelper):
         self.param("w", self.TypeDouble, "Width", default=5.0)
         self.param("l", self.TypeDouble, "Length", default=5.0)
         self.param("sab", self.TypeDouble, "SAB", default=0.33)
-        self.param("gate_contact", self.TypeString, "Gate Contact",default="Both", choices= (["Top","Top"], ["Bottom","Bottom"], ["Both","Both"]))
+        self.param("gate_contact", self.TypeString, "Gate Contact",default="Both", choices= (["Top","Top"], ["Bottom","Bottom"], ["Both","Both"],["Alternate","Alternate"]))
         self.param("gate_contact_num", self.TypeInt, "Gate Contact Num",default=1, choices= (["1",1], ["2",2]))
         self.param("finger_num", self.TypeInt, "Fingers Num", default=1)
         self.param("LmCON", self.TypeBoolean, "Left CA",default=True)
