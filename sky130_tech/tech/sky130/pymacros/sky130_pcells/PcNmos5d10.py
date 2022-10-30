@@ -64,6 +64,56 @@ class pcNmos5d10Generator(pya.PCellDeclarationHelper):
       Only the parameter values can be modified. 
       Parameter  attributes such as name, description, type and hidden flag are static.
       """
+      
+      #min. poly width = 0.15um 
+      poly_size = 0.15
+      #min. spacing of poly to poly = 0.21um
+      poly_spc = 0.21
+      #Extension of diff beyond poly (min drain) = 0.25um
+      diff_poly_ext = 0.25
+      #mcon min width = 0.17um
+      mcon_size = 0.17
+      #enclosure of mcon by met = 0.03um
+      met_mcon_enc_1 = 0.03
+      #licon size = 0.17um
+      licon_size = 0.17
+      #enclosure of licon by diff = 0.04um
+      diff_licon_enc_1 = 0.04
+      #enclosure of licon by li = 0.08um
+      li_enc_licon_2 = 0.08
+      #Spacing of licon on diff or tap to poly on diff (for all FETs inside :drc_tag:`areaid.sc` except 0.15um phighvt) = 0.05um
+      licon_poly_spc = 0.05
+      #enclosure of licon by poly = 0.08um
+      poly_licon_enc_2 = 0.08
+      #spacing of li to li = 0.17um
+      li_spc = 0.17
+      
+      #Min spacing of NPC to NPC = 0.27um
+      npc_spc = 0.27
+      
+      #calulate min allowed length of poly/met enclosing contacts x-dir
+      length_poly_licon = licon_size+2*max(poly_licon_enc_2,li_enc_licon_2)
+      length_met_mcon = mcon_size+2*met_mcon_enc_1
+      length_gate_contact = max(length_poly_licon,length_met_mcon)
+      
+      #calculate min allowed width of diff enclosing contacts
+      sab_min = max(diff_poly_ext,max(mcon_size+2*met_mcon_enc_1, licon_size+2*max(diff_licon_enc_1,li_enc_licon_2,licon_poly_spc)))
+
+      if self.w < sab_min:
+        self.w = sab_min
+        #raise AttributeError("Mininum channel width 0.33um")
+       
+      if self.sab < sab_min:
+        self.sab = sab_min
+        #raise AttributeError("Mininum sab 0.33um")
+        
+      if self.l < max(li_spc,poly_size):
+        self.l = max(li_spc,poly_size)
+        #raise AttributeError("Mininum poly width 0.15um & Minimum Li Space 0.17um")
+
+      if (self.l+sab_min-length_gate_contact) < max(npc_spc,poly_spc):
+        self.gate_contact = "Alternate"
+        #raise AttributeError("alternating gate contact placement")
     
     def _mos5d10FingerTrans(self, cell, well, w, l, sab, gate_contact, gate_contact_num, finger_num):
 
