@@ -54,7 +54,7 @@ class pclvtNmos18Generator(pya.PCellDeclarationHelper):
     def display_text_impl(self):
 
         # Provide a descriptive text for the cell
-        return "pcNmos18 (w=%.4gum,l=%.4gum)" % (self.w,self.l)
+        return "pclvtNmos18 (w=%.4gum,l=%.4gum)" % (self.w,self.l)
 
     def coerce_parameters_impl(self):
 
@@ -233,4 +233,4 @@ class pclvtNmos18Generator(pya.PCellDeclarationHelper):
     def produce_impl(self):
 
       # call GRing sub fucntion (__pclvtNmos18)
-      nmos18 = self._lvtNmos18(self.w, self.l, self.sab, self.gate_contact,self.gate_contact_num, self.finger_num)
+      lvtnmos18 = self._lvtNmos18(self.w, self.l, self.sab, self.gate_contact,self.gate_contact_num, self.finger_num)

@@ -40,7 +40,7 @@ class pclvtPmos18Generator(pya.PCellDeclarationHelper):
         self.param("w", self.TypeDouble, "Width", default=5.0)
         self.param("l", self.TypeDouble, "Length", default=5.0)
         self.param("sab", self.TypeDouble, "SAB", default=0.27)
-        self.param("gate_contact", self.TypeString, "Gate Contact",default="Both", choices= (["Top","Top"], ["Bottom","Bottom"], ["Both","Both"]))
+        self.param("gate_contact", self.TypeString, "Gate Contact",default="Both", choices= (["Top","Top"], ["Bottom","Bottom"], ["Both","Both"], ["Alternate","Alternate"]))
         self.param("gate_contact_num", self.TypeInt, "Gate Contact Num",default=1, choices= (["1",1], ["2",2]))
         self.param("finger_num", self.TypeInt, "Fingers Num", default=1)
         self.param("subring", self.TypeBoolean, "Sub-Ring",default=False)
@@ -52,7 +52,7 @@ class pclvtPmos18Generator(pya.PCellDeclarationHelper):
     def display_text_impl(self):
     
         # Provide a descriptive text for the cell
-        return "pcPmos18 (w=%.4gum,l=%.4gum)" % (self.w,self.l)
+        return "pclvtPmos18 (w=%.4gum,l=%.4gum)" % (self.w,self.l)
 
     def coerce_parameters_impl(self):
 
@@ -64,13 +64,55 @@ class pclvtPmos18Generator(pya.PCellDeclarationHelper):
       Parameter  attributes such as name, description, type and hidden flag are static.
       """
 
-      if self.w < 0.33:
-        self.w = 0.33
-        #raise AttributeError("Mininum channel width 0.33um")
+      #min. poly width = 0.15um 
+      poly_size = 0.15
+      #min. spacing of poly to poly = 0.21um
+      poly_spc = 0.21
+      #Extension of diff beyond poly (min drain) = 0.25um
+      diff_poly_ext = 0.25
+      #mcon min width = 0.17um
+      mcon_size = 0.17
+      #enclosure of mcon by met = 0.03um
+      met_mcon_enc_1 = 0.03
+      #licon size = 0.17um
+      licon_size = 0.17
+      #enclosure of licon by diff = 0.04um
+      diff_licon_enc_1 = 0.04
+      #enclosure of licon by li = 0.08um
+      li_enc_licon_2 = 0.08
+      #Spacing of licon on diff or tap to poly on diff (for all FETs inside :drc_tag:`areaid.sc` except 0.15um phighvt) = 0.05um
+      licon_poly_spc = 0.05
+      #enclosure of licon by poly = 0.08um
+      poly_licon_enc_2 = 0.08
+      #spacing of li to li = 0.17um
+      li_spc = 0.17
       
-      if self.sab < 0.33:
-        self.sab = 0.33
+      #Min spacing of NPC to NPC = 0.27um
+      npc_spc = 0.27
+      
+      #calulate min allowed length of poly/met enclosing contacts x-dir
+      length_poly_licon = licon_size+2*max(poly_licon_enc_2,li_enc_licon_2)
+      length_met_mcon = mcon_size+2*met_mcon_enc_1
+      length_gate_contact = max(length_poly_licon,length_met_mcon)
+      
+      #calculate min allowed width of diff enclosing contacts
+      sab_min = max(diff_poly_ext,max(mcon_size+2*met_mcon_enc_1, licon_size+2*max(diff_licon_enc_1,li_enc_licon_2,licon_poly_spc)))
+
+      if self.w < sab_min:
+        self.w = sab_min
         #raise AttributeError("Mininum channel width 0.33um")
+       
+      if self.sab < sab_min:
+        self.sab = sab_min
+        #raise AttributeError("Mininum sab 0.33um")
+        
+      if self.l < max(li_spc,poly_size):
+        self.l = max(li_spc,poly_size)
+        #raise AttributeError("Mininum poly width 0.15um & Minimum Li Space 0.17um")
+
+      if (self.l+sab_min-length_gate_contact) < max(npc_spc,poly_spc):
+        self.gate_contact = "Alternate"
+        #raise AttributeError("alternating gate contact placement")
 
     def _mos18FingerTrans(self, cell, well, w, l, sab, gate_contact, gate_contact_num, finger_num):
 
@@ -205,5 +247,5 @@ class pclvtPmos18Generator(pya.PCellDeclarationHelper):
 
     def produce_impl(self):
 
-      # call GRing sub fucntion (__pcPmos18)
-      pmos18 = self._lvtPmos18(self.w, self.l, self.sab, self.gate_contact,self.gate_contact_num, self.finger_num, self.subring)
+      # call GRing sub fucntion (__pclvtPmos18)
+      lvtpmos18 = self._lvtPmos18(self.w, self.l, self.sab, self.gate_contact,self.gate_contact_num, self.finger_num, self.subring)

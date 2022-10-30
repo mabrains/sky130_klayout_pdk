@@ -2,7 +2,6 @@
 
 from sky130_pcells.imported_generators.layers_definiations import *
 from sky130_pcells.PcMos5d10Finger import *
-from sky130_pcells.PcNmos18 import *
 from sky130_pcells.PcGRing import *
 
 import pya
