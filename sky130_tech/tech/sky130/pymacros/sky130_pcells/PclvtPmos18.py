@@ -212,7 +212,7 @@ class pclvtPmos18Generator(pya.PCellDeclarationHelper):
       hgring = w+extPC+2*widStack+2*gate_tap_spc
 
       instpcGRing = pcGRingGenerator()
-      gring = instpcGRing._GRing(self.layout, self.cell, well, False, False, wgring, lgring, hgring, self.LmCON, self.RmCON, self.BmCON, self.TmCON)
+      gring = instpcGRing._GRing(self.layout, self.cell, well, False, False, wgring, lgring, hgring, self.LmCON, self.RmCON, self.BmCON, self.TmCON, 100.0)
 
       if subring:
         wsubgring_licon = licon_size+2*max(li_enc_licon_2,diff_licon_enc_2)
@@ -228,7 +228,7 @@ class pclvtPmos18Generator(pya.PCellDeclarationHelper):
         hsubgring = round((round(hsubgring/grid/2.0, 2))*grid*2.0, 2)
         wsubgring = round((round(wsubgring/grid/2.0, 2))*grid*2.0, 2)
         
-        subgring = instpcGRing._GRing(self.layout, self.cell, subwell, False, False, wsubgring, lsubgring, hsubgring, self.LmCON, self.RmCON, self.BmCON, self.TmCON)
+        subgring = instpcGRing._GRing(self.layout, self.cell, subwell, False, False, wsubgring, lsubgring, hsubgring, self.LmCON, self.RmCON, self.BmCON, self.TmCON, 100.0)
 
       if typ != "none":
         if typ == "lvtn":

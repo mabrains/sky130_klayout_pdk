@@ -25,6 +25,7 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
         # w         : width of diff layer
         # l         : Inner cell boundary opening in x-dir (um)
         # h         : Inner cell boundary opening in y-dir (um)
+        # covmCON   : coverage of guard ring contacts (%)
         # LmCON     : Toggle left side mCON placement (True,False)
         # RmCON     : Toggle Right side mCON placement (True,False)
         # BmCON     : Toggle Bottom mCON placement (True,False)
@@ -35,9 +36,10 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
         self.param("well",self.TypeString,"Well", default="P+Tap",choices=(["N+Tap", "N+Tap"],["N+Tap in DNW","N+Tap in DNW"],["P+Tap", "P+Tap"])) 
         self.param("hvnwell", self.TypeBoolean, "Thick Oxide",default=False)
         self.param("nwell_hole", self.TypeBoolean, "Nwell-Hole",default=False)
-        self.param("w", self.TypeDouble, "Width", default=0.29)
-        self.param("l", self.TypeDouble, "Length", default=5.0)
-        self.param("h", self.TypeDouble, "Height", default=5.0)
+        self.param("w", self.TypeDouble, "Width (um)", default=0.29)
+        self.param("l", self.TypeDouble, "Length (um)", default=5.0)
+        self.param("h", self.TypeDouble, "Height (um)", default=5.0)
+        self.param("covmCON", self.TypeDouble, "Contact Coverage (%)",default=100.0)
         self.param("LmCON", self.TypeBoolean, "Left CA",default=True)
         self.param("RmCON", self.TypeBoolean, "Right CA",default=True)
         self.param("BmCON", self.TypeBoolean, "Bottom CA",default=True)
@@ -46,9 +48,57 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
     def display_text_impl(self):
         # Provide a descriptive text for the cell
         return "pcGRing (w=%.4gum,l=%.4gum)" % (self.w,self.l)
+  
+    def coerce_parameters_impl(self):
 
+      """
+      parametrization is a two-stage process: the parameters are edited and then transferred to the PCell by
+      "Apply". Only then the layout is modified. While editing, "coerce_parameters" is called to "fix" the 
+      parameter configuration - e.g. to ensure parameters to be compatible or within a certain range. 
+      Only the parameter values can be modified. 
+      Parameter  attributes such as name, description, type and hidden flag are static.
+      """
 
-    def _GRing(self,layout, cell, well, hvnwell, nwell_hole, w, l, h, LmCON, RmCON, BmCON, TmCON):
+      if round(self.covmCON*100) > round(self.covmCON*10):
+        self.covmCON = int(self.covmCON*10)/10.0
+        #("1 decimal place allowed ")
+        
+      if self.covmCON > 100.0:
+        self.covmCON = 100.0
+        #("max 100% ")
+        
+      #periphery.rst https://github.com/google/skywater-pdk/blob/main/docs/rules/periphery-rules.rst
+      # mcon to mcon space = 0.19um
+      # licon to licon space = 0.17um
+      # mcon to mcon space = 0.17
+      via_spc = 0.17
+      mcon_spc = 0.19
+      licon_spc = 0.17
+      
+      #periphery.rst https://github.com/google/skywater-pdk/blob/main/docs/rules/periphery-rules.rst
+      # licon size = 0.17um
+      # via size = 0.15um
+      # mcon size = 0.17um 
+      licon_size = 0.17
+      via_size = 0.15
+      mcon_size = 0.17
+      
+      max_rect_size = max(licon_size, via_size, mcon_size)
+      max_rect_spc = max(licon_spc, via_spc, mcon_spc)
+      
+      pathLenx = self.l+self.w
+      pathLeny = self.h+self.w
+      ncov_pathLenx = ((100-self.covmCON)*pathLenx)/100.0/2.0 
+      ncov_pathLeny = ((100-self.covmCON)*pathLeny)/100.0/2.0
+      # inverse normalized pathLen
+      inv_norm_conv_pathLen = 1/((pathLenx+pathLeny)/100.0/2.0) 
+      
+      if self.covmCON < 100.0 :
+        if (ncov_pathLenx+ncov_pathLeny)/2.0 < ((max_rect_spc**2)/2.0)**0.5+max_rect_size or self.covmCON < 0.01:
+          self.covmCON = 100-( ((max_rect_spc**2)/2.0)**0.5+max_rect_size )*2*inv_norm_conv_pathLen
+          #("distance between corner contacts has to be respected and no negative values allowed")
+          
+    def _GRing(self,layout, cell, well, hvnwell, nwell_hole, w, l, h, LmCON, RmCON, BmCON, TmCON, covmCON):
       # draw polygons ring paths
       
       self.layout = layout
@@ -243,51 +293,52 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
       #--------------------------
       # length of contacts row: bottom
       pathLen = round((l+w)/grid)*grid  
-      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, grid, 0-(l+w)/2.0, 0-(h+w)/2.0, "R0" )
+      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, grid, 0-(l+w)/2.0, 0-(h+w)/2.0, "R0", covmCON )
       
       # length of contacts row: Top
       pathLen = round((l+w)/grid)*grid  
-      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, grid, 0-(l+w)/2.0, 0+(h+w)/2.0, "R0" )
+      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, grid, 0-(l+w)/2.0, 0+(h+w)/2.0, "R0", covmCON )
       
       # Heights of contacts row: Left
       pathLen = round((h+w)/grid)*grid  
-      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, grid, 0-(h+w)/2.0, 0-(l+w)/2.0, "R90" )
+      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, grid, 0-(h+w)/2.0, 0-(l+w)/2.0, "R90", covmCON )
       
       # Heights of contacts row: Right
       pathLen = round((h+w)/grid)*grid  
-      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, grid, 0-(h+w)/2.0, 0+(l+w)/2.0, "R90" )
+      self.rectRowCenterToCenter(l_licon, pathLen, licon_spc, licon_size, grid, 0-(h+w)/2.0, 0+(l+w)/2.0, "R90", covmCON )
       
       # Generate mcon contacts
       #--------------------------
       # length of contacts row: bottom
       if BmCON:
         pathLen = round((l+w)/grid)*grid  
-        self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, grid, 0-(l+w)/2.0, 0-(h+w)/2.0, "R0" )
+        self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, grid, 0-(l+w)/2.0, 0-(h+w)/2.0, "R0", covmCON )
       
       # length of contacts row: Top
       if TmCON:
         pathLen = round((l+w)/grid)*grid  
-        self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, grid, 0-(l+w)/2.0, 0+(h+w)/2.0, "R0" )
+        self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, grid, 0-(l+w)/2.0, 0+(h+w)/2.0, "R0", covmCON )
       
       # Heights of contacts row: Left
       if LmCON:
         pathLen = round((h+w)/grid)*grid  
-        self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, grid, 0-(h+w)/2.0, 0-(l+w)/2.0, "R90" )
+        self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, grid, 0-(h+w)/2.0, 0-(l+w)/2.0, "R90", covmCON )
       
       # Heights of contacts row: Right
       if RmCON:
         pathLen = round((h+w)/grid)*grid  
-        self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, grid, 0-(h+w)/2.0, 0+(l+w)/2.0, "R90" )
+        self.rectRowCenterToCenter(l_mcon, pathLen, mcon_spc, mcon_size, grid, 0-(h+w)/2.0, 0+(l+w)/2.0, "R90", covmCON )
     
-    def rectRowCenterToCenter(self, l_rect, pathLen, min_rect_spc, rect_size, grid, varCrd, fixCrd, R):
+    def rectRowCenterToCenter(self, l_rect, pathLen, min_rect_spc, rect_size, grid, varCrd, fixCrd, R, cov):
       """
         A function that places first and last rect-centers over path beg&end
         spaces between rects are then calculated based on min_rect_spc param.+delta.
         delta changes when path lengths - over which rects are placed center to center - change.
       """
       std_pitch_rect = rect_size+min_rect_spc
-      num_rects_dec = (pathLen+std_pitch_rect)/std_pitch_rect
-      num_rects_int = int( (pathLen+std_pitch_rect)/std_pitch_rect )
+      cov_pathLen = pathLen*cov/100.0
+      num_rects_dec = (cov_pathLen+std_pitch_rect)/std_pitch_rect
+      num_rects_int = int( (cov_pathLen+std_pitch_rect)/std_pitch_rect )
       
       delta = round( (num_rects_dec-num_rects_int)*std_pitch_rect/grid )*grid
       rect_spc = min_rect_spc+int((delta/(num_rects_int-1))/grid)*grid
@@ -296,12 +347,12 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
       grid_delta = round( (delta-(rect_spc-min_rect_spc)*(num_rects_int-1))/grid )*grid
       
       for i in range(0, int(num_rects_int/2)):
-        vcon1 = round((varCrd+i*pitch_rect)/grid )*grid
+        vcon1 = round((varCrd+i*pitch_rect+(pathLen-cov_pathLen)/2.0)/grid )*grid
         if num_rects_int % 2 == 0:
-          vcon2 = round((varCrd+grid_delta+(i+num_rects_int/2.0)*pitch_rect)/grid )*grid
+          vcon2 = round((varCrd+grid_delta+(i+num_rects_int/2.0)*pitch_rect+(pathLen-cov_pathLen)/2.0)/grid )*grid
         else:
-          vcon2 = round((varCrd+grid_delta+(i+1+int(num_rects_int/2.0))*pitch_rect)/grid )*grid
-          vcon3 = round((varCrd+grid_delta/2.0+int(num_rects_int/2.0)*pitch_rect)/grid )*grid
+          vcon2 = round((varCrd+grid_delta+(i+1+int(num_rects_int/2.0))*pitch_rect+(pathLen-cov_pathLen)/2.0)/grid )*grid
+          vcon3 = round((varCrd+grid_delta/2.0+int(num_rects_int/2.0)*pitch_rect+(pathLen-cov_pathLen)/2.0)/grid )*grid
           
           #expectional contact placement
           if R == "R0":
@@ -319,4 +370,4 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
     def produce_impl(self):
       
       # call GRing sub fucntion (_GRing)
-      self._GRing(self.layout,self.cell,self.well,self.hvnwell,self.nwell_hole,self.w,self.l,self.h,self.LmCON,self.RmCON,self.BmCON,self.TmCON)
+      self._GRing(self.layout,self.cell,self.well,self.hvnwell,self.nwell_hole,self.w,self.l,self.h,self.LmCON,self.RmCON,self.BmCON,self.TmCON,self.covmCON)

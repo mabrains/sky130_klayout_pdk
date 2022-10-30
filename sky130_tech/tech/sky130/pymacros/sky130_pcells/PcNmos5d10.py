@@ -229,7 +229,7 @@ class pcNmos5d10Generator(pya.PCellDeclarationHelper):
       #instantiate isolated pwell guard ring
       well = "P+Tap"
       instpcGRing = pcGRingGenerator()
-      gr_pwell = instpcGRing._GRing(self.layout, self.cell, well, False, False, wgring1, lgring1, hgring1, self.LmCON, self.RmCON, self.BmCON, self.TmCON)
+      gr_pwell = instpcGRing._GRing(self.layout, self.cell, well, False, False, wgring1, lgring1, hgring1, self.LmCON, self.RmCON, self.BmCON, self.TmCON, 100.0)
 
       #----------------
       #  Guard-Ring 2
@@ -253,7 +253,7 @@ class pcNmos5d10Generator(pya.PCellDeclarationHelper):
       
       #instantiate dnwell guard ring
       well = "N+Tap in DNW"
-      gr_dnwell = instpcGRing._GRing(self.layout, self.cell, well, True, True, wgring2, lgring2, hgring2, self.LmCON, self.RmCON, self.BmCON, self.TmCON)
+      gr_dnwell = instpcGRing._GRing(self.layout, self.cell, well, True, True, wgring2, lgring2, hgring2, self.LmCON, self.RmCON, self.BmCON, self.TmCON, 100.0)
 
     def _Nmos5d10(self, w, l, sab, gate_contact, gate_contact_num, finger_num):
       

@@ -213,7 +213,7 @@ class pclvtNmos18Generator(pya.PCellDeclarationHelper):
       hgring = w+extPC+2*widStack+2*gate_tap_spc
 
       instpcGRing = pcGRingGenerator()
-      instpcGRing._GRing(self.layout, self.cell, well, False, False, wgring, lgring, hgring, self.LmCON, self.RmCON, self.BmCON, self.TmCON)
+      instpcGRing._GRing(self.layout, self.cell, well, False, False, wgring, lgring, hgring, self.LmCON, self.RmCON, self.BmCON, self.TmCON, 100.0)
 
       if typ != "none":
         if typ == "lvtn":
