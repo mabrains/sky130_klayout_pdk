@@ -88,14 +88,14 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
       
       pathLenx = self.l+self.w
       pathLeny = self.h+self.w
-      ncov_pathLenx = ((100-self.covmCON)*pathLenx)/100.0/2.0 
-      ncov_pathLeny = ((100-self.covmCON)*pathLeny)/100.0/2.0
-      # inverse normalized pathLen
-      inv_norm_conv_pathLen = 1/((pathLenx+pathLeny)/100.0/2.0) 
+      delta_cov = (100-self.covmCON)/100.0/2.0
+      delta_pathLenx = delta_cov*pathLenx
+      delta_pathLeny = delta_cov*pathLeny
       
-      if self.covmCON < 100.0 :
-        if (ncov_pathLenx+ncov_pathLeny)/2.0 < ((max_rect_spc**2)/2.0)**0.5+max_rect_size or self.covmCON < 0.01:
-          self.covmCON = 100-( ((max_rect_spc**2)/2.0)**0.5+max_rect_size )*2*inv_norm_conv_pathLen
+      if self.covmCON < 100.0:
+        if (delta_pathLenx < (max_rect_size+max_rect_spc) and delta_pathLeny < (max_rect_size+max_rect_spc) ) or self.covmCON < 0.01:
+          min_delta_cov = (max_rect_size+max_rect_spc)/max(pathLenx, pathLeny) # estimated
+          self.covmCON = int((100-2*100.0*min_delta_cov)*10)/10.0
           #("distance between corner contacts has to be respected and no negative values allowed")
           
     def _GRing(self,layout, cell, well, hvnwell, nwell_hole, w, l, h, LmCON, RmCON, BmCON, TmCON, covmCON):
@@ -338,7 +338,7 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
       std_pitch_rect = rect_size+min_rect_spc
       cov_pathLen = pathLen*cov/100.0
       num_rects_dec = (cov_pathLen+std_pitch_rect)/std_pitch_rect
-      num_rects_int = int( (cov_pathLen+std_pitch_rect)/std_pitch_rect )
+      num_rects_int = max(2, int( (cov_pathLen+std_pitch_rect)/std_pitch_rect ))
       
       delta = round( (num_rects_dec-num_rects_int)*std_pitch_rect/grid )*grid
       rect_spc = min_rect_spc+int((delta/(num_rects_int-1))/grid)*grid
