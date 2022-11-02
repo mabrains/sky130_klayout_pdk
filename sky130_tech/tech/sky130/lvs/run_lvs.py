@@ -18,7 +18,7 @@
 
 Usage:
     run_lvs.py (--help| -h)
-    run_lvs.py (--design=<layout_path>) (--net=<netlist_path>) [--report=<report_output_path>] [--output_netlist=<output_netlist_path>] [--thr=<thr>] [--run_mode=<run_mode>] [--lvs_sub=<sub_name>] [--no_net_names] [--set_spice_comments] [--set_scale] [--set_verbose] [--set_schematic_simplify] [--set_net_only] [--set_top_lvl_pins] [--set_combine] [--set_purge] [--set_purge_nets]
+    run_lvs.py (--design=<layout_path>) (--net=<netlist_path>) [--report=<report_output_path>] [--output_netlist=<output_netlist_path>] [--thr=<thr>] [--run_mode=<run_mode>] [--set_connect_implicit] [--lvs_sub=<sub_name>] [--no_net_names] [--set_spice_comments] [--set_scale] [--set_verbose] [--set_schematic_simplify] [--set_net_only] [--set_top_lvl_pins] [--set_combine] [--set_purge] [--set_purge_nets]
 
 Options:
     --help -h                                   Print this help message.
@@ -29,6 +29,7 @@ Options:
     --thr=<thr>                                 Number of cores to be used by LVS checker
     --run_mode=<run_mode>                       Select klayout mode Allowed modes (flat , deep, tiling). [default: deep]
     --lvs_sub=<sub_name>                        Assign the substrate name used in design.
+    --set_connect_implicit                      Assign the labels names as connections.
     --no_net_names                              Discard net names in extracted netlist.
     --set_spice_comments                        Set netlist comments in extracted netlist.
     --set_scale                                 Set scale of 1e6 in extracted netlist.
@@ -60,6 +61,8 @@ def main():
     
     if args["--output_netlist"]:
         switches += "-rd target_netlist={} ".format(args["--output_netlist"])
+
+    switches = switches + '-rd connect_implicit=true ' if args["--set_connect_implicit"] else switches + '-rd connect_implicit=false '
 
     switches = switches + '-rd spice_net_names=false ' if args["--no_net_names"] else switches + '-rd spice_net_names=true '
 

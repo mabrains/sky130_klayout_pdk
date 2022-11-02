@@ -1668,11 +1668,11 @@ logger.info("Starting SKY130 LVS connectivity setup (Global connections)")
 # Global
 connect_global(sub  , substrate_name)
 
-logger.info("Starting SKY130 LVS connectivity setup (Multifinger Devices)")
-
 # Multifinger Devices
-connect_implicit("*")
-
+if $connect_implicit == "true"
+  logger.info("Starting SKY130 LVS connectivity setup (Multifinger Devices)")
+    connect_implicit("*")
+  end
 
 #================================
 # ------ BJT CONNECTIONS --------
