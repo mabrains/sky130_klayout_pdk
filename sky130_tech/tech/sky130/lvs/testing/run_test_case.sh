@@ -19,33 +19,34 @@ then
     cp $cdl_file $RUN_FOLDER
     gds_file=$RUN_FOLDER/${CASE_NAME}.gds
     cdl_file=$RUN_FOLDER/${CASE_NAME}.cdl
-    sed -E 's/w=([0-9]\.[0-9]+) l=([0-9]\.[0-9]+)/w=$1U l=$2U/gm;t;d' $cdl_file
+    sed -E 's/w=([0-9.]+) l=([0-9.]+)/w=$1U l=$2U/gm;t;d' $cdl_file
     sed -E 's/topography=normal //gm;t;d' $cdl_file
 
     if [ -f $gds_file ]
     then
         if [ -f $cdl_file ]
         then
-            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$gds_file --net=$cdl_file --output_netlist=$RUN_FOLDER/${CASE_NAME}_pass_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_pass --lvs_sub=${GND-sky130_gnd} > $RUN_FOLDER/${CASE_NAME}_pass_lvs.log 2>&1
+            if [[ "$CASE_NAME" == *"sky130_fd_sc_lp__lsbuf"* ]] | [[ "$CASE_NAME" == *"sky130_fd_sc_hd__lpflow_lsbuf"* ]] ; then export GND="VGND"; else export GND=$7; fi
+            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$gds_file --net=$cdl_file --output_netlist=$RUN_FOLDER/${CASE_NAME}_ext.cir --report=$RUN_FOLDER/${CASE_NAME} --lvs_sub=${GND-sky130_gnd} > $RUN_FOLDER/${CASE_NAME}_lvs.log 2>&1
             return_code=$?
             if [ "$return_code" != "0" ]
             then
-                echo "## Pass test case $CASE_NAME didn't pass as expected."
+                echo "## Test case $CASE_NAME didn't pass as expected."
                 echo "$CASE_NAME,No" >> $RUN_FOLDER/sc_test.csv
                 if [ "$COND" == "GHA" ]
                 then
                     exit 1
                 fi
             else
-                echo "## Pass test case $CASE_NAME passed successfully."
+                echo "## Test case $CASE_NAME passed successfully."
                 echo "$CASE_NAME,Yes" >> $RUN_FOLDER/sc_test.csv
             fi
         else
-            echo "## Can't find pass CDL for case: $cdl_file"
+            echo "## Can't find CDL for case: $cdl_file"
             exit 1
         fi
     else
-        echo "## Can't find pass GDS for case: $gds_file"
+        echo "## Can't find GDS for case: $gds_file"
         exit 1
     fi
 

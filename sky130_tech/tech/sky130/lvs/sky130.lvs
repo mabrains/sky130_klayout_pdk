@@ -1173,8 +1173,8 @@ logger.info("Starting RESISTOR DERIVATIONS")
 nplus_res_init  = ncomp.and(diff_res)
 pplus_res_init  = pcomp.and(nwell).and(diff_res)
 
-nplus_cont_init = ncomp.not_interacting(ngate).interacting(diff_res).not(diff_res)
-pplus_cont_init = pcomp.and(nwell).not_interacting(pgate).interacting(diff_res).not(diff_res)
+nplus_cont_init = ncomp.not(ngate).interacting(diff_res).not(diff_res)
+pplus_cont_init = pcomp.and(nwell).not(pgate).interacting(diff_res).not(diff_res)
 
 # N+ diffusion resistor
 nplus_res       = nplus_res_init.not(hvi)

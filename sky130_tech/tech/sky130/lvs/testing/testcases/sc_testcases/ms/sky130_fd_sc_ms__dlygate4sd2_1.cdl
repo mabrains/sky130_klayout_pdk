@@ -14,18 +14,22 @@
 *
 * SPDX-License-Identifier: Apache-2.0
 
-.SUBCKT sky130_fd_sc_lp__clkbuflp_2 A VGND VNB VPB VPWR X
+.SUBCKT sky130_fd_sc_ms__dlygate4sd2_1 A VGND VNB VPB VPWR X
 *.PININFO A:I VGND:I VNB:I VPB:I VPWR:I X:O
-MMIN0 Ab A net25 VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MMIN1 Ab net34 VGND VNB sky130_fd_pr__nfet_01v8_lvt m=1 w=0.42U l=0.18U mult=1
++ sa=0.265 sb=0.265 sd=0.28 area=0.063 perim=1.14
+MMIN2 X Ab VGND VNB sky130_fd_pr__nfet_01v8_lvt m=1 w=0.74U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 area=0.063 perim=1.14
-MMIN1 X Ab net29 VNB sky130_fd_pr__nfet_01v8 m=2 w=0.42U l=0.15U mult=1 sa=0.265
+MI6 net34 net30 VGND VNB sky130_fd_pr__nfet_01v8_lvt m=1 w=0.42U l=0.18U mult=1
++ sa=0.265 sb=0.265 sd=0.28 area=0.063 perim=1.14
+MI9 net30 A VGND VNB sky130_fd_pr__nfet_01v8_lvt m=1 w=0.42U l=0.15U mult=1 sa=0.265
 + sb=0.265 sd=0.28 area=0.063 perim=1.14
-MI5 net29 Ab VGND VNB sky130_fd_pr__nfet_01v8 m=2 w=0.42U l=0.15U mult=1 sa=0.265
+MMIP1 Ab net34 VPWR VPB sky130_fd_pr__pfet_01v8 m=1 w=1U l=0.25U mult=1 sa=0.265
 + sb=0.265 sd=0.28 area=0.063 perim=1.14
-MI4 net25 A VGND VNB sky130_fd_pr__nfet_01v8 m=1 w=0.42U l=0.15U mult=1 sa=0.265
+MMIP2 X Ab VPWR VPB sky130_fd_pr__pfet_01v8 m=1 w=1.12U l=0.18U mult=1 sa=0.265
 + sb=0.265 sd=0.28 area=0.063 perim=1.14
-MMIP0 Ab A VPWR VPB sky130_fd_pr__pfet_01v8_hvt m=1 w=1U l=0.25U mult=1 sa=0.265
+MI7 net34 net30 VPWR VPB sky130_fd_pr__pfet_01v8 m=1 w=1U l=0.25U mult=1 sa=0.265
 + sb=0.265 sd=0.28 area=0.063 perim=1.14
-MMIP1 X Ab VPWR VPB sky130_fd_pr__pfet_01v8_hvt m=2 w=1.0U l=0.25U mult=1 sa=0.265
+MI8 net30 A VPWR VPB sky130_fd_pr__pfet_01v8 m=1 w=0.42U l=0.18U mult=1 sa=0.265
 + sb=0.265 sd=0.28 area=0.063 perim=1.14
-.ENDS sky130_fd_sc_lp__clkbuflp_2
+.ENDS sky130_fd_sc_ms__dlygate4sd2_1
