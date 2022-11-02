@@ -19,7 +19,7 @@ class pcMos5d10FingerGenerator:
         super(pcMos5d10FingerGenerator, self).__init__()
      
      
-    def _MOS5d10Finger(self,layout, cell, well, w, l, sab, gate_contact,gate_contact_num, finger_num):
+    def _MOS5d10Finger(self,layout, cell, well, w, l, sab, gate_contact,gate_contact_num, finger_num, sdCovmCON):
    
       #----------------------------
       #         Parameters
@@ -27,6 +27,11 @@ class pcMos5d10FingerGenerator:
       # well      : Diffusion Well type (N+S/D, P+S/D)
       # w         : Gate width (um)
       # l         : Gate length (um)
+      # sab             : diffusion extension on STI
+      # gate_contact    : gate contact availability (top,bottom,both)
+      # gate_contact_num: num of gate contact vertical direction (1,2)
+      # finger_num      : number of tran fingers
+      # sdCovmCON       : coverage of Source/Drain contacts (%)
      
       prcn = 1000
       grid = 0.005*prcn
@@ -91,7 +96,7 @@ class pcMos5d10FingerGenerator:
       
       # instantiate NMOS18 Finger Transistor (_MOS18Finger)
       instpcMos18Finger = pcMos18FingerGenerator()
-      mos18 = instpcMos18Finger._MOS18Finger(self.layout,self.cell,well,w, l, sab, gate_contact, gate_contact_num, finger_num)
+      mos18 = instpcMos18Finger._MOS18Finger(self.layout,self.cell,well,w, l, sab, gate_contact, gate_contact_num, finger_num, sdCovmCON)
    
       # draw hvntm for hvi thick gate oxide (5V) MOS
       l_hvntm = self.layout.layer(hvntm_lay_num,hvntm_lay_dt)
