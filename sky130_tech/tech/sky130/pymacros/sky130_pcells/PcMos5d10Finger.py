@@ -19,7 +19,7 @@ class pcMos5d10FingerGenerator:
         super(pcMos5d10FingerGenerator, self).__init__()
      
      
-    def _MOS5d10Finger(self,layout, cell, well, w, l, sab, gate_contact,gate_contact_num, finger_num, sdCovmCON):
+    def _MOS5d10Finger(self,layout, cell, well, w, l, sab, gate_contact,gate_contact_num, finger_num, sdCovmCON, n_tip_imp):
    
       #----------------------------
       #         Parameters
@@ -98,6 +98,9 @@ class pcMos5d10FingerGenerator:
       instpcMos18Finger = pcMos18FingerGenerator()
       mos18 = instpcMos18Finger._MOS18Finger(self.layout,self.cell,well,w, l, sab, gate_contact, gate_contact_num, finger_num, sdCovmCON)
    
-      # draw hvntm for hvi thick gate oxide (5V) MOS
-      l_hvntm = self.layout.layer(hvntm_lay_num,hvntm_lay_dt)
-      self.cell.shapes(l_hvntm).insert(pya.DBox(-lenRx/2.0-hvtnm_enc_diff, -widRx/2.0-hvtnm_enc_diff, lenRx/2.0+hvtnm_enc_diff, widRx/2.0+hvtnm_enc_diff))
+      # draw hvntm for N-tip High-vt Nmos Implant (5V) MOS
+      #periphery.rst https://github.com/google/skywater-pdk/blob/main/docs/rules/periphery-rules.rst
+      # Hvntm must overlap hvi
+      if n_tip_imp:
+        l_hvntm = self.layout.layer(hvntm_lay_num,hvntm_lay_dt)
+        self.cell.shapes(l_hvntm).insert(pya.DBox(-lenRx/2.0-hvtnm_enc_diff, -widRx/2.0-hvtnm_enc_diff, lenRx/2.0+hvtnm_enc_diff, widRx/2.0+hvtnm_enc_diff))
