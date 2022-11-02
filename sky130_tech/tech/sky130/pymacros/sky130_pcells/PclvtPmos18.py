@@ -224,13 +224,13 @@ class pclvtPmos18Generator(pya.PCellDeclarationHelper):
         delta_pathLenx = delta_cov*pathLenx
         delta_pathLeny = delta_cov*pathLeny
           
-        if (delta_pathLenx < (max_rect_size+max_rect_spc) and delta_pathLeny < (max_rect_size+max_rect_spc) ) or (wgring-max_rect_size)/2.0 < max_rect_enc or self.grCovmCON < 0.01:
+        if (delta_pathLenx < (max_rect_size+max_rect_spc) and delta_pathLeny < (max_rect_size+max_rect_spc) ) or min(delta_pathLenx, delta_pathLeny)+(wgring-max_rect_size)/2.0 < max_rect_enc or self.grCovmCON < 0.01:
           min_delta_cov1 = (max_rect_size+max_rect_spc)/max(pathLenx, pathLeny)
           min_delta_cov2 = (max_rect_enc-(wgring-max_rect_size)/2.0)/min(pathLenx, pathLeny)
           min_delta_cov = max(min_delta_cov1, min_delta_cov2)
           self.grCovmCON = int((100-2*100.0*min_delta_cov)*10)/10.0
           #("distance between corner contacts has to be respected and no negative values allowed")
-
+          
     def _mos18FingerTrans(self, cell, well, w, l, sab, gate_contact, gate_contact_num, finger_num, sdCovmCON):
 
       instpcMos18Finger = pcMos18FingerGenerator()
