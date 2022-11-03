@@ -18,7 +18,7 @@
 
 Usage:
     run_lvs.py (--help| -h)
-    run_lvs.py (--design=<layout_path>) (--net=<netlist_path>) [--report=<report_output_path>] [--output_netlist=<output_netlist_path>] [--thr=<thr>] [--run_mode=<run_mode>] [--set_connect_implicit] [--lvs_sub=<sub_name>] [--no_net_names] [--set_spice_comments] [--set_scale] [--set_verbose] [--set_schematic_simplify] [--set_net_only] [--set_top_lvl_pins] [--set_combine] [--set_purge] [--set_purge_nets]
+    run_lvs.py (--design=<layout_path>) (--net=<netlist_path>) [--report=<report_output_path>] [--output_netlist=<output_netlist_path>] [--thr=<thr>] [--run_mode=<run_mode>] [--set_connect_implicit] [--lvs_sub=<sub_name>] [--flattened_cells=<flatten_path>] [--no_net_names] [--set_spice_comments] [--set_scale] [--set_verbose] [--set_schematic_simplify] [--set_net_only] [--set_top_lvl_pins] [--set_combine] [--set_purge] [--set_purge_nets]
 
 Options:
     --help -h                                   Print this help message.
@@ -29,6 +29,7 @@ Options:
     --thr=<thr>                                 Number of cores to be used by LVS checker
     --run_mode=<run_mode>                       Select klayout mode Allowed modes (flat , deep, tiling). [default: deep]
     --lvs_sub=<sub_name>                        Assign the substrate name used in design.
+    --flattened_cells=<flatten_path>            The input flattened cells file path.
     --set_connect_implicit                      Assign the labels names as connections.
     --no_net_names                              Discard net names in extracted netlist.
     --set_spice_comments                        Set netlist comments in extracted netlist.
@@ -85,6 +86,8 @@ def main():
     switches = switches + '-rd purge_nets=true ' if args["--set_purge_nets"] else switches + '-rd purge_nets=false '
 
     switches = switches + f'-rd lvs_sub={args["--lvs_sub"]} ' if args["--lvs_sub"] else switches
+
+    switches = switches + f'-rd flattened_cells={args["--flattened_cells"]} ' if args["--flattened_cells"] else switches
 
 
     # Generate databases

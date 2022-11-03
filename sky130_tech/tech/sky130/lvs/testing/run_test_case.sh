@@ -26,7 +26,7 @@ then
     then
         if [ -f $cdl_file ]
         then
-            if [[ "$CASE_NAME" == *"sky130_fd_sc_lp__lsbuf"* ]] | [[ "$CASE_NAME" == *"sky130_fd_sc_hd__lpflow_lsbuf"* ]] ; then export GND="VGND"; else export GND=$7; fi
+            if [[ "$CASE_NAME" == *"sky130_fd_sc_lp__lsbufiso"* ]] | [[ "$CASE_NAME" == *"sky130_fd_sc_hd__lpflow_lsbuf_lh_hl_"* ]] ; then export GND="VGND"; else export GND=$7; fi
             python3 $PDK_ROOT/$PDK/run_lvs.py --design=$gds_file --net=$cdl_file --output_netlist=$RUN_FOLDER/${CASE_NAME}_ext.cir --report=$RUN_FOLDER/${CASE_NAME} --lvs_sub=${GND-sky130_gnd} > $RUN_FOLDER/${CASE_NAME}_lvs.log 2>&1
             return_code=$?
             if [ "$return_code" != "0" ]

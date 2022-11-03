@@ -2558,6 +2558,27 @@ extract_devices(mos4("sky130_fd_bs_flash__special_sonosfet_star"), { "SD" => son
 
 logger.info("Starting SKY130 LVS comparison section")
 
+#=== GET FLATTENED CELLS (IGNORED CELLS) ===
+if $flattened_cells
+  cells_list = File.readlines($flattened_cells, chomp: true)
+  logger.info("Flattened cells file: #{$flattened_cells}")
+else
+  begin
+    cells_list = File.readlines(File.expand_path(File.dirname(__FILE__)) + "/sky130_flattened_cells.txt", chomp: true)
+    logger.info("Flattened cells file (default): #{File.expand_path(File.dirname(__FILE__))}/sky130_flattened_cells.txt")
+  rescue
+    cells_list = []
+    logger.info("No flattened cells file path entered, will continue without it")
+  end
+end
+
+if cells_list.length > 0
+  cells_list.each do |cir|
+    schematic.flatten_circuit(cir)
+    netlist.flatten_circuit(cir)
+  end
+end
+
 #=== FLATTEN CELLS ===
 align
 

@@ -1,0 +1,6 @@
+* NGSPICE file created from sky130_fd_pr__photodiode.ext - technology: sky130A
+
+.subckt sky130_fd_pr__photodiode D1 D0
+D0 D0 D1 sky130_fd_pr__model__parasitic__diode_ps2dn area=9e+12p
+.ends
+

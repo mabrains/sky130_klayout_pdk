@@ -22,7 +22,9 @@ The `run_lvs.py` script takes a gds file and a netlist to run LVS rule deck of S
 
 ```bash
     run_lvs.py (--help| -h)
-    run_lvs.py (--design=<layout_path>) (--net=<netlist_path>) [--thr=<thr>] [--run_mode=<run_mode>] [--no_net_names] [--set_spice_comments] [--set_scale] [--set_verbose] [--set_schematic_simplify] [--set_net_only] [--set_top_lvl_pins] [--set_combine] [--set_purge] [--set_purge_nets]
+    run_lvs.py (--design=<layout_path>) (--net=<netlist_path>) [--thr=<thr>] [--run_mode=<run_mode>] [--set_connect_implicit] [--lvs_sub=<sub_name>] 
+    [--flattened_cells=<flatten_path>] [--no_net_names] [--set_spice_comments] [--set_scale] [--set_verbose] [--set_schematic_simplify] [--set_net_only] 
+    [--set_top_lvl_pins] [--set_combine] [--set_purge] [--set_purge_nets]
 ```
 
 Example:
@@ -41,7 +43,13 @@ Example:
 
 `--thr=<thr>`                       The number of threads used in run.
 
-`run_mode=<run_mode>`               Select klayout mode Allowed modes (flat , deep, tiling). [default: flat]
+`--run_mode=<run_mode>`             Select klayout mode Allowed modes (flat , deep, tiling). [default: flat]
+
+`--lvs_sub=<sub_name>`              Assign the substrate name used in design.
+
+`--flattened_cells=<flatten_path>`  The input flattened cells file path.
+
+`--set_connect_implicit`            Assign the labels names as connections.
 
 `--no_net_names`                    Discard net names in extracted netlist.
 
@@ -62,6 +70,19 @@ Example:
 `--set_purge`                       Set netlist purge all only in extracted netlist.
 
 `--set_purge_nets`                  Set netlist purge nets only in extracted netlist.
+
+#### Note
+
+To use the `sky130_flattened_cells.txt`, the name of sub-circuits should be entered per line without whitespaces and without empty lines.
+
+Example:
+
+```text
+    sky130_fd_sc_hd__conb_1
+    sky130_fd_sc_hd__tap_2
+    sky130_fd_sc_hd__tapvgnd_1
+    sky130_fd_sc_ms__fill_4
+```
 
 ### **LVS Outputs**
 
