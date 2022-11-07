@@ -65,7 +65,7 @@ else
     then
         if [ -f $pass_cdl ]
         then
-            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$pass_gds --net=$pass_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_pass_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_pass --set_connect_implicit > $RUN_FOLDER/${CASE_NAME}_pass_lvs.log 2>&1
+            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$pass_gds --net=$pass_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_pass_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_pass --set_connect_implicit --lvs_sub="SUBSTRATE" > $RUN_FOLDER/${CASE_NAME}_pass_lvs.log 2>&1
             return_code=$?
             if [ "$return_code" != "0" ]
             then
@@ -93,7 +93,7 @@ else
     then
         if [ -f $fail_dim_cdl ]
         then
-            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$fail_dim_gds --net=$fail_dim_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_fail_dim_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_fail_dim --set_connect_implicit > $RUN_FOLDER/${CASE_NAME}_fail_dim_lvs.log 2>&1
+            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$fail_dim_gds --net=$fail_dim_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_fail_dim_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_fail_dim --set_connect_implicit --lvs_sub="SUBSTRATE" > $RUN_FOLDER/${CASE_NAME}_fail_dim_lvs.log 2>&1
             return_code=$?
             if [ "$return_code" != "1" ]
             then
@@ -126,7 +126,7 @@ else
     then
         if [ -f $fail_lay_cdl ]
         then
-            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$fail_lay_gds --net=$fail_lay_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_fail_lay_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_fail_lay --set_connect_implicit > $RUN_FOLDER/${CASE_NAME}_fail_lay_lvs.log 2>&1
+            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$fail_lay_gds --net=$fail_lay_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_fail_lay_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_fail_lay --set_connect_implicit --lvs_sub="SUBSTRATE" > $RUN_FOLDER/${CASE_NAME}_fail_lay_lvs.log 2>&1
             return_code=$?
             if [ "$return_code" != "1" ]
             then
@@ -159,7 +159,7 @@ else
     then
         if [ -f $fail_net_cdl ]
         then
-            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$fail_net_gds --net=$fail_net_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_fail_net_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_fail_net --set_connect_implicit > $RUN_FOLDER/${CASE_NAME}_fail_net_lvs.log 2>&1
+            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$fail_net_gds --net=$fail_net_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_fail_net_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_fail_net --set_connect_implicit --lvs_sub="SUBSTRATE" > $RUN_FOLDER/${CASE_NAME}_fail_net_lvs.log 2>&1
             return_code=$?
             if [ "$return_code" != "1" ]
             then
