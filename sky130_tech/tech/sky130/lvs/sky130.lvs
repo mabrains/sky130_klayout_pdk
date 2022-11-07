@@ -73,8 +73,7 @@ class SubcircuitModels < RBA::NetlistSpiceWriterDelegate
 
   def write_device(device)
     device_class = device.device_class
-    
-    
+    if device_class.name.include?('fet')
       str = "M" + device.expanded_name
     elsif device_class.name.include?('diode')
       str = "D" + device.expanded_name

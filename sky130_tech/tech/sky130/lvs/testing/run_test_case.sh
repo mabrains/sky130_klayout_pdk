@@ -33,21 +33,17 @@ then
             then
                 echo "## Test case $CASE_NAME didn't pass as expected."
                 echo "$CASE_NAME,No" >> $RUN_FOLDER/sc_test.csv
-                if [ "$COND" == "GHA" ]
-                then
-                    exit 1
-                fi
             else
                 echo "## Test case $CASE_NAME passed successfully."
                 echo "$CASE_NAME,Yes" >> $RUN_FOLDER/sc_test.csv
             fi
         else
             echo "## Can't find CDL for case: $cdl_file"
-            exit 1
+            echo "$CASE_NAME,No" >> $RUN_FOLDER/sc_test.csv
         fi
     else
         echo "## Can't find GDS for case: $gds_file"
-        exit 1
+        echo "$CASE_NAME,No" >> $RUN_FOLDER/sc_test.csv
     fi
 
 else

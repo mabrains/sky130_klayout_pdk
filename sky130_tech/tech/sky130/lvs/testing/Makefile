@@ -30,29 +30,22 @@ MAIN_CONN	     	:= $(wildcard testcases/connectivity_test/*.gds)
 CONN_CASES       	:= $(MAIN_CONN:testcases/connectivity_test/%.gds=test_conn_%)
 SC_HD	         	:= $(wildcard testcases/sc_testcases/hd/*.cdl)
 SC_HD_GHA		 	:= $(SC_HD:testcases/sc_testcases/hd/%.cdl=test_lvs_sc_gha_%)
-SC_HD_LOCAL		 	:= $(SC_HD:testcases/sc_testcases/hd/%.cdl=test_lvs_sc_local_%)
 SC_HDLL	         	:= $(wildcard testcases/sc_testcases/hdll/*.cdl)
 SC_HDLL_GHA	 		:= $(SC_HDLL:testcases/sc_testcases/hdll/%.cdl=test_lvs_sc_gha_%)
-SC_HDLL_LOCAL 		:= $(SC_HDLL:testcases/sc_testcases/hdll/%.cdl=test_lvs_sc_local_%)
 SC_HS	         	:= $(wildcard testcases/sc_testcases/hs/*.cdl)
 SC_HS_GHA		 	:= $(SC_HS:testcases/sc_testcases/hs/%.cdl=test_lvs_sc_gha_%)
-SC_HS_LOCAL		 	:= $(SC_HS:testcases/sc_testcases/hs/%.cdl=test_lvs_sc_local_%)
 SC_HVL	         	:= $(wildcard testcases/sc_testcases/hvl/*.cdl)
 SC_HVL_GHA	 		:= $(SC_HVL:testcases/sc_testcases/hvl/%.cdl=test_lvs_sc_gha_%)
-SC_HVL_LOCAL 		:= $(SC_HVL:testcases/sc_testcases/hvl/%.cdl=test_lvs_sc_local_%)
 SC_LP	         	:= $(wildcard testcases/sc_testcases/lp/*.cdl)
 SC_LP_GHA		 	:= $(SC_LP:testcases/sc_testcases/lp/%.cdl=test_lvs_sc_gha_%)
-SC_LP_LOCAL		 	:= $(SC_LP:testcases/sc_testcases/lp/%.cdl=test_lvs_sc_local_%)
 SC_LS	         	:= $(wildcard testcases/sc_testcases/ls/*.cdl)
 SC_LS_GHA		 	:= $(SC_LS:testcases/sc_testcases/ls/%.cdl=test_lvs_sc_gha_%)
-SC_LS_LOCAL		 	:= $(SC_LS:testcases/sc_testcases/ls/%.cdl=test_lvs_sc_local_%)
 SC_MS	         	:= $(wildcard testcases/sc_testcases/ms/*.cdl)
 SC_MS_GHA		 	:= $(SC_MS:testcases/sc_testcases/ms/%.cdl=test_lvs_sc_gha_%)
-SC_MS_LOCAL		 	:= $(SC_MS:testcases/sc_testcases/ms/%.cdl=test_lvs_sc_local_%)
 
 .DEFAULT_GOAL := all
 
-all: test_lvs_main test_lvs_collective test_lvs_connectivity
+all: test_lvs_main test_lvs_collective test_lvs_connectivity test_lvs_sc
 
 #=================================
 # -------- TEST MAIN LVS ---------
@@ -170,73 +163,62 @@ test_lvs_connectivity: $(CONN_CASES)
 test_lvs_sc_gha_%: $(run_folder)
 	@$(Testing_DIR)/run_test_case.sh $* $(PDK_ROOT) $(PDK) $(SC_TESTCASES_DIR) $(run_folder) GHA VNB $(word 4,$(subst _, ,$*)) SC
 
-.phony:
-test_lvs_sc_local_%: $(run_folder)
-	@$(Testing_DIR)/run_test_case.sh $* $(PDK_ROOT) $(PDK) $(SC_TESTCASES_DIR) $(run_folder) LOCAL VNB $(word 4,$(subst _, ,$*)) SC
-
 .ONESHELL:
 test_lvs_sc: test_lvs_hd_sc test_lvs_hdll_sc test_lvs_hs_sc test_lvs_hvl_sc test_lvs_lp_sc test_lvs_ls_sc test_lvs_ms_sc
-	@echo "Congratulations! Testing All SC LVS has finished successfully"
-
-.ONESHELL:
-test_lvs_sc_local: test_lvs_hd_sc_local test_lvs_hdll_sc_local test_lvs_hs_sc_local test_lvs_hvl_sc_local test_lvs_lp_sc_local test_lvs_ls_sc_local test_lvs_ms_sc_local
-	@echo "Congratulations! Testing All SC LVS has finished successfully"
+	@echo -e "\n============= SC LVS RESULTS ============="
+	@cat $(run_folder)/sc_test.csv
+	@if grep -q ,No $(run_folder)/sc_test.csv; then exit 1; fi
+	@echo -e "\nCongratulations! Testing All SC LVS has finished successfully"
 
 .ONESHELL:
 test_lvs_hd_sc: $(run_folder) $(SC_HD_GHA)
-	@echo "Congratulations! Testing HD SC LVS has finished successfully"
-
-.ONESHELL:
-test_lvs_hd_sc_local: $(run_folder) $(SC_HD_LOCAL)
-	@echo "Congratulations! Testing HD SC LVS has finished successfully"
+	@echo -e "\n============= SC LVS RESULTS ============="
+	@cat $(run_folder)/sc_test.csv
+	@if grep -q ,No $(run_folder)/sc_test.csv; then exit 1; fi
+	@echo -e "\nCongratulations! Testing HD SC LVS has finished successfully"
 
 .ONESHELL:
 test_lvs_hdll_sc: $(run_folder) $(SC_HDLL_GHA)
-	@echo "Congratulations! Testing HDLL SC LVS has finished successfully"
-
-.ONESHELL:
-test_lvs_hdll_sc_local: $(run_folder) $(SC_HDLL_LOCAL)
-	@echo "Congratulations! Testing HDLL SC LVS has finished successfully"
+	@echo -e "\n============= SC LVS RESULTS ============="
+	@cat $(run_folder)/sc_test.csv
+	@if grep -q ,No $(run_folder)/sc_test.csv; then exit 1; fi
+	@echo -e "\nCongratulations! Testing HDLL SC LVS has finished successfully"
 
 .ONESHELL:
 test_lvs_hs_sc: $(run_folder) $(SC_HS_GHA)
-	@echo "Congratulations! Testing HS SC LVS has finished successfully"
-
-.ONESHELL:
-test_lvs_hs_sc_local: $(run_folder) $(SC_HS_LOCAL)
-	@echo "Congratulations! Testing HS SC LVS has finished successfully"
+	@echo -e "\n============= SC LVS RESULTS ============="
+	@cat $(run_folder)/sc_test.csv
+	@if grep -q ,No $(run_folder)/sc_test.csv; then exit 1; fi
+	@echo -e "\nCongratulations! Testing HS SC LVS has finished successfully"
 
 .ONESHELL:
 test_lvs_hvl_sc: $(run_folder) $(SC_HVL_GHA)
-	@echo "Congratulations! Testing HVL SC LVS has finished successfully"
-
-.ONESHELL:
-test_lvs_hvl_sc_local: $(run_folder) $(SC_HVL_LOCAL)
-	@echo "Congratulations! Testing HVL SC LVS has finished successfully"
+	@echo -e "\n============= SC LVS RESULTS ============="
+	@cat $(run_folder)/sc_test.csv
+	@if grep -q ,No $(run_folder)/sc_test.csv; then exit 1; fi
+	@echo -e "\nCongratulations! Testing HVL SC LVS has finished successfully"
 
 .ONESHELL:
 test_lvs_lp_sc: $(run_folder) $(SC_LP_GHA)
-	@echo "Congratulations! Testing LP SC LVS has finished successfully"
-
-.ONESHELL:
-test_lvs_lp_sc_local: $(run_folder) $(SC_LP_LOCAL)
-	@echo "Congratulations! Testing LP SC LVS has finished successfully"
+	@echo -e "\n============= SC LVS RESULTS ============="
+	@cat $(run_folder)/sc_test.csv
+	@if grep -q ,No $(run_folder)/sc_test.csv; then exit 1; fi
+	@echo -e "\nCongratulations! Testing LP SC LVS has finished successfully"
 
 .ONESHELL:
 test_lvs_ls_sc: $(run_folder) $(SC_LS_GHA)
-	@echo "Congratulations! Testing LS SC LVS has finished successfully"
-
-.ONESHELL:
-test_lvs_ls_sc_local: $(run_folder) $(SC_LS_LOCAL)
-	@echo "Congratulations! Testing LS SC LVS has finished successfully"
+	@echo -e "\n============= SC LVS RESULTS ============="
+	@cat $(run_folder)/sc_test.csv
+	@if grep -q ,No $(run_folder)/sc_test.csv; then exit 1; fi
+	@echo -e "\nCongratulations! Testing LS SC LVS has finished successfully"
 
 .ONESHELL:
 test_lvs_ms_sc: $(run_folder) $(SC_MS_GHA)
-	@echo "Congratulations! Testing MS SC LVS has finished successfully"
+	@echo -e "\n============= SC LVS RESULTS ============="
+	@cat $(run_folder)/sc_test.csv
+	@if grep -q ,No $(run_folder)/sc_test.csv; then exit 1; fi
+	@echo -e "\nCongratulations! Testing MS SC LVS has finished successfully"
 
-.ONESHELL:
-test_lvs_ms_sc_local: $(run_folder) $(SC_MS_LOCAL)
-	@echo "Congratulations! Testing MS SC LVS has finished successfully"
 
 #==========================
 # --------- HELP ----------
@@ -244,9 +226,9 @@ test_lvs_ms_sc_local: $(run_folder) $(SC_MS_LOCAL)
 
 # Help Target
 help:
-	@echo "\n ==== The following are some of the valid targets for this Makefile ====\n"
-	@echo "... all						(the default if no target is provided          			)"
-	@echo "... test_lvs_main			(To run main lvs regression for all devices    			)"
-	@echo "... test_lvs_collective		(To run collective lvs regression for all devices		)"
-	@echo "... test_lvs_connectivity	(To run connectivity lvs regression for all devices		)"
-	@echo "... test_lvs_sc				(To run standard cells lvs regression for all devices	)"
+	@echo -e "\n ==== The following are some of the valid targets for this Makefile ====\n"
+	@echo "... all                      (the default if no target is provided                   )"
+	@echo "... test_lvs_main            (To run main lvs regression for all devices             )"
+	@echo "... test_lvs_collective      (To run collective lvs regression for all devices       )"
+	@echo "... test_lvs_connectivity    (To run connectivity lvs regression for all devices     )"
+	@echo "... test_lvs_sc              (To run standard cells lvs regression for all devices   )"
