@@ -65,7 +65,3 @@
 .include ./hvl_cdl/sky130_fd_sc_hvl__xor2_1.cdl
 .include ./hvl_cdl/sky130_fd_sc_hvl__conb_1.cdl
 .include ./hvl_cdl/sky130_fd_sc_hvl__diode_2.cdl
-.include ./hvl_cdl/sky130_fd_sc_hvl__fill_1.cdl
-.include ./hvl_cdl/sky130_fd_sc_hvl__fill_2.cdl
-.include ./hvl_cdl/sky130_fd_sc_hvl__fill_4.cdl
-.include ./hvl_cdl/sky130_fd_sc_hvl__fill_8.cdl

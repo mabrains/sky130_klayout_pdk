@@ -377,16 +377,6 @@
 .include ./hs_cdl/sky130_fd_sc_hs__xor3_4.cdl
 .include ./hs_cdl/sky130_fd_sc_hs__conb_1.cdl
 .include ./hs_cdl/sky130_fd_sc_hs__diode_2.cdl
-.include ./hs_cdl/sky130_fd_sc_hs__fill_1.cdl
-.include ./hs_cdl/sky130_fd_sc_hs__fill_2.cdl
-.include ./hs_cdl/sky130_fd_sc_hs__fill_4.cdl
-.include ./hs_cdl/sky130_fd_sc_hs__fill_8.cdl
 .include ./hs_cdl/sky130_fd_sc_hs__fill_diode_2.cdl
 .include ./hs_cdl/sky130_fd_sc_hs__fill_diode_4.cdl
 .include ./hs_cdl/sky130_fd_sc_hs__fill_diode_8.cdl
-.include ./hs_cdl/sky130_fd_sc_hs__tap_1.cdl
-.include ./hs_cdl/sky130_fd_sc_hs__tap_2.cdl
-.include ./hs_cdl/sky130_fd_sc_hs__tapmet1_2.cdl
-.include ./hs_cdl/sky130_fd_sc_hs__tapvgnd_1.cdl
-.include ./hs_cdl/sky130_fd_sc_hs__tapvgnd2_1.cdl
-.include ./hs_cdl/sky130_fd_sc_hs__tapvpwrvgnd_1.cdl

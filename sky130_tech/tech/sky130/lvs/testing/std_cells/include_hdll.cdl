@@ -321,14 +321,6 @@
 .include ./hdll_cdl/sky130_fd_sc_hdll__diode_4.cdl
 .include ./hdll_cdl/sky130_fd_sc_hdll__diode_6.cdl
 .include ./hdll_cdl/sky130_fd_sc_hdll__diode_8.cdl
-.include ./hdll_cdl/sky130_fd_sc_hdll__fill_1.cdl
-.include ./hdll_cdl/sky130_fd_sc_hdll__fill_2.cdl
-.include ./hdll_cdl/sky130_fd_sc_hdll__fill_4.cdl
-.include ./hdll_cdl/sky130_fd_sc_hdll__fill_8.cdl
 .include ./hdll_cdl/sky130_fd_sc_hdll__o211a_4.cdl
 .include ./hdll_cdl/sky130_fd_sc_hdll__o211ai_4.cdl
 .include ./hdll_cdl/sky130_fd_sc_hdll__o21a_4.cdl
-.include ./hdll_cdl/sky130_fd_sc_hdll__tap_1.cdl
-.include ./hdll_cdl/sky130_fd_sc_hdll__tapvgnd_1.cdl
-.include ./hdll_cdl/sky130_fd_sc_hdll__tapvgnd2_1.cdl
-.include ./hdll_cdl/sky130_fd_sc_hdll__tapvpwrvgnd_1.cdl

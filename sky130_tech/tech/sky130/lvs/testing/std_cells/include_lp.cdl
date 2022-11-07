@@ -731,12 +731,3 @@
 .include ./lp_cdl/sky130_fd_sc_lp__clkinvlp_8.cdl
 .include ./lp_cdl/sky130_fd_sc_lp__diode_0.cdl
 .include ./lp_cdl/sky130_fd_sc_lp__diode_1.cdl
-.include ./lp_cdl/sky130_fd_sc_lp__fill_1.cdl
-.include ./lp_cdl/sky130_fd_sc_lp__fill_2.cdl
-.include ./lp_cdl/sky130_fd_sc_lp__fill_4.cdl
-.include ./lp_cdl/sky130_fd_sc_lp__fill_8.cdl
-.include ./lp_cdl/sky130_fd_sc_lp__tap_1.cdl
-.include ./lp_cdl/sky130_fd_sc_lp__tap_2.cdl
-.include ./lp_cdl/sky130_fd_sc_lp__tapvgnd_1.cdl
-.include ./lp_cdl/sky130_fd_sc_lp__tapvgnd2_1.cdl
-.include ./lp_cdl/sky130_fd_sc_lp__tapvpwrvgnd_1.cdl
