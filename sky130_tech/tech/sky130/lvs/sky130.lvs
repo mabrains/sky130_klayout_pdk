@@ -1639,16 +1639,15 @@ connect(met5_con    ,     met5_label)
 connect(rdl         ,      rdl_label)
 connect(pad         ,      pad_label)
 
-logger.info("Starting SKY130 LVS connectivity setup (Global connections)")
-
 # Global
 if $lvs_sub
+  logger.info("Setting substrate name of #{$lvs_sub}")
   connect_global(sub  , substrate_name)
 end
 
 # Multifinger Devices
 if $connect_implicit == "true"
-  logger.info("Starting SKY130 LVS connectivity setup (Multifinger Devices)")
+  logger.info("Implicit connectivity is Enabled")
   connect_implicit("*")
 end
 
