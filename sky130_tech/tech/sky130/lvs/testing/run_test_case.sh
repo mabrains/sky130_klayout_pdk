@@ -19,34 +19,31 @@ then
     cp $cdl_file $RUN_FOLDER
     gds_file=$RUN_FOLDER/${CASE_NAME}.gds
     cdl_file=$RUN_FOLDER/${CASE_NAME}.cdl
-    sed -E 's/w=([0-9]\.[0-9]+) l=([0-9]\.[0-9]+)/w=$1U l=$2U/gm;t;d' $cdl_file
+    sed -E 's/w=([0-9.]+) l=([0-9.]+)/w=$1U l=$2U/gm;t;d' $cdl_file
     sed -E 's/topography=normal //gm;t;d' $cdl_file
 
     if [ -f $gds_file ]
     then
         if [ -f $cdl_file ]
         then
-            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$gds_file --net=$cdl_file --output_netlist=$RUN_FOLDER/${CASE_NAME}_pass_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_pass --lvs_sub=${GND-sky130_gnd} > $RUN_FOLDER/${CASE_NAME}_pass_lvs.log 2>&1
+            if [[ "$CASE_NAME" == *"sky130_fd_sc_lp__lsbuf"* ]] | [[ "$CASE_NAME" == *"sky130_fd_sc_hd__lpflow_lsbuf_lh_hl_"* ]] ; then export GND="VGND"; else export GND=$7; fi
+            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$gds_file --net=$cdl_file --output_netlist=$RUN_FOLDER/${CASE_NAME}_ext.cir --report=$RUN_FOLDER/${CASE_NAME} --lvs_sub=${GND-sky130_gnd} > $RUN_FOLDER/${CASE_NAME}_lvs.log 2>&1
             return_code=$?
             if [ "$return_code" != "0" ]
             then
-                echo "## Pass test case $CASE_NAME didn't pass as expected."
+                echo "## Test case $CASE_NAME didn't pass as expected."
                 echo "$CASE_NAME,No" >> $RUN_FOLDER/sc_test.csv
-                if [ "$COND" == "GHA" ]
-                then
-                    exit 1
-                fi
             else
-                echo "## Pass test case $CASE_NAME passed successfully."
+                echo "## Test case $CASE_NAME passed successfully."
                 echo "$CASE_NAME,Yes" >> $RUN_FOLDER/sc_test.csv
             fi
         else
-            echo "## Can't find pass CDL for case: $cdl_file"
-            exit 1
+            echo "## Can't find CDL for case: $cdl_file"
+            echo "$CASE_NAME,No" >> $RUN_FOLDER/sc_test.csv
         fi
     else
-        echo "## Can't find pass GDS for case: $gds_file"
-        exit 1
+        echo "## Can't find GDS for case: $gds_file"
+        echo "$CASE_NAME,No" >> $RUN_FOLDER/sc_test.csv
     fi
 
 else
@@ -68,7 +65,7 @@ else
     then
         if [ -f $pass_cdl ]
         then
-            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$pass_gds --net=$pass_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_pass_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_pass > $RUN_FOLDER/${CASE_NAME}_pass_lvs.log 2>&1
+            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$pass_gds --net=$pass_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_pass_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_pass --set_connect_implicit --lvs_sub="SUBSTRATE" > $RUN_FOLDER/${CASE_NAME}_pass_lvs.log 2>&1
             return_code=$?
             if [ "$return_code" != "0" ]
             then
@@ -96,7 +93,7 @@ else
     then
         if [ -f $fail_dim_cdl ]
         then
-            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$fail_dim_gds --net=$fail_dim_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_fail_dim_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_fail_dim > $RUN_FOLDER/${CASE_NAME}_fail_dim_lvs.log 2>&1
+            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$fail_dim_gds --net=$fail_dim_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_fail_dim_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_fail_dim --set_connect_implicit --lvs_sub="SUBSTRATE" > $RUN_FOLDER/${CASE_NAME}_fail_dim_lvs.log 2>&1
             return_code=$?
             if [ "$return_code" != "1" ]
             then
@@ -129,7 +126,7 @@ else
     then
         if [ -f $fail_lay_cdl ]
         then
-            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$fail_lay_gds --net=$fail_lay_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_fail_lay_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_fail_lay > $RUN_FOLDER/${CASE_NAME}_fail_lay_lvs.log 2>&1
+            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$fail_lay_gds --net=$fail_lay_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_fail_lay_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_fail_lay --set_connect_implicit --lvs_sub="SUBSTRATE" > $RUN_FOLDER/${CASE_NAME}_fail_lay_lvs.log 2>&1
             return_code=$?
             if [ "$return_code" != "1" ]
             then
@@ -162,7 +159,7 @@ else
     then
         if [ -f $fail_net_cdl ]
         then
-            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$fail_net_gds --net=$fail_net_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_fail_net_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_fail_net > $RUN_FOLDER/${CASE_NAME}_fail_net_lvs.log 2>&1
+            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$fail_net_gds --net=$fail_net_cdl --output_netlist=$RUN_FOLDER/${CASE_NAME}_fail_net_ext.cir --report=$RUN_FOLDER/${CASE_NAME}_fail_net --set_connect_implicit --lvs_sub="SUBSTRATE" > $RUN_FOLDER/${CASE_NAME}_fail_net_lvs.log 2>&1
             return_code=$?
             if [ "$return_code" != "1" ]
             then

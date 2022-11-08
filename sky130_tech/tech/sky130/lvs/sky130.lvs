@@ -65,8 +65,7 @@ if $lvs_sub
   substrate_name = $lvs_sub
   logger.info("Substrate name: #{$lvs_sub}")
 else
-  substrate_name = "sky130_gnd"
-  logger.info("No substrate name given, default name is sky130_gnd")
+  logger.info("No substrate name is given")
 end
 
 #=== CUSTOM WRITER CLASS ===
@@ -861,8 +860,6 @@ rdl_label       = labels(74 , 5)
 pad_label       = labels(76 , 5)
 txt_label       = labels(83 ,44)
 
-#=== BULK LAYER ===
-sub = polygon_layer
 
 #================================================
 #------------------ SWITCHES --------------------
@@ -964,9 +961,12 @@ pcomp     = diff.and(psdm)
 sd        = diff.not(poly).not(diff_res).not(diff_cut).not(tap).not(areaid_po).not(npnid).not(pnpid).not(areaid_de).not(uhv_mos_1).not(uhv_mos_2).not(uhv_mos_3)
 tgate     = poly.and(diff).not(poly_res).not(poly_cut).not(tap).not(tunm).not(rpm).not(npc).not(hvtr).not(uhv_mos_1).not(uhv_mos_2).not(uhv_mos_3)
 
+pwell_iso = dnwell.and(nwell).holes.not(pwell_res)
+ptap_dw   = tap.and(psdm).not(nwell).and(pwell_iso).not(diff_res).not(diff_cut).not(npnid).not(pnpid)
+
 ngate     = nsdm.and(tgate).not(nwell).not(pwde).not(hvtp).not(psdm)
 nsd       = nsdm.and(sd).not(nwell).interacting(ngate)
-ptap_conn = tap.and(psdm).not(nwell).not(diff_res).not(diff_cut).not(npnid).not(pnpid)
+ptap_conn = tap.and(psdm).not(nwell).not(pwell_iso).not(diff_res).not(diff_cut).not(npnid).not(pnpid)
 ptap_bjt  = tap.and(psdm).not(diff_res).not(diff_cut)
 
 pgate     = psdm.and(tgate).and(nwell).not(ldntm).not(nsdm).not(areaid_le)
@@ -974,7 +974,7 @@ psd       = psdm.and(sd).and(nwell).interacting(pgate)
 ntap_conn = tap.and(nsdm).and(nwell).not(diff_res).not(diff_cut).not(npnid).not(pnpid)
 ntap_bjt  = tap.and(nsdm).not(diff_res).not(diff_cut)
 
-poly_con  = poly.not(poly_res).not(vpp).not(npnid)
+poly_con  = poly.not(poly_res).not(vpp).not(npnid).not(poly_short)
 li_con    = li.not( li_res ).not(vpp)
 met1_con  = met1.not(met1_res).not(vpp)
 met2_con  = met2.not(met2_res).not(inductor).not(met2_fuse).not(vpp)
@@ -982,6 +982,8 @@ met3_con  = met3.not(met3_res).not(inductor).not(met3_fuse).not(vpp)
 met4_con  = met4.not(met4_res).not(met4_fuse).not(vpp)
 met5_con  = met5.not(met5_res).not(vpp)
 
+#=== BULK LAYER ===
+sub       = extent.not(pwell_iso).not(pwell_res)
 
 #==================================
 # ------ MOSFET DERIVATIONS -------
@@ -1107,43 +1109,33 @@ logger.info("Starting DIODE DERIVATIONS")
 
 # N+ diffusion diode
 ndiode_terminal_n = ncomp.outside(dnwell).not(hvtp).interacting(areaid_de).not_interacting(areaid_ed)
-ndiode_terminal_p = ptap_conn.holes.interacting(ndiode_terminal_n).not_interacting(areaid_ed)
 
 # P+ diffusion diode
-pdiode_terminal_n = pcomp.outside(dnwell).interacting(areaid_de).not_interacting(areaid_ed)
-pdiode_terminal_p = nwell.interacting(areaid_de).not_interacting(areaid_ed)
+pdiode_terminal_p = pcomp.outside(dnwell).interacting(areaid_de).not_interacting(areaid_ed)
 
 # 5V N+ diffusion diode
 ndiode_5v0_terminal_n = ndiode_terminal_n.not(hvi).not(lvtn)
-ndiode_5v0_terminal_p = ndiode_terminal_p.interacting(ndiode_5v0_terminal_n)
 
 # 5V N+ diffusion diode low threshold voltage  [lvt]
 ndiode_5v0_lvt_terminal_n = ndiode_terminal_n.not(hvi).and(lvtn)
-ndiode_5v0_lvt_terminal_p = ndiode_terminal_p.interacting(ndiode_5v0_lvt_terminal_n)
 
 # 5V N+ diffusion diode native threshold voltage [lvt & hvi]
 ndiode_5v0_nvt_terminal_n = ndiode_terminal_n.and(hvi).and(lvtn)
-ndiode_5v0_nvt_terminal_p = ndiode_terminal_p.interacting(ndiode_5v0_nvt_terminal_n)
 
 # 11V N+ diffusion diode 
 ndiode_11v0_terminal_n = ndiode_terminal_n.and(hvi).not(lvtn)
-ndiode_11v0_terminal_p = ndiode_terminal_p.interacting(ndiode_11v0_terminal_n)
 
 # 5V P+ diffusion diode
-pdiode_5v0_terminal_n = pdiode_terminal_n.not(hvtp).not(hvi).not(lvtn)
-pdiode_5v0_terminal_p = pdiode_terminal_p.interacting(pdiode_5v0_terminal_n)
+pdiode_5v0_terminal_p = pdiode_terminal_p.not(hvtp).not(hvi).not(lvtn)
 
 # 5V P+ diffusion diode low threshold voltage [lvt]
-pdiode_5v0_lvt_terminal_n = pdiode_terminal_n.not(hvtp).not(hvi).and(lvtn)
-pdiode_5v0_lvt_terminal_p = pdiode_terminal_p.interacting(pdiode_5v0_lvt_terminal_n)
+pdiode_5v0_lvt_terminal_p = pdiode_terminal_p.not(hvtp).not(hvi).and(lvtn)
 
 # 5V P+ diffusion diode high threshold voltage [hvtp]
-pdiode_5v0_hvt_terminal_n = pdiode_terminal_n.and(hvtp).not(hvi).not(lvtn)
-pdiode_5v0_hvt_terminal_p = pdiode_terminal_p.interacting(pdiode_5v0_hvt_terminal_n)
+pdiode_5v0_hvt_terminal_p = pdiode_terminal_p.and(hvtp).not(hvi).not(lvtn)
 
 # 11V P+ diffusion diode [hvi]
-pdiode_11v0_terminal_n = pdiode_terminal_n.not(hvtp).and(hvi).not(lvtn)
-pdiode_11v0_terminal_p = pdiode_terminal_p.interacting(pdiode_11v0_terminal_n)
+pdiode_11v0_terminal_p = pdiode_terminal_p.not(hvtp).and(hvi).not(lvtn)
 
 
 #================================
@@ -1173,8 +1165,8 @@ logger.info("Starting RESISTOR DERIVATIONS")
 nplus_res_init  = ncomp.and(diff_res)
 pplus_res_init  = pcomp.and(nwell).and(diff_res)
 
-nplus_cont_init = ncomp.not_interacting(ngate).interacting(diff_res).not(diff_res)
-pplus_cont_init = pcomp.and(nwell).not_interacting(pgate).interacting(diff_res).not(diff_res)
+nplus_cont_init = ncomp.not(ngate).interacting(diff_res).not(diff_res)
+pplus_cont_init = pcomp.and(nwell).not(pgate).interacting(diff_res).not(diff_res)
 
 # N+ diffusion resistor
 nplus_res       = nplus_res_init.not(hvi)
@@ -1194,8 +1186,6 @@ pplus_hv_cont   = pplus_cont_init.and(hvi)
 
 # Isolated PWELL resistor
 pwell_resistor  = pwell_res.not(nwell).and(dnwell)
-pwell_term      = ptap_conn.and(dnwell).interacting(pwell_res).not(pwell_res)
-pwell_cont      = nwell.holes.covering(pwell_term)
 
 # ==============
 # ---- POLY ----
@@ -1299,12 +1289,10 @@ varactor_gate =  poly_con.and(ntap_conn).not(varactor_exclude)
 # Low threshold voltage varactor
 varactor_gate_lvt = poly_con.interacting(varactor_gate.not(hvtp).not(hvi))
 varactor_nsd_lvt  = ntap_conn.not(hvtp).not(hvi).interacting(varactor_gate_lvt).not(varactor_exclude)
-varactor_bulk_lvt = ptap_conn.holes.interacting(varactor_gate_lvt)
 
 # High threshold voltage varactor
 varactor_gate_hvt = poly_con.interacting(varactor_gate.and(hvtp).not(hvi))
 varactor_nsd_hvt  = ntap_conn.and(hvtp).not(hvi).interacting(varactor_gate_hvt).not(varactor_exclude)
-varactor_bulk_hvt = ptap_conn.holes.interacting(varactor_gate_hvt)
 
 
 #==================================
@@ -1391,8 +1379,6 @@ via1_vpp  =  via1.and(vpp)
 via2_vpp  =  via2.and(vpp)
 via3_vpp  =  via3.and(vpp)
 via4_vpp  =  via4.and(vpp)
-
-# met4_xvpp = met4.interacting(met4.extents.edges.with_length(55.1.um , 55.12.um )).interacting(met4.extents.edges.with_length(28.89.um , 28.91.um ))
 
 # ===============
 # ---- AREAS ----
@@ -1513,18 +1499,6 @@ vpp_11p5x11p7_l1m1m2m3m4_shieldpom5 = vpp.interacting(vpp_11p5x11p7).interacting
 # vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x device
 vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x = vpp.interacting(vpp_11p5x11p7).interacting(vpp_pol1m1m2m3m4m5).interacting(met5.not_covering(vpp))
 
-# # vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x6 device
-# vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x6 = vpp.interacting(vpp_11p5x11p7).interacting(vpp_pol1m1m2m3m4m5).interacting(met5.covering(vpp)).inside(vpp.sized(15.um).interacting(ptap_conn)).interacting(met4.not_covering(vpp))
-
-# # vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x7 device
-# vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x7 = vpp.interacting(vpp_11p5x11p7).interacting(vpp_pol1m1m2m3m4m5).interacting(met5.not_covering(vpp)).inside(vpp.sized(15.um).interacting(ptap_conn)).interacting(met4.not_covering(vpp))
-
-# # vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x8 device
-# vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x8 = vpp.interacting(vpp_11p5x11p7).interacting(vpp_pol1m1m2m3m4m5).interacting(met5.covering(vpp)).interacting(met4_xvpp)
-
-# # vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x9 device
-# vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x9 = vpp.interacting(vpp_11p5x11p7).interacting(vpp_pol1m1m2m3m4m5).interacting(met5.not_covering(vpp)).interacting(met4_xvpp)
-
 # vpp_11p5x11p7_l1m1m2m3_shieldm4 device
 vpp_11p5x11p7_l1m1m2m3_shieldm4 = vpp.interacting(vpp_11p5x11p7).interacting(vpp_l1m1m2m3m4)
 
@@ -1626,8 +1600,9 @@ logger.info("Starting SKY130 LVS connectivity setup (Inter-layer)")
 
 # Inter-layer
 connect(sub         ,     ptap_conn)
-connect(dnwell      ,     ntap_conn)
 connect(nwell       ,     ntap_conn)
+connect(pwell_iso   ,       ptap_dw)
+connect(ptap_dw     ,         licon)
 connect(ptap_conn   ,         licon)
 connect(ntap_conn   ,         licon)
 connect(psd         ,         licon)
@@ -1648,11 +1623,12 @@ connect(via4        ,      met5_con)
 logger.info("Starting SKY130 LVS connectivity setup (Attaching labels)")
 
 # Attaching labels
-connect(sub         ,      sub_label)
+connect(sub         ,    pwell_label)
 connect(nwell       ,    nwell_label)
-connect(tap         ,      tap_label)
-connect(nsd        ,      diff_label)
-connect(psd        ,      diff_label)
+connect(ntap_conn   ,      tap_label)
+connect(ptap_conn   ,      tap_label)
+connect(nsd         ,     diff_label)
+connect(psd         ,     diff_label)
 connect(poly_con    ,     poly_label)
 connect(li_con      ,       li_label)
 connect(met1_con    ,     met1_label)
@@ -1663,16 +1639,17 @@ connect(met5_con    ,     met5_label)
 connect(rdl         ,      rdl_label)
 connect(pad         ,      pad_label)
 
-logger.info("Starting SKY130 LVS connectivity setup (Global connections)")
-
 # Global
-connect_global(sub  , substrate_name)
-
-logger.info("Starting SKY130 LVS connectivity setup (Multifinger Devices)")
+if $lvs_sub
+  logger.info("Setting substrate name of #{$lvs_sub}")
+  connect_global(sub  , substrate_name)
+end
 
 # Multifinger Devices
-connect_implicit("*")
-
+if $connect_implicit == "true"
+  logger.info("Implicit connectivity is Enabled")
+  connect_implicit("*")
+end
 
 #================================
 # ------ BJT CONNECTIONS --------
@@ -1685,33 +1662,33 @@ logger.info("Starting LVS BJT CONNECTIONS")
 # ==============
 
 # npn_5v0_1x1 nodes connections
-connect(npn_5v0_1x1_e,licon)
-connect(npn_5v0_1x1_b,licon)
-connect(npn_5v0_1x1_c,licon)
+connect(npn_5v0_1x1_e,  licon)
+connect(npn_5v0_1x1_b,  licon)
+connect(npn_5v0_1x1_c,  licon)
 
 # npn_5v0_1x2 nodes connections
-connect(npn_5v0_1x2_e,licon)
-connect(npn_5v0_1x2_b,licon)
-connect(npn_5v0_1x2_c,licon)
+connect(npn_5v0_1x2_e,  licon)
+connect(npn_5v0_1x2_b,  licon)
+connect(npn_5v0_1x2_c,  licon)
 
 # npn_11v0_1x1 nodes connections
-connect(npn_11v0_1x1_e,licon)
-connect(npn_11v0_1x1_b,licon)
-connect(npn_11v0_1x1_c,licon)
+connect(npn_11v0_1x1_e, licon)
+connect(npn_11v0_1x1_b, licon)
+connect(npn_11v0_1x1_c, licon)
 
 # ==============
 # ---- pnp ----
 # ==============
 
 # pnp_5v0_0p68x0p68 connections
-connect(pnp_5v0_0p68x0p68_e,licon)
-connect(pnp_5v0_0p68x0p68_b,licon)
-connect(pnp_5v0_0p68x0p68_c,licon)
+connect(pnp_5v0_0p68x0p68_e,  licon)
+connect(pnp_5v0_0p68x0p68_b,  licon)
+connect(pnp_5v0_0p68x0p68_c,  licon)
 
 # pnp_5v0_3p4x3p4 nodes
-connect(pnp_5v0_3p4x3p4_e,licon)
-connect(pnp_5v0_3p4x3p4_b,licon)
-connect(pnp_5v0_3p4x3p4_c,licon)
+connect(pnp_5v0_3p4x3p4_e,    licon)
+connect(pnp_5v0_3p4x3p4_b,    licon)
+connect(pnp_5v0_3p4x3p4_c,    licon)
 
 
 #================================
@@ -1721,12 +1698,16 @@ connect(pnp_5v0_3p4x3p4_c,licon)
 logger.info("Starting LVS DIODE CONNECTIONS")
 
 # N+ diffusion diode
-connect(ndiode_terminal_n,     licon)
-connect(ndiode_terminal_p, ptap_conn)
+connect(ndiode_5v0_terminal_n     , licon)
+connect(ndiode_5v0_lvt_terminal_n , licon)
+connect(ndiode_5v0_nvt_terminal_n , licon)
+connect(ndiode_11v0_terminal_n    , licon)
 
 # P+ diffusion diode
-connect(pdiode_terminal_n, licon)
-connect(pdiode_terminal_p, nwell)
+connect(pdiode_5v0_terminal_p     , licon)
+connect(pdiode_5v0_lvt_terminal_p , licon)
+connect(pdiode_5v0_hvt_terminal_p , licon)
+connect(pdiode_11v0_terminal_p    , licon)
 
 
 #================================
@@ -1736,8 +1717,8 @@ connect(pdiode_terminal_p, nwell)
 logger.info("Starting LVS PHOTODIODE CONNECTIONS")
 
 # Photodiode
-connect(photodiode_n,     licon)
-connect(photodiode_p, ptap_conn)
+connect(photodiode_n,       licon)
+connect(photodiode_p,   ptap_conn)
 
 
 #==================================
@@ -1747,25 +1728,12 @@ connect(photodiode_p, ptap_conn)
 logger.info("Starting LVS MIMCAP CONNECTIONS")
 
 # mim on metal3
-connect(capm      , via3    )
+connect(capm      ,     via3)
 connect(met3_ncap , met3_con)
 
 # mim on metal4
-connect(capm2     , via4    )
+connect(capm2     ,     via4)
 connect(met4_ncap , met4_con)
-
-
-#================================
-# ---- VARACTOR CONNECTIONS -----
-#================================
-
-logger.info("Starting LVS VARACTOR CONNECTIONS")
-
-# Low threshold voltage varactor
-connect(varactor_bulk_lvt, ptap_conn)
-
-# High threshold voltage varactor
-connect(varactor_bulk_hvt, ptap_conn)
 
 
 #================================
@@ -1779,7 +1747,6 @@ connect(nplus_cont    , licon)
 connect(nplus_hv_cont , licon)
 connect(pplus_cont    , licon)
 connect(pplus_hv_cont , licon)
-connect(pwell_term    , licon)
 
 
 #================================
@@ -1788,8 +1755,8 @@ connect(pwell_term    , licon)
 
 logger.info("Starting LVS INDUCTOR CONNECTIONS")
 
-connect(met3_ind     ,  met3_ncap)
-connect(met3_ind     , met3_label)
+connect(met3_ind     ,   met3_ncap)
+connect(met3_ind     ,  met3_label)
 
 
 #================================
@@ -1906,27 +1873,21 @@ logger.info("Starting NPN BJT EXTRACTION")
 
 # sky130_fd_pr__npn_05v5_W1p00L1p00 BJT
 logger.info("Extracting sky130_fd_pr__npn_05v5_W1p00L1p00 BJT")
-cls = extract_devices(bjt4("sky130_fd_pr__npn_05v5_W1p00L1p00"), { "C" => npn_5v0_1x1_c.extents , "B" => npn_5v0_1x1_b.extents , "E" => npn_5v0_1x1_e,"S" => sub.extents,
+extract_devices(bjt4("sky130_fd_pr__npn_05v5_W1p00L1p00"), { "C" => npn_5v0_1x1_c.extents , "B" => npn_5v0_1x1_b.extents , "E" => npn_5v0_1x1_e,"S" => sub.extents,
                                   "tC" => npn_5v0_1x1_c , "tB" => npn_5v0_1x1_b, "tE" => npn_5v0_1x1_e, "tS" => sub })
 ignore_parameter("sky130_fd_pr__npn_05v5_W1p00L1p00","AE")
-cls.supports_serial_combination = false
-cls.supports_parallel_combination = false
 
 # sky130_fd_pr__npn_05v5_W1p00L2p00 BJT
 logger.info("Extracting sky130_fd_pr__npn_05v5_W1p00L2p00 BJT")
-cls = extract_devices(bjt4("sky130_fd_pr__npn_05v5_W1p00L2p00"), { "C" => npn_5v0_1x2_c.extents , "B" => npn_5v0_1x2_b.extents , "E" => npn_5v0_1x2_e,"S" => sub.extents,
+extract_devices(bjt4("sky130_fd_pr__npn_05v5_W1p00L2p00"), { "C" => npn_5v0_1x2_c.extents , "B" => npn_5v0_1x2_b.extents , "E" => npn_5v0_1x2_e,"S" => sub.extents,
                                 "tC" => npn_5v0_1x2_c , "tB" => npn_5v0_1x2_b, "tE" => npn_5v0_1x2_e, "tS" => sub })
 ignore_parameter("sky130_fd_pr__npn_05v5_W1p00L2p00","AE")
-cls.supports_serial_combination = false
-cls.supports_parallel_combination = false
 
 # sky130_fd_pr__npn_11v0_W1p00L1p00 BJT
 logger.info("Extracting sky130_fd_pr__npn_11v0_W1p00L1p00 BJT")
-cls = extract_devices(FixBJT4Transistor::new("sky130_fd_pr__npn_11v0_W1p00L1p00"), { "BJT" => npn_11v0_1x1_c.extents, "tC" => npn_11v0_1x1_c , "tB" => npn_11v0_1x1_b, 
+extract_devices(FixBJT4Transistor::new("sky130_fd_pr__npn_11v0_W1p00L1p00"), { "BJT" => npn_11v0_1x1_c.extents, "tC" => npn_11v0_1x1_c , "tB" => npn_11v0_1x1_b, 
                                                                                 "tE" => npn_11v0_1x1_e, "tS" => sub })
 ignore_parameter("sky130_fd_pr__npn_11v0_W1p00L1p00","AE")
-cls.supports_serial_combination = false
-cls.supports_parallel_combination = false
 
 # ====================
 # ------- PNP --------
@@ -1936,19 +1897,15 @@ logger.info("Starting PNP BJT EXTRACTION")
 
 # sky130_fd_pr__pnp_05v5_W0p68L0p68 BJT
 logger.info("Extracting sky130_fd_pr__pnp_05v5_W0p68L0p68 BJT")
-cls = extract_devices(bjt3("sky130_fd_pr__pnp_05v5_W0p68L0p68"), { "C" => pnp_5v0_0p68x0p68_c.extents , "B" => pnp_5v0_0p68x0p68_b.extents , "E" => pnp_5v0_0p68x0p68_e,
+extract_devices(bjt3("sky130_fd_pr__pnp_05v5_W0p68L0p68"), { "C" => pnp_5v0_0p68x0p68_c.extents , "B" => pnp_5v0_0p68x0p68_b.extents , "E" => pnp_5v0_0p68x0p68_e,
                                   "tC" => pnp_5v0_0p68x0p68_c , "tB" => pnp_5v0_0p68x0p68_b, "tE" => pnp_5v0_0p68x0p68_e })
 ignore_parameter("sky130_fd_pr__pnp_05v5_W0p68L0p68","AE")
-cls.supports_serial_combination = false
-cls.supports_parallel_combination = false
 
 # sky130_fd_pr__pnp_05v5_W3p40L3p40 BJT
 logger.info("Extracting sky130_fd_pr__pnp_05v5_W3p40L3p40 BJT")
-cls = extract_devices(bjt3("sky130_fd_pr__pnp_05v5_W3p40L3p40"), { "C" => pnp_5v0_3p4x3p4_c.extents , "B" => pnp_5v0_3p4x3p4_b.extents , "E" => pnp_5v0_3p4x3p4_e,
+extract_devices(bjt3("sky130_fd_pr__pnp_05v5_W3p40L3p40"), { "C" => pnp_5v0_3p4x3p4_c.extents , "B" => pnp_5v0_3p4x3p4_b.extents , "E" => pnp_5v0_3p4x3p4_e,
                                 "tC" => pnp_5v0_3p4x3p4_c , "tB" => pnp_5v0_3p4x3p4_b, "tE" => pnp_5v0_3p4x3p4_e })
 ignore_parameter("sky130_fd_pr__pnp_05v5_W3p40L3p40","AE")
-cls.supports_serial_combination = false
-cls.supports_parallel_combination = false
 
 
 #================================
@@ -1959,35 +1916,35 @@ logger.info("Starting DIODE EXTRACTION")
 
 # 5V N+ diffusion diode
 logger.info("Extracting 5V N+ diffusion diode")
-extract_devices(diode("sky130_fd_pr__diode_pw2nd_05v5", Diode), { "P" => ndiode_5v0_terminal_p, "N" => ndiode_5v0_terminal_n, "tA" => ndiode_terminal_p , "tC" => ndiode_terminal_n})
+extract_devices(diode("sky130_fd_pr__diode_pw2nd_05v5", Diode), { "P" => sub, "N" => ndiode_5v0_terminal_n})
 
 # 5V N+ diffusion diode low threshold voltage
 logger.info("Extracting 5V N+ diffusion diode low threshold voltage")
-extract_devices(diode("sky130_fd_pr__diode_pw2nd_05v5_lvt", Diode), { "N" => ndiode_5v0_lvt_terminal_n , "P" => ndiode_5v0_lvt_terminal_p, "tA" => ndiode_terminal_n , "tC" => ndiode_terminal_p})
+extract_devices(diode("sky130_fd_pr__diode_pw2nd_05v5_lvt", Diode), { "P" => sub , "N" => ndiode_5v0_lvt_terminal_n})
 
 # 5V N+ diffusion diode native threshold voltage
 logger.info("Extracting 5V N+ diffusion diode native threshold voltage")
-extract_devices(diode("sky130_fd_pr__diode_pw2nd_05v5_nvt", Diode), { "N" => ndiode_5v0_nvt_terminal_n , "P" => ndiode_5v0_nvt_terminal_p, "tA" => ndiode_terminal_n , "tC" => ndiode_terminal_p})
+extract_devices(diode("sky130_fd_pr__diode_pw2nd_05v5_nvt", Diode), { "P" => sub , "N" => ndiode_5v0_nvt_terminal_n})
 
 # 11V N+ diffusion diode
 logger.info("Extracting 11V N+ diffusion diode")
-extract_devices(diode("sky130_fd_pr__diode_pw2nd_11v0", Diode), { "N" => ndiode_11v0_terminal_n , "P" => ndiode_11v0_terminal_p, "tA" => ndiode_terminal_n , "tC" => ndiode_terminal_p})
+extract_devices(diode("sky130_fd_pr__diode_pw2nd_11v0", Diode), { "P" => sub , "N" => ndiode_11v0_terminal_n})
 
 # 5V P+ diffusion diode
 logger.info("Extracting 5V P+ diffusion diode")
-extract_devices(diode("sky130_fd_pr__diode_pd2nw_05v5", Diode), { "N" => pdiode_5v0_terminal_n , "P" => pdiode_5v0_terminal_p, "tA" => pdiode_terminal_n, "tC" => pdiode_terminal_p})
+extract_devices(diode("sky130_fd_pr__diode_pd2nw_05v5", Diode), { "P" => pdiode_5v0_terminal_p , "N" => nwell})
 
 # 5V P+ diffusion diode low threshold voltage
 logger.info("Extracting5V P+ diffusion diode low threshold voltage")
-extract_devices(diode("sky130_fd_pr__diode_pd2nw_05v5_lvt", Diode), { "N" => pdiode_5v0_lvt_terminal_n , "P" => pdiode_5v0_lvt_terminal_p, "tA" => pdiode_terminal_n, "tC" => pdiode_terminal_p})
+extract_devices(diode("sky130_fd_pr__diode_pd2nw_05v5_lvt", Diode), { "P" => pdiode_5v0_lvt_terminal_p , "N" => nwell})
 
 # 5V P+ diffusion diode high threshold voltage
 logger.info("Extracting 5V P+ diffusion diode high threshold voltage")
-extract_devices(diode("sky130_fd_pr__diode_pd2nw_05v5_hvt", Diode), { "N" => pdiode_5v0_hvt_terminal_n , "P" => pdiode_5v0_hvt_terminal_p, "tA" => pdiode_terminal_n, "tC" => pdiode_terminal_p})
+extract_devices(diode("sky130_fd_pr__diode_pd2nw_05v5_hvt", Diode), { "P" => pdiode_5v0_hvt_terminal_p , "N" => nwell})
 
 # 11V P+ diffusion diode
 logger.info("Extracting 11V P+ diffusion diode")
-extract_devices(diode("sky130_fd_pr__diode_pd2nw_11v0", Diode), { "N" => pdiode_11v0_terminal_n , "P" => pdiode_11v0_terminal_p, "tA" => pdiode_terminal_n, "tC" => pdiode_terminal_p})
+extract_devices(diode("sky130_fd_pr__diode_pd2nw_11v0", Diode), { "P" => pdiode_11v0_terminal_p , "N" => nwell})
 
 
 #================================
@@ -2033,7 +1990,7 @@ extract_devices(resistor_with_bulk("sky130_fd_pr__res_generic_pd_hv", 197, BResi
 
 # sky130_fd_pr__res_iso_pw
 logger.info("Extracting sky130_fd_pr__res_iso_pw device")
-extract_devices(resistor_with_bulk("sky130_fd_pr__res_iso_pw", 3050, BResistor), { "R" => pwell_resistor, "C" => pwell_cont, "W" => dnwell, "tA" => pwell_term, "tB" => pwell_term, "tW" => dnwell})
+extract_devices(resistor_with_bulk("sky130_fd_pr__res_iso_pw", 3050, BResistor), { "R" => pwell_resistor, "C" => pwell_iso, "W" => dnwell, "tA" => ptap_dw, "tB" => ptap_dw, "tW" => ntap_conn})
 
 # ==============
 # ---- POLY ----
@@ -2122,21 +2079,23 @@ if FUSE == "m2"
 
   # sky130_fd_pr__fuse_m2
   logger.info("Extracting sky130_fd_pr__fuse_m2 device")
-  extract_devices(resistor("sky130_fd_pr__fuse_m2", 120, NResistor), { "R" => met2_fuse_res_layer, "C" => met2_con })
+  cls = extract_devices(resistor("sky130_fd_pr__fuse_m2", 120, NResistor), { "R" => met2_fuse_res_layer, "C" => met2_con })
 
 elsif FUSE == "m3"
 
   # sky130_fd_pr__fuse_m3
   logger.info("Extracting sky130_fd_pr__fuse_m3 device")
-  extract_devices(resistor("sky130_fd_pr__fuse_m3", 47, NResistor), { "R" => met3_fuse_res_layer, "C" => met3_ncap })
+  cls = extract_devices(resistor("sky130_fd_pr__fuse_m3", 47, NResistor), { "R" => met3_fuse_res_layer, "C" => met3_ncap })
 
 else
 
   # sky130_fd_pr__fuse_m4
   logger.info("Extracting sky130_fd_pr__fuse_m4 device")
-  extract_devices(resistor("sky130_fd_pr__fuse_m4", 47, NResistor), { "R" => met4_fuse_res_layer, "C" => met4_ncap })
+  cls = extract_devices(resistor("sky130_fd_pr__fuse_m4", 47, NResistor), { "R" => met4_fuse_res_layer, "C" => met4_ncap })
 
 end
+cls.supports_serial_combination = false
+cls.supports_parallel_combination = false
 
 
 #==================================
@@ -2163,11 +2122,11 @@ logger.info("Starting VARACTOR EXTRACTION")
 
 # Low threshold voltage varactor
 logger.info("Extracting low threshold voltage varactor")
-extract_devices(capacitor_with_bulk("sky130_fd_pr__cap_var_lvt", 4.4e-15, VarCap), { "P1" => varactor_gate_lvt, "P2" => varactor_nsd_lvt, "W" => varactor_bulk_lvt, "tA" => poly_con, "tB" => ntap_conn})
+extract_devices(capacitor_with_bulk("sky130_fd_pr__cap_var_lvt", 4.4e-15, VarCap), { "P1" => varactor_gate_lvt, "P2" => varactor_nsd_lvt, "W" => sub, "tA" => poly_con, "tB" => ntap_conn, "tW" => ptap_conn})
 
 # High threshold voltage varactor
 logger.info("Extracting high threshold voltage varactor")
-extract_devices(capacitor_with_bulk("sky130_fd_pr__cap_var_hvt", 4.4e-15, VarCap), { "P1" => varactor_gate_hvt, "P2" => varactor_nsd_hvt, "W" => varactor_bulk_hvt, "tA" => poly_con, "tB" => ntap_conn})
+extract_devices(capacitor_with_bulk("sky130_fd_pr__cap_var_hvt", 4.4e-15, VarCap), { "P1" => varactor_gate_hvt, "P2" => varactor_nsd_hvt, "W" => sub, "tA" => poly_con, "tB" => ntap_conn, "tW" => ptap_conn})
 
 
 #==================================
@@ -2376,30 +2335,6 @@ cls = extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2
 cls.supports_serial_combination = false
 cls.supports_parallel_combination = false
 
-# # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4 and shieldpom5
-# logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x6")
-# cls = extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x6"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x6, "B" => vpp_sub })
-# cls.supports_serial_combination = false
-# cls.supports_parallel_combination = false
-
-# # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4 and shieldpom5
-# logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x7")
-# cls = extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x7"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x7, "B" => vpp_sub })
-# cls.supports_serial_combination = false
-# cls.supports_parallel_combination = false
-
-# # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4 and shieldpom5
-# logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x8")
-# cls = extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x8"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x8, "B" => vpp_sub })
-# cls.supports_serial_combination = false
-# cls.supports_parallel_combination = false
-
-# # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4 and shieldpom5
-# logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x9")
-# cls = extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x9"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x9, "B" => vpp_sub })
-# cls.supports_serial_combination = false
-# cls.supports_parallel_combination = false
-
 # VPP capacitor with dimensions of 11.5um x 11.7um and with layers of l1m1m2m3m4 and shieldpom5
 logger.info("Extracting sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x")
 cls = extract_devices(VPP4Extractor::new("sky130_fd_pr__cap_vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x"), {"C1" => met2_vpp, "C2" => met5_vpp, "M" => vpp_11p5x11p7_l1m1m2m3m4_shieldpom5_x, "B" => vpp_sub })
@@ -2568,6 +2503,27 @@ extract_devices(mos4("sky130_fd_bs_flash__special_sonosfet_star"), { "SD" => son
 
 logger.info("Starting SKY130 LVS comparison section")
 
+#=== GET FLATTENED CELLS (IGNORED CELLS) ===
+if $flattened_cells
+  cells_list = File.readlines($flattened_cells, chomp: true)
+  logger.info("Flattened cells file: #{$flattened_cells}")
+else
+  begin
+    cells_list = File.readlines(File.expand_path(File.dirname(__FILE__)) + "/sky130_flattened_cells.txt", chomp: true)
+    logger.info("Flattened cells file (default): #{File.expand_path(File.dirname(__FILE__))}/sky130_flattened_cells.txt")
+  rescue
+    cells_list = []
+    logger.info("No flattened cells file path entered, will continue without it")
+  end
+end
+
+if cells_list.length > 0
+  cells_list.each do |cir|
+    schematic.flatten_circuit(cir)
+    netlist.flatten_circuit(cir)
+  end
+end
+
 #=== FLATTEN CELLS ===
 align
 
@@ -2625,6 +2581,3 @@ else
   logger.info("INFO : Congratulations! Netlists match.")
   logger.info("==========================================")
 end
-
-
-
