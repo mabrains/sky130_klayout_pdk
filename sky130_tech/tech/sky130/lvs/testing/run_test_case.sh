@@ -23,7 +23,7 @@ then
     sed -E 's/topography=normal //gm;t;d' $cdl_file
     list="sky130_fd_sc_hd__lpflow_lsbuf_lh_isowell_4 sky130_fd_sc_hdll__muxb16to1_1 sky130_fd_sc_hdll__muxb16to1_2 \
     sky130_fd_sc_hdll__muxb16to1_4 sky130_fd_sc_hdll__muxb8to1_4 sky130_fd_sc_hvl__lsbufhv2lv_1 \
-    sky130_fd_sc_hvl__lsbuflv2hv_1 sky130_fd_sc_hvl__lsbuflv2hv_clkiso_hlkg_3 \
+    sky130_fd_sc_hvl__lsbuflv2hv_1 sky130_fd_sc_hvl__lsbuflv2hv_clkiso_hlkg_3 sky130_fd_sc_hvl__lsbufhv2hv_lh_1 \
     sky130_fd_sc_hvl__lsbuflv2hv_isosrchvaon_1 sky130_fd_sc_hvl__lsbuflv2hv_symmetric_1"
 
     if [ -f $gds_file ]
