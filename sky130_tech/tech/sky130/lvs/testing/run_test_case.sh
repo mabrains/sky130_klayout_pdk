@@ -21,13 +21,28 @@ then
     cdl_file=$RUN_FOLDER/${CASE_NAME}.cdl
     sed -E 's/w=([0-9.]+) l=([0-9.]+)/w=$1U l=$2U/gm;t;d' $cdl_file
     sed -E 's/topography=normal //gm;t;d' $cdl_file
+    list="sky130_fd_sc_hd__lpflow_lsbuf_lh_isowell_4 sky130_fd_sc_hdll__muxb16to1_1 sky130_fd_sc_hdll__muxb16to1_2 \
+    sky130_fd_sc_hdll__muxb16to1_4 sky130_fd_sc_hdll__muxb8to1_4 sky130_fd_sc_hvl__lsbufhv2lv_1 \
+    sky130_fd_sc_hvl__lsbuflv2hv_1 sky130_fd_sc_hvl__lsbuflv2hv_clkiso_hlkg_3 \
+    sky130_fd_sc_hvl__lsbuflv2hv_isosrchvaon_1 sky130_fd_sc_hvl__lsbuflv2hv_symmetric_1"
 
     if [ -f $gds_file ]
     then
         if [ -f $cdl_file ]
         then
-            if [[ "$CASE_NAME" == *"sky130_fd_sc_lp__lsbuf"* ]] | [[ "$CASE_NAME" == *"sky130_fd_sc_hd__lpflow_lsbuf_lh_hl_"* ]] ; then export GND="VGND"; else export GND=$7; fi
-            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$gds_file --net=$cdl_file --output_netlist=$RUN_FOLDER/${CASE_NAME}_ext.cir --report=$RUN_FOLDER/${CASE_NAME} --lvs_sub=${GND-sky130_gnd} > $RUN_FOLDER/${CASE_NAME}_lvs.log 2>&1
+            if [[ "$CASE_NAME" == *"sky130_fd_sc_lp__lsbuf"* ]] | [[ "$CASE_NAME" == *"sky130_fd_sc_hd__lpflow_lsbuf_lh_hl_"* ]]
+            then 
+                export GND="VGND"
+            else 
+                export GND=$7
+            fi
+            if echo $list | grep -F -q "$CASE_NAME"
+            then 
+                connect_implicit="--set_connect_implicit"
+            else 
+                connect_implicit=""
+            fi
+            python3 $PDK_ROOT/$PDK/run_lvs.py --design=$gds_file --net=$cdl_file --output_netlist=$RUN_FOLDER/${CASE_NAME}_ext.cir --report=$RUN_FOLDER/${CASE_NAME} --lvs_sub=${GND-sky130_gnd} $connect_implicit > $RUN_FOLDER/${CASE_NAME}_lvs.log 2>&1
             return_code=$?
             if [ "$return_code" != "0" ]
             then
