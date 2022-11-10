@@ -458,7 +458,31 @@
   end
   mw.menu.insert_item("skymenu.lvs_menu.end", "purge_nets", purge_nets_action)
   
+  #13 Setting connect_implicit
+  connect_implicit_action = RBA::Action::new
+  connect_implicit_action.title = "Implicit connectivity"
+  connect_implicit_action.checkable=(true)
+  connect_implicit_action.checked=(false)
+  connect_implicit_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/sky130_lvs.lylvs", 'w') { |f| 
+      text = File.read(f)
+      if connect_implicit_action.is_checked?
+        connect_implicit_bool = "true"
+      else
+        connect_implicit_bool = "false"
+      end
+      if text.include?("$connect_implicit")
+        new_contents = text.gsub(/\$connect_implicit = \".*\"/, '$connect_implicit = "'+ connect_implicit_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$connect_implicit = "'+ connect_implicit_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("skymenu.lvs_menu.end", "connect_implicit", connect_implicit_action)
   
+
   #####################################################################################
   # Adding Magic LVS options
   #####################################################################################

@@ -184,4 +184,4 @@ jobs:
           -e PDK_ROOT=/wrk/sky130_tech/tech/sky130
           -e PDK=lvs
           "$IMAGE"
-          make test_${{ matrix.type }}_${{ matrix.test }}_sc
+          make test_${{ matrix.type }}_${{ matrix.test }}_sc -j$(nproc)
