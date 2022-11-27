@@ -25,6 +25,7 @@ from sky130_pcells.PclvtNmos18 import pclvtNmos18Generator
 from sky130_pcells.PclvtPmos18 import pclvtPmos18Generator
 from sky130_pcells.PcNmos18 import pcNmos18Generator
 from sky130_pcells.PcPmos18 import pcPmos18Generator
+from sky130_pcells.PchvtPmos18 import pchvtPmos18Generator
 from sky130_pcells.PcNmos5d10 import pcNmos5d10Generator
 from sky130_pcells.nmos18 import NMOS18
 from sky130_pcells.pmos18 import PMOS18
@@ -61,6 +62,7 @@ class Sky130(pya.Library):
         self.layout().register_pcell("PclvtPmos18", pclvtPmos18Generator())
         self.layout().register_pcell("PcNmos18", pcNmos18Generator())
         self.layout().register_pcell("PcPmos18", pcPmos18Generator())
+        self.layout().register_pcell("PchvtPmos18", pchvtPmos18Generator())
         self.layout().register_pcell("PcNmos5d10", pcNmos5d10Generator())
         self.layout().register_pcell("nmos18", NMOS18())
         self.layout().register_pcell("pmos18", PMOS18())

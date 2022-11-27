@@ -151,6 +151,9 @@ l_hvi_lay_str = \
 l_lvtn_lay_str  = \
     lay_df.loc[(lay_df["Layer name"] == "lvtn") & (lay_df["Purpose"].str.contains("drawing")), "GDS layer:datatype"].values[
     0]
+l_hvtp_lay_str  = \
+    lay_df.loc[(lay_df["Layer name"] == "hvtp") & (lay_df["Purpose"].str.contains("drawing")), "GDS layer:datatype"].values[
+    0]
 
 # print(diff_lay_str)
 
@@ -257,3 +260,6 @@ hvi_lay_dt = int(l_hvi_lay_str.split(":")[1])
 
 lvtn_lay_num = int(l_lvtn_lay_str.split(":")[0])
 lvtn_lay_dt = int(l_lvtn_lay_str.split(":")[1])
+
+hvtp_lay_num = int(l_hvtp_lay_str.split(":")[0])
+hvtp_lay_dt = int(l_hvtp_lay_str.split(":")[1])
