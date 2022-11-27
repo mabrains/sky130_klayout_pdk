@@ -241,6 +241,7 @@ class pcNmos18Generator(pya.PCellDeclarationHelper):
       #Width of nwell = 0.84um
       #size
 
+      grid = 0.005
       licon_size = 0.17
       via_size = 0.15
       mcon_size = 0.17
@@ -317,7 +318,7 @@ class pcNmos18Generator(pya.PCellDeclarationHelper):
       # calculate min required guard ring path-width
       if grCovmCON > 99.999:
         wgring_licon = licon_size+2*max(li_enc_licon_2,0)
-        wgring_mcon = mcon_size+2*max(met1_via_enc_2,met2_via_enc_2)
+        wgring_mcon = mcon_size+2*met_mcon_enc_2
         #wgring_via = via_size+2*max(met1_via_enc_2,met2_via_enc_2)
       else:
         wgring_licon = licon_size
@@ -344,6 +345,10 @@ class pcNmos18Generator(pya.PCellDeclarationHelper):
       widStack_via = gate_contact_num*via_size+(gate_contact_num-1)*via_spc+2*max(met1_via_enc_2,met2_via_enc_2)
       widStack = max(widStack_licon, widStack_mcon, widStack_via)
       hgring1 = w+extPC+2*widStack+2*gate_tap_spc
+      
+      lgring1 = round((round(lgring1/grid/2.0, 2))*grid*2.0, 2)
+      hgring1 = round((round(hgring1/grid/2.0, 2))*grid*2.0, 2)
+      wgring1 = round((round(wgring1/grid/2.0, 2))*grid*2.0, 2)
 
       #instantiate isolated pwell guard ring
       well = "P+Tap"
@@ -359,7 +364,7 @@ class pcNmos18Generator(pya.PCellDeclarationHelper):
       # min guardring width
       if grCovmCON > 99.999:
         wgring_licon = licon_size+2*max(li_enc_licon_2,0)
-        wgring_mcon = mcon_size+2*max(met1_via_enc_2,met2_via_enc_2)
+        wgring_mcon = mcon_size+2*met_mcon_enc_2
         #wgring_via = via_size+2*max(met1_via_enc_2,met2_via_enc_2)
       else:
         wgring_licon = licon_size
@@ -374,6 +379,10 @@ class pcNmos18Generator(pya.PCellDeclarationHelper):
       
       #calculate min required guard ring opening (y-dir)
       hgring2 = hgring1+2*(wgring1+max(diff_tap_spc, npsdm_tap_spc+npsdm_enc_tap, nwell_enc_ntap+nwell_ptap_spc))
+      
+      lgring2 = round((round(lgring2/grid/2.0, 2))*grid*2.0, 2)
+      hgring2 = round((round(hgring2/grid/2.0, 2))*grid*2.0, 2)
+      wgring2 = round((round(wgring2/grid/2.0, 2))*grid*2.0, 2)
       
       #instantiate dnwell guard ring
       well = "N+Tap in DNW"

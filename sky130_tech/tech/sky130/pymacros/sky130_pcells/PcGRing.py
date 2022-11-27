@@ -344,15 +344,15 @@ class pcGRingGenerator(pya.PCellDeclarationHelper):
       rect_spc = min_rect_spc+int((delta/(num_rects_int-1))/grid)*grid
       pitch_rect = rect_size+rect_spc
       
-      grid_delta = round( (delta-(rect_spc-min_rect_spc)*(num_rects_int-1))/grid )*grid
+      grid_delta = max(0, round( (delta-(rect_spc-min_rect_spc)*(num_rects_int-1))/grid )*grid)
       
       for i in range(0, int(num_rects_int/2)):
-        vcon1 = round((varCrd+i*pitch_rect+(pathLen-cov_pathLen)/2.0)/grid )*grid
+        vcon1 = varCrd+i*pitch_rect+round(((pathLen-cov_pathLen)/2.0)/grid )*grid
         if num_rects_int % 2 == 0:
-          vcon2 = round((varCrd+grid_delta+(i+num_rects_int/2.0)*pitch_rect+(pathLen-cov_pathLen)/2.0)/grid )*grid
+          vcon2 = varCrd+grid_delta+(i+num_rects_int/2.0)*pitch_rect+round(((pathLen-cov_pathLen)/2.0)/grid )*grid
         else:
-          vcon2 = round((varCrd+grid_delta+(i+1+int(num_rects_int/2.0))*pitch_rect+(pathLen-cov_pathLen)/2.0)/grid )*grid
-          vcon3 = round((varCrd+grid_delta/2.0+int(num_rects_int/2.0)*pitch_rect+(pathLen-cov_pathLen)/2.0)/grid )*grid
+          vcon2 = varCrd+grid_delta+(i+1+int(num_rects_int/2.0))*pitch_rect+round(((pathLen-cov_pathLen)/2.0)/grid )*grid
+          vcon3 = varCrd+int(num_rects_int/2.0)*pitch_rect+round((grid_delta/2.0+(pathLen-cov_pathLen)/2.0)/grid )*grid
           
           #expectional contact placement
           if R == "R0":

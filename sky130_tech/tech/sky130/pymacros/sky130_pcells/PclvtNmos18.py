@@ -243,7 +243,7 @@ class pclvtNmos18Generator(pya.PCellDeclarationHelper):
       #Diff and tap are not allowed to extend beyond their abutting edge
 
       #size
-
+      grid = 0.005
       licon_size = 0.17
       via_size = 0.15
       mcon_size = 0.17
@@ -335,6 +335,10 @@ class pclvtNmos18Generator(pya.PCellDeclarationHelper):
       widStack_via = gate_contact_num*via_size+(gate_contact_num-1)*via_spc+2*max(met1_via_enc_2,met2_via_enc_2)
       widStack = max(widStack_licon, widStack_mcon, widStack_via)
       hgring = w+extPC+2*widStack+2*gate_tap_spc
+      
+      lgring = round((round(lgring/grid/2.0, 2))*grid*2.0, 2)
+      hgring = round((round(hgring/grid/2.0, 2))*grid*2.0, 2)
+      wgring = round((round(wgring/grid/2.0, 2))*grid*2.0, 2)
 
       instpcGRing = pcGRingGenerator()
       instpcGRing._GRing(self.layout, self.cell, well, False, False, wgring, lgring, hgring, self.LmCON, self.RmCON, self.BmCON, self.TmCON, grCovmCON)
