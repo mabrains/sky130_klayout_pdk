@@ -39,7 +39,7 @@ class pcNmos18Generator(pya.PCellDeclarationHelper):
         # TmCON           : Toggle Top mCON placement (True,False)
 
         # declare the parameters
-        self.param("des_param", self.TypeString, "Description", default= "SkyWater 130nm LNMOS18 Pcell", readonly = True)
+        self.param("des_param", self.TypeString, "Description", default= "SkyWater 130nm MOS18 Pcell", readonly = True)
         self.param("w", self.TypeDouble, "Width", default=5.0)
         self.param("l", self.TypeDouble, "Length", default=5.0)
         self.param("sab", self.TypeDouble, "SAB", default=0.33)
@@ -398,5 +398,5 @@ class pcNmos18Generator(pya.PCellDeclarationHelper):
 
     def produce_impl(self):
 
-      # call GRing sub fucntion (__pcsNmos18)
+      # call GRing sub fucntion (__pcNmos18)
       stdnmos18 = self._stdNmos18(self.w, self.l,self.sab,self.gate_contact,self.gate_contact_num,self.finger_num,self.grCovmCON,self.sdCovmCON)
