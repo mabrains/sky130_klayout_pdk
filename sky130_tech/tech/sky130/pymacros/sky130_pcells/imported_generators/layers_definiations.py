@@ -56,6 +56,7 @@ l_hvi_lay_str         = lay_df.loc[(lay_df["Layer name"] == "hvi") & (lay_df["Pu
 l_lvtn_lay_str        = lay_df.loc[(lay_df["Layer name"] == "lvtn") & (lay_df["Purpose"].str.contains("drawing")), "GDS layer:datatype"].values[0]
 l_hvtp_lay_str        = lay_df.loc[(lay_df["Layer name"] == "hvtp") & (lay_df["Purpose"].str.contains("drawing")), "GDS layer:datatype"].values[0]
 l_areaid_lvt_lay_str  = lay_df.loc[(lay_df["Layer name"] == "areaid.lvt") & (lay_df["Purpose"].str.contains("dentifier")), "GDS layer:datatype"].values[0]
+l_areaid_le_lay_str   = lay_df.loc[(lay_df["Layer name"] == "areaid.le") & (lay_df["Purpose"].str.contains("dentifier")), "GDS layer:datatype"].values[0]
 
 ## Extract Layer GDS Num & Purpose
 diff_lay_num          = int(diff_lay_str.split(":")[0])
@@ -165,3 +166,6 @@ hvtp_lay_dt           = int(l_hvtp_lay_str.split(":")[1])
 
 areaid_lvt_lay_num    = int(l_areaid_lvt_lay_str.split(":")[0])
 areaid_lvt_lay_dt     = int(l_areaid_lvt_lay_str.split(":")[1])
+
+areaid_le_lay_num    = int(l_areaid_le_lay_str.split(":")[0])
+areaid_le_lay_dt     = int(l_areaid_le_lay_str.split(":")[1])
