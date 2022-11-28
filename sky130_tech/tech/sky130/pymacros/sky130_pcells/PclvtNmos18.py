@@ -344,7 +344,7 @@ class pclvtNmos18Generator(pya.PCellDeclarationHelper):
       instpcGRing._GRing(self.layout, self.cell, well, False, False, wgring, lgring, hgring, self.LmCON, self.RmCON, self.BmCON, self.TmCON, grCovmCON)
 
       if typ != "none":
-        if typ == "lvtn":
+        if typ == "01v8_lvt":
           # draw lvtn low-vt mos to block vt implants
           llvtn = lgring
           hlvtn = hgring
@@ -352,12 +352,12 @@ class pclvtNmos18Generator(pya.PCellDeclarationHelper):
           l_areaid_lvt = self.layout.layer(areaid_lvt_lay_num,areaid_lvt_lay_dt)
           self.cell.shapes(l_lvtn).insert(pya.DBox(-llvtn/2.0, -hlvtn/2.0, llvtn/2.0, hlvtn/2.0))
           self.cell.shapes(l_areaid_lvt).insert(pya.DBox(-llvtn/2.0, -hlvtn/2.0, llvtn/2.0, hlvtn/2.0))
-      
+    
     def _lvtNmos18(self, w, l, sab, gate_contact, gate_contact_num, finger_num, grCovmCON, sdCovmCON):
 
       self.wellgring = "P+Tap"
       self.wellmos18 = "N+S/D"
-      self._ngringTrans(self.cell, self.wellgring, w, l, sab, gate_contact_num, finger_num,"lvtn",grCovmCON)
+      self._ngringTrans(self.cell, self.wellgring, w, l, sab, gate_contact_num, finger_num,"01v8_lvt",grCovmCON)
       self._mos18FingerTrans(self.cell, self.wellmos18, w, l, sab, gate_contact, gate_contact_num, finger_num, sdCovmCON)
 
     def produce_impl(self):
