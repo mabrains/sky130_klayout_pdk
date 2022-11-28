@@ -366,7 +366,9 @@ class pclvtPmos18Generator(pya.PCellDeclarationHelper):
           llvtn = lgring
           hlvtn = hgring
           l_lvtn = self.layout.layer(lvtn_lay_num,lvtn_lay_dt)
+          l_areaid_lvt = self.layout.layer(areaid_lvt_lay_num,areaid_lvt_lay_dt)
           self.cell.shapes(l_lvtn).insert(pya.DBox(-llvtn/2.0, -hlvtn/2.0, llvtn/2.0, hlvtn/2.0))
+          self.cell.shapes(l_areaid_lvt).insert(pya.DBox(-llvtn/2.0, -hlvtn/2.0, llvtn/2.0, hlvtn/2.0))
       
     def _lvtPmos18(self, w, l, sab, gate_contact, gate_contact_num, finger_num, subring, grCovmCON, sdCovmCON):
       self.wellgring = "N+Tap"
