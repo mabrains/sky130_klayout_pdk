@@ -1,32 +1,49 @@
-# Skywaters 130nm Technology for KLayout Device Generators
+# Skywater 130nm Technology PDK for KLayout [![License](https://img.shields.io/github/license/mabrains/sky130_klayout_pdk)](LICENSE)
 
-[<img src="https://raw.githubusercontent.com/mabrains/sky130_ubuntu_setup/main/logo.svg" width="150">](http://mabrains.com/)
+<p align="center"><img src="https://mabrains.com/assets/images/mabrains_logo.jpg" width="300" /></p>
 
-Mabrains is excited to share with you our Device Generator Library for Skywater 130nm PDK. These Device Generators are not qualified. Please use with caution.
+Mabrains is excited to share with you our Skywater 130nm PDK for Klayout. These files are not qualified. Please use with caution.
 
 ## KLayout technology files for Skywater Sky130
 
- * sky130.lyt   : technology and connections description
- * sky130.lyp   : layers color and shape description
- * DRC please use the following: https://github.com/efabless/mpw_precheck/blob/main/checks/tech-files/sky130A_mr.drc
- * LVS : lvs/lvs_sky130.lylvs : LVS script (Not Qualified)
+* sky130.lyt   : technology and connections description
+* sky130.lyp   : layers color and shape description
+* DRC          : please use the following --> <https://github.com/efabless/mpw_precheck/blob/main/checks/tech-files/sky130A_mr.drc>
+* LVS          : LVS script `lvs/lvs_sky130.lylvs` (In development)
+* Pcells       : Devices generators (In development)
 
 ## Installation
-To use this repo, you need to do the following:
-1. Clone the repo:
-```
-git clone https://github.com/mabrains/sky130_klayout_pdk.git
-```
-2. Go inside sky130_klayout_pdk:
-```
-cd sky130_klayout_pdk
-```
-3. Open klayout using the following command:
-```
-KLAYOUT_HOME=./sky130_tech klayout -e
-```
 
- ## Status
+To use this repo, you need to do the following:
+
+1. Clone the repo:
+
+    ```bash
+
+    git clone <https://github.com/mabrains/sky130_klayout_pdk.git>
+
+    ```
+
+2. Go inside sky130_klayout_pdk:
+
+    ```bash
+
+    cd sky130_klayout_pdk
+
+    ```
+
+3. Open klayout using the following command:
+
+    ```bash
+
+    KLAYOUT_HOME=./sky130_tech klayout -e
+
+    ```
+
+## Status
+
+### Devices Status
+
 | Device Name           |  Model | Status        | DRC           | LVS           | Number of Cases | Method of verification |
 |-----------------------|--------|---------------|---------------|---------------|-----------------|------------------------|
 | Nmos 1.8v             |sky130_fd_pr__nfet_01v8 |:heavy_check_mark:| :heavy_check_mark:| :heavy_check_mark: | 163             | Semi automated         |
@@ -66,7 +83,3 @@ KLAYOUT_HOME=./sky130_tech klayout -e
 | N-latch FET (SRAM)    |sky130_fd_pr__special_nfet_latch |:x:| :x: | :x:   | :x:       | :x:|
 | P-latch FET (SRAM)    |sky130_fd_pr__special_pfet_pass |:x:| :x: | :x:   | :x:       | :x:|
 | Varactors             |sky130_fd_pr__cap_var_lvt , sky130_fd_pr__cap_var_hvt |:x:| :x: | :x: | :x:| :x:|
-
-
-
- 

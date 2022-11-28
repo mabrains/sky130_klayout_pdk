@@ -3571,6 +3571,40 @@
   <source>82/28@1</source>
  </properties>
  <properties>
+  <frame-color>#c3ccd9</frame-color>
+  <fill-color>#c3ccd9</fill-color>
+  <frame-brightness>0</frame-brightness>
+  <fill-brightness>0</fill-brightness>
+  <dither-pattern>C21</dither-pattern>
+  <line-style>C0</line-style>
+  <valid>true</valid>
+  <visible>true</visible>
+  <transparent>false</transparent>
+  <width>1</width>
+  <marked>false</marked>
+  <xfill>false</xfill>
+  <animation>0</animation>
+  <name>capm.drawing - 89/44</name>
+  <source>89/44@1</source>
+ </properties>
+ <properties>
+  <frame-color>#c33cd9</frame-color>
+  <fill-color>#c33cd9</fill-color>
+  <frame-brightness>0</frame-brightness>
+  <fill-brightness>0</fill-brightness>
+  <dither-pattern>C21</dither-pattern>
+  <line-style>C0</line-style>
+  <valid>true</valid>
+  <visible>true</visible>
+  <transparent>false</transparent>
+  <width>1</width>
+  <marked>false</marked>
+  <xfill>false</xfill>
+  <animation>0</animation>
+  <name>capm2.drawing - 97/44</name>
+  <source>97/44@1</source>
+ </properties>
+ <properties>
   <frame-color>#ccccd9</frame-color>
   <fill-color>#ccccd9</fill-color>
   <frame-brightness>0</frame-brightness>

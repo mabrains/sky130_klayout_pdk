@@ -1,0 +1,9 @@
+*** All STD cells Include files.
+
+.include ./include_hd.cdl
+.include ./include_hdll.cdl
+.include ./include_hvl.cdl
+.include ./include_hs.cdl
+.include ./include_ms.cdl
+.include ./include_ls.cdl
+.include ./include_lp.cdl

@@ -1,8 +1,21 @@
 # Byte-compiled / optimized / DLL files
+
 __pycache__/
 *.py[cod]
 *$py.class
 sky130_tech/klayoutrc
+devices_list.odp.ods
+devices.tsv
+sky130.tsv
+.~lock.devices_list.odp.ods#
+.~lock.devices.tsv#
+.~lock.sky130.tsv#
+gen*.py
+*.lvsdb
+*.cir
+*.lvsdb
+run_*/
+*.lyrdb
 
 pymacros/sky130_pcells/__pycache__/*
 

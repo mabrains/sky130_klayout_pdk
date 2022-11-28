@@ -1,13 +1,34 @@
-########################################################################################################################
-##
-# Mabrains Company LLC ("Mabrains Company LLC") CONFIDENTIAL
-##
-# Copyright (C) 2018-2021 Mabrains Company LLC <contact@mabrains.com>
-##
-# This file is authored by:
-#           - <Mina Maksimous> <mina_maksimous@mabrains.com>
-##
-########################################################################################################################
+#!/usr/bin/env python3
+# Copyright 2020 R. Timothy Edwards
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+#-------------------------------------------------------------------------
+# run_standard_drc.py ---  A script to run magic in batch mode and apply
+# full DRC checks on a layout.  This inclues full DRC but excludes
+# antenna and density checks, for which there are separate scripts.
+#
+# Usage:
+#
+#   run_standard_drc.py <layout_name>
+#
+# Results:
+#
+#   generates a file "<layout_name>_drc.txt" containing a human-readable
+#   list of the DRC errors.
+# 	
+#-------------------------------------------------------------------------
 
 import subprocess
 import shutil
