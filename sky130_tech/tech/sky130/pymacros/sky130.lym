@@ -22,13 +22,16 @@ import os
 technology_macros_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, technology_macros_path)
 
-from sky130_pcells import Sky130
+from cells import sky130
 
 # Instantiate and register the library
-Sky130()
+sky130()
 
-print("## Skywaters 130nm PDK Pcells loaded.")
+print("## Skywaters 130nm PDK loaded.")
 print(sys.path)
+
+import sys
+import os
 
 </text>
 </klayout-macro>
