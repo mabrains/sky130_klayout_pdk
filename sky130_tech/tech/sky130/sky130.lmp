@@ -1,8 +1,18 @@
 li1     NET,SPNET,VIA            67  20
-li1     PIN                      67  16
+li1     LEFPIN,PIN               67  16
 li1     LEFOBS                   67  5
+NAME    li1/LABEL,li1/LEFPIN     67  5
 
-li1     VIA                      67  44
+mcon    LEFOBS                   67  44
+mcon    LEFPIN                   67  48
+NAME    mcon/LABEL,mcon/LEFPIN   67  48
+
+nwell   LEFPIN                   64  16
+NAME    nwell/LABEL,nwell/LEFPIN 64  5
+
+pwell   LEFPIN                   122 16
+NAME    pwell/LABEL,pwell/LEFPIN 122 5
+
 mcon    VIA                      67  44
 via     VIA                      68  44
 via2    VIA                      69  44
